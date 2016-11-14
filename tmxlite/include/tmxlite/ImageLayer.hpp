@@ -54,7 +54,7 @@ namespace tmx
         */
         const std::string& getImagePath() const { return m_filePath; }
         /*!
-        \brief Returns the colour userd by the image to represent transparent
+        \brief Returns the colour used by the image to represent transparent
         pixels. By default this is (0, 0, 0, 0)
         */
         const Colour& getTransparencyColour() const { return m_transparencyColour; }
