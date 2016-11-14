@@ -29,6 +29,8 @@ source distribution.
 #include <tmxlite/Log.hpp>
 #include "miniz.h"
 
+#include <cstring>
+
 bool tmx::decompress(const char* source, std::vector<unsigned char>& dest, int inSize, int expectedSize)
 {
     if (!source)
