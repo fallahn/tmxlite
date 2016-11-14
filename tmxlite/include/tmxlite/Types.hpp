@@ -32,6 +32,9 @@ source distribution.
 
 namespace tmx
 {
+    /*!
+    \brief Two dimensional vector used to store points and positions
+    */
     template <class T>
     struct Vector2 final
     {
@@ -44,6 +47,9 @@ namespace tmx
     using Vector2i = Vector2<int>;
     using Vector2u = Vector2<unsigned>;
 
+    /*!
+    \brief Describes a rectangular area, such as an AABB (axis aligned bounding box)
+    */
     template <class T>
     struct Rectangle final
     {
@@ -56,6 +62,10 @@ namespace tmx
     using FloatRect = Rectangle<float>;
     using IntRect = Rectangle<int>;
 
+    /*!
+    \brief Contains the red, green, blue and alpha values of a colour
+    in the range 0 - 255.
+    */
     struct Colour final
     {
         Colour(std::uint8_t red = 0, std::uint8_t green = 0, std::uint8_t blue = 0, std::uint8_t alpha = 255)

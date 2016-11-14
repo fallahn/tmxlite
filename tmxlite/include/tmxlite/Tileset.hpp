@@ -65,8 +65,14 @@ namespace tmx
             std::array<std::int32_t, 4u> terrainIndices;
             std::uint32_t probability = 100;
 
+            /*!
+            \brief a group of frames which make up an animation
+            */
             struct Animation final
             {
+                /*!
+                \brief A frame within an animation
+                */
                 struct Frame final
                 {
                     std::uint32_t tileID = 0;

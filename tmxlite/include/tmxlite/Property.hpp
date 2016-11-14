@@ -42,7 +42,7 @@ namespace tmx
 {
     /*!
     \brief Represents a custom property.
-    Tiles, objects and layers of a tmx may all have custom
+    Tiles, objects and layers of a tmx map may have custom
     properties assigned to them. This class represents a 
     single property and provides access to its value, the
     type of which can be determined with getType()

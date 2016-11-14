@@ -39,6 +39,9 @@ source distribution.
 
 namespace tmx
 {
+    /*!
+    \brief Holds the xml version of the loaded map
+    */
     struct TMXLITE_EXPORT_API Version
     {
         //major/minor are apparently reserved by gcc            
@@ -81,8 +84,8 @@ namespace tmx
     This class can be used to parse the XML format tile maps created
     with the Tiled map editor, providing an interface to create drawable and
     physics objects. Typical usage would be to create an instance of this
-    class before calling load() providing a path to the *.tmx file to
-    load. Then layers or objects can be requested from the Map class
+    class before calling load() providing a path to the *.tmx file to be
+    loaded. Then layers or objects can be requested from the Map class
     to be interpreted as needed.
     */
     class TMXLITE_EXPORT_API Map final
@@ -128,7 +131,7 @@ namespace tmx
         */
         const Vector2u& getTileSize() const { return m_tileSize; }
         /*!
-        \brief Returns the bounds of the map in SFML units
+        \brief Returns the bounds of the map
         */
         FloatRect getBounds() const { return FloatRect(0.f, 0.f, static_cast<float>(m_tileCount.x * m_tileSize.x), static_cast<float>(m_tileCount.y * m_tileSize.y)); }
         /*!

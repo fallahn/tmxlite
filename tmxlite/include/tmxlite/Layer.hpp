@@ -41,7 +41,6 @@ namespace pugi
     class xml_node;
 }
 
-
 namespace tmx
 {
     class Map;

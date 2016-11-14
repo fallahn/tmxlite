@@ -46,7 +46,7 @@ source distribution.
 namespace tmx
 {
     /*!
-    \brief Class to allowing messages to be logged to a combination
+    \brief Class allowing messages to be logged to a combination
     of one or more destinations such as the console, log file or
     output window in Visual Studio
     */

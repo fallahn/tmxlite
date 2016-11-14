@@ -108,7 +108,7 @@ namespace tmx
         */
         bool visible() const { return m_visible; }
         /*!
-        \brief Returns the Shape of the Object
+        \brief Returns the Shape type of the Object
         */
         Shape getShape() const { return m_shape; }
         /*!
