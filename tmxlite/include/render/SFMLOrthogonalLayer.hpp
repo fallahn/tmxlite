@@ -27,8 +27,10 @@ source distribution.
 
 /*
 Creates an SFML drawable from an Orthogonal tmx map layer.
-This is an example of drawing with SFML - better use of vertex
-arrays as well as resource management by the user is encouraged.
+This is an example of drawing with SFML - not all features,
+such as tile flipping, are implemented. For a more detailed
+implementation, including artifact prevention, see:
+https://github.com/fallahn/xygine/blob/master/xygine/src/components/ComponentTileMapLayer.cpp
 */
 
 #ifndef SFML_ORTHO_HPP_
@@ -99,10 +101,65 @@ private:
     public:
         using Ptr = std::unique_ptr<Chunk>;
         using Tile = std::array<sf::Vertex, 4u>;
-        Chunk(const tmx::TileLayer, std::vector<const tmx::Tileset*> tilesets, const sf::Vector2f& position)
+        Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tilesets,
+            const sf::Vector2f& position, const sf::Vector2f& tileCount, std::size_t rowSize,  TextureResource& tr)
         {
-            //go through the tiles and create the approriate arrays
-            //TODO remember to set vertex colours / visibility from layer property
+            auto opacity = static_cast<sf::Uint8>(layer.getOpacity() /  1.f * 255.f);
+            sf::Color vertColour = sf::Color::White;
+            vertColour.a = opacity;
+
+            auto offset = layer.getOffset();
+            sf::Vector2f layerOffset(offset.x, offset.y);
+
+            const auto& tileIDs = layer.getTiles();
+            
+            //go through the tiles and create the appropriate arrays
+            for (const auto ts : tilesets)
+            {
+                bool chunkArrayCreated = false;
+                auto tileSize = ts->getTileSize();
+
+                sf::Vector2u tsTileCount;
+
+                std::size_t xPos = static_cast<std::size_t>(position.x / tileSize.x);
+                std::size_t yPos = static_cast<std::size_t>(position.y / tileSize.y);
+
+                for (auto y = yPos; y < yPos + tileCount.y; ++y)
+                {
+                    for (auto x = xPos; x < xPos + tileCount.x; ++x)
+                    {
+                        auto idx = (y * rowSize + x);
+                        if (idx < tileIDs.size() && tileIDs[idx].ID >= ts->getFirstGID()
+                            && tileIDs[idx].ID < (ts->getFirstGID() + ts->getTileCount()))
+                        {
+                            //ID must belong to this set - so add a tile
+                            if (!chunkArrayCreated)
+                            {
+                                m_chunkArrays.emplace_back(std::make_unique<ChunkArray>(*tr.find(ts->getImagePath())->second));
+                                auto texSize = m_chunkArrays.back()->getTextureSize();
+                                tsTileCount.x = texSize.x / tileSize.x;
+                                tsTileCount.y = texSize.y / tileSize.y;
+                                chunkArrayCreated = true;
+                            }
+                            auto& ca = m_chunkArrays.back();
+                            sf::Vector2f tileOffset(x * tileSize.x, y * tileSize.y);
+                            
+                            auto idIndex = tileIDs[idx].ID - ts->getFirstGID();
+                            sf::Vector2f tileIndex(idIndex % tsTileCount.x, idIndex / tsTileCount.x);
+                            tileIndex.x *= tileSize.x;
+                            tileIndex.y *= tileSize.y;
+                            Tile tile = 
+                            {
+                                sf::Vertex(tileOffset, vertColour, tileIndex),
+                                sf::Vertex(tileOffset + sf::Vector2f(tileSize.x, 0.f), vertColour, tileIndex + sf::Vector2f(tileSize.x, 0.f)),
+                                sf::Vertex(tileOffset + sf::Vector2f(tileSize.x, tileSize.y), vertColour, tileIndex + sf::Vector2f(tileSize.x, tileSize.y)),
+                                sf::Vertex(tileOffset + sf::Vector2f(0.f, tileSize.y), vertColour, tileIndex + sf::Vector2f(0.f, tileSize.y))
+                            };
+                            ca->addTile(tile);
+                        }
+                    }
+                }
+            }
             
             setPosition(position);
         }
@@ -129,6 +186,7 @@ private:
                     m_vertices.push_back(v);
                 }
             }
+            sf::Vector2u getTextureSize() const { return m_texture.getSize(); }
 
         private:
             const sf::Texture& m_texture;
@@ -180,9 +238,19 @@ private:
         {
             const auto& path = ts->getImagePath();
             std::unique_ptr<sf::Texture> newTexture = std::make_unique<sf::Texture>();
-            if (!newTexture->loadFromFile(path))
+            sf::Image img;
+            if (!img.loadFromFile(path))
             {
                 newTexture->loadFromImage(fallback);
+            }
+            else
+            {
+                if (ts->hasTransparency())
+                {
+                    auto transparency = ts->getTransparencyColour();
+                    img.createMaskFromColor({ transparency.r, transparency.g, transparency.b, transparency.a });
+                }
+                newTexture->loadFromImage(img);
             }
             m_textureResource.insert(std::make_pair(path, std::move(newTexture)));
         }
@@ -193,11 +261,14 @@ private:
         m_chunkCount.x = static_cast<sf::Uint32>(std::ceil(bounds.width / m_chunkSize.x));
         m_chunkCount.y = static_cast<sf::Uint32>(std::ceil(bounds.height / m_chunkSize.y));
 
+        sf::Vector2f tileCount(m_chunkSize.x / map.getTileSize().x, m_chunkSize.y / map.getTileSize().y);
+
         for (auto y = 0u; y < m_chunkCount.y; ++y)
         {
             for (auto x = 0u; x < m_chunkCount.x; ++x)
             {
-                m_chunks.emplace_back(std::make_unique<Chunk>(layer, usedTileSets, sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y)));
+                m_chunks.emplace_back(std::make_unique<Chunk>(layer, usedTileSets, 
+                    sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y), tileCount, map.getTileCount().x, m_textureResource));
             }
         }
     }
@@ -215,8 +286,8 @@ private:
         {
             for (auto x = posX; x < posX + 2; ++x)
             {
-                auto idx = y * m_chunkCount.x + x;
-                if (idx > 0 && idx < m_chunks.size() && !m_chunks[idx]->empty())
+                auto idx = y * int(m_chunkCount.x) + x;
+                if (idx >= 0 && idx < m_chunks.size() && !m_chunks[idx]->empty())
                 {
                     visible.push_back(m_chunks[idx].get());
                 }
@@ -230,7 +301,7 @@ private:
     {
         //calc view coverage and draw nearest chunks
         updateVisibility(rt.getView());
-        for (const auto c : m_visibleChunks)
+        for (const auto& c : m_visibleChunks)
         {
             rt.draw(*c, states);
         }
