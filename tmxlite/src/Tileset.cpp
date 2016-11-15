@@ -27,6 +27,7 @@ source distribution.
 
 #include <tmxlite/Tileset.hpp>
 #include <tmxlite/FreeFuncs.hpp>
+#include <tmxlite/detail/Log.hpp>
 
 #include <ctype.h>
 

@@ -36,7 +36,6 @@ source distribution.
 #include <string>
 #include <vector>
 
-
 namespace tmx
 {
     /*!

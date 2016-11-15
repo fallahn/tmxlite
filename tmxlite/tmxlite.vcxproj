@@ -231,7 +231,6 @@
     <ClInclude Include="include\tmxlite\FreeFuncs.hpp" />
     <ClInclude Include="include\tmxlite\ImageLayer.hpp" />
     <ClInclude Include="include\tmxlite\Layer.hpp" />
-    <ClInclude Include="include\tmxlite\Log.hpp" />
     <ClInclude Include="include\tmxlite\Map.hpp" />
     <ClInclude Include="include\tmxlite\Object.hpp" />
     <ClInclude Include="include\tmxlite\ObjectGroup.hpp" />

@@ -26,7 +26,7 @@ source distribution.
 *********************************************************************/
 
 #include <tmxlite/FreeFuncs.hpp>
-#include <tmxlite/Log.hpp>
+#include <tmxlite/detail/Log.hpp>
 #include "miniz.h"
 
 #include <cstring>

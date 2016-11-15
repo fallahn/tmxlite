@@ -63,5 +63,4 @@ source distribution.
 #define TMXLITE_EXPORT_API
 
 #endif //TMXLITE_STATIC
-#include <tmxlite/Log.hpp>
 #endif //TMXLITE_CONFIG_HPP_

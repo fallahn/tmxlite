@@ -48,9 +48,6 @@
     <ClInclude Include="include\tmxlite\Types.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tmxlite\Log.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\FreeFuncs.cpp">

@@ -52,9 +52,9 @@ René Nyffenegger rene.nyffenegger@adp-gmbh.ch
 #ifndef TMXLITE_TILE_FUNCS_HPP_
 #define TMXLITE_TILE_FUNCS_HPP_
 
-#include <tmxlite/pugixml.hpp>
+#include <tmxlite/detail/pugixml.hpp>
+#include <tmxlite/detail/Log.hpp>
 #include <tmxlite/Types.hpp>
-#include <tmxlite/Log.hpp>
 
 #include <string>
 #include <sstream>
