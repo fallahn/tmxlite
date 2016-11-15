@@ -44,6 +44,7 @@ https://github.com/fallahn/xygine/blob/master/xygine/src/components/ComponentTil
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Transformable.hpp>
 
 #include <memory>
 #include <vector>
@@ -51,6 +52,7 @@ https://github.com/fallahn/xygine/blob/master/xygine/src/components/ComponentTil
 #include <map>
 #include <string>
 #include <limits>
+#include <iostream>
 
 class MapLayer final : public sf::Drawable
 {
