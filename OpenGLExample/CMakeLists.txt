@@ -24,14 +24,17 @@ SET (CMAKE_CXX_FLAGS_RELEASE "-O4 -DNDEBUG")
 find_package(TMXLITE REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(SDL2_Image REQUIRED)
+find_package(OpenGL REQUIRED)
 
 include_directories(
   ${TMXLITE_INCLUDE_DIR}
   ${SDL2_INCLUDE_DIR}
   ${SDL2_IMAGE_INCLUDE_DIR}
+  ${OPENGL_INCLUDE_DIR}
   src)
 
-set(PROJECT_SRC src/main.cpp)
+SET(PROJECT_DIR ${CMAKE_SOURCE_DIR}/src)
+include(${PROJECT_DIR}/CMakeLists.txt)
 
 if(WIN32)
   add_executable(${PROJECT_NAME} WIN32 ${PROJECT_SRC})
@@ -42,7 +45,8 @@ endif()
 target_link_libraries(${PROJECT_NAME}
   ${TMXLITE_LIBRARIES}
   ${SDL2_LIBRARY}
-  ${SDL2_IMAGE_LIBRARIES})
+  ${SDL2_IMAGE_LIBRARIES}
+  ${OPENGL_LIBRARIES})
 
 #install executable
 install(TARGETS ${PROJECT_NAME}

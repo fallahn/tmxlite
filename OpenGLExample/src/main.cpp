@@ -25,7 +25,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#include <tmxlite/Map.hpp>
+#include <Game.hpp>
 
 #include <SDL2/SDL.h>
 
@@ -39,11 +39,8 @@ namespace
 
 int main()
 {
-    tmx::Map map;
-    map.load("assets/demo.tmx");
-
     SDL_Window* window = nullptr;
-    SDL_Surface* surface = nullptr;
+    SDL_GLContext context = nullptr;
     
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -51,20 +48,35 @@ int main()
     }
     else
     {
-        window = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
+        window = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_OPENGL);
         if(!window)
         {
             std::cout << "Failed to create window *sadface*" << std::endl;
         }
         else
         {
-            surface = SDL_GetWindowSurface(window);
-            SDL_FillRect(surface, nullptr, SDL_MapRGB(surface->format, 220, 120, 45));
-            SDL_UpdateWindowSurface(window);
-            SDL_Delay(1000);
-        }
+			context = SDL_GL_CreateContext(window);
+			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+			
+			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+			
+			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+			
+			SDL_GL_SetSwapInterval(1); //vsync
+			
+			int value = 0;
+			SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &value);
+			std::cout << "Got context with OpenGL Version: " << value;
+			SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &value);
+			std::cout << "." << value << std::endl;
+			
+			Game game;
+			game.run(window);
+		}
     }
     
+    SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
     SDL_Quit();
     
