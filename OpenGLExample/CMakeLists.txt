@@ -25,12 +25,14 @@ find_package(TMXLITE REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(SDL2_Image REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(GLM REQUIRED)
 
 include_directories(
   ${TMXLITE_INCLUDE_DIR}
   ${SDL2_INCLUDE_DIR}
   ${SDL2_IMAGE_INCLUDE_DIR}
   ${OPENGL_INCLUDE_DIR}
+  ${GLM_INCLUDE_DIR}
   src)
 
 SET(PROJECT_DIR ${CMAKE_SOURCE_DIR}/src)

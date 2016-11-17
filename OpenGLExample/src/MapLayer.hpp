@@ -25,40 +25,29 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#ifndef OGL_GAME_HPP_
-#define OGL_GAME_HPP_
+#ifndef MAPLAYER_HPP_
+#define MAPLAYER_HPP_
 
-#include <SDL2/SDL.h>
-#include <glm/matrix.hpp>
+namespace tmx
+{
+    class Map;
+}
 
-#include <MapLayer.hpp>
-
-#include <memory>
-#include <vector>
-
-class Game final
+class MapLayer final
 {
 public:
-	Game();
-	~Game();
-	
-	void run(SDL_Window*);
-	
+    MapLayer(const tmx::Map&, int);
+    ~MapLayer();
+    
+    MapLayer(const MapLayer&) = delete;
+    MapLayer& operator = (const MapLayer&) = delete;
+
+    void draw();
+
 private:
 
-	void doEvents();
-	void update(float);
-	void draw(SDL_Window*);
-	
-	std::vector<std::unique_ptr<MapLayer>> m_mapLayers;
-	void loadMap();
-	
-	glm::mat4 m_projectionMatrix;
-	
-	unsigned m_shader;
-	void initGLStuff();
-	void loadShader();
-
+    unsigned m_vbo;
+    void createResources(const tmx::Map&);
 };
 
-#endif //OGL_GAME_HPP_
+#endif //MAPLAYER_HPP_

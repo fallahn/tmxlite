@@ -25,40 +25,46 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#ifndef OGL_GAME_HPP_
-#define OGL_GAME_HPP_
+// based on fragment shader at 
+// http://www.the2dgame.com/index?page=articles&ref=ART4
 
-#include <SDL2/SDL.h>
-#include <glm/matrix.hpp>
+#ifndef SHADER_INL_
+#define SHADER_INL_
 
-#include <MapLayer.hpp>
+#include <string>
 
-#include <memory>
-#include <vector>
+static const std::string vertexShader = R"(
+    #version 130
+    
+    in vec3 a_position;
+    in vec2 a_texCoord;
+    
+    uniform mat4 u_projectionMatrix;
+    
+    out vec2 v_texCoord;
+    
+    void main()
+    {
+        gl_Position = u_projectionMatrix * vec4(a_position, 1.0);
+        //gl_Position = vec4(a_position, 1.0);
+        
+        v_texCoord = a_texCoord;
+    })";
+    
 
-class Game final
-{
-public:
-	Game();
-	~Game();
-	
-	void run(SDL_Window*);
-	
-private:
+static const std::string fragmentShader = R"(
+    #version 130
+    
+    in vec2 v_texCoord;
+    
+    uniform sampler2D u_tileMap;
+    uniform usampler2D u_lookupMap;
+    
+    out vec4 colour;
+    
+    void main()
+    {
+        colour = vec4(1.0, 0.0, 0.0, 1.0);
+    })";
 
-	void doEvents();
-	void update(float);
-	void draw(SDL_Window*);
-	
-	std::vector<std::unique_ptr<MapLayer>> m_mapLayers;
-	void loadMap();
-	
-	glm::mat4 m_projectionMatrix;
-	
-	unsigned m_shader;
-	void initGLStuff();
-	void loadShader();
-
-};
-
-#endif //OGL_GAME_HPP_
+#endif //SHADER_INL_
