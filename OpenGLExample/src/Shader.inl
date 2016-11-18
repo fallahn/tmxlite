@@ -64,7 +64,7 @@ static const std::string fragmentShader = R"(
     
     void main()
     {
-        colour = vec4(1.0, 0.0, 0.0, 1.0);
+        colour = texture(u_tileMap, v_texCoord);
     })";
 
 #endif //SHADER_INL_

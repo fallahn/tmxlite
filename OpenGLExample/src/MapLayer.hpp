@@ -28,6 +28,8 @@ source distribution.
 #ifndef MAPLAYER_HPP_
 #define MAPLAYER_HPP_
 
+#include <vector>
+
 namespace tmx
 {
     class Map;
@@ -36,7 +38,7 @@ namespace tmx
 class MapLayer final
 {
 public:
-    MapLayer(const tmx::Map&, int);
+    MapLayer(const tmx::Map&, int, const std::vector<unsigned>&);
     ~MapLayer();
     
     MapLayer(const MapLayer&) = delete;
@@ -45,6 +47,8 @@ public:
     void draw();
 
 private:
+
+    const std::vector<unsigned>& m_tilesetTextures;
 
     unsigned m_vbo;
     void createResources(const tmx::Map&);

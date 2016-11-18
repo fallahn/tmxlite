@@ -26,13 +26,14 @@ source distribution.
 *********************************************************************/
 
 #include <MapLayer.hpp>
-#include <GLExtensions.hpp>
+#include <OpenGL.hpp>
 #include <GLCheck.hpp>
 
 #include <tmxlite/Map.hpp>
 
-MapLayer::MapLayer(const tmx::Map& map, int layer)
-  : m_vbo(0)
+MapLayer::MapLayer(const tmx::Map& map, int layer, const std::vector<unsigned>& textures)
+  : m_tilesetTextures   (textures),
+  m_vbo                 (0)
 {
     createResources(map);
 }
@@ -49,6 +50,9 @@ MapLayer::~MapLayer()
 //public
 void ::MapLayer::draw()
 {
+    glCheck(glActiveTexture(GL_TEXTURE0));
+    glCheck(glBindTexture(GL_TEXTURE_2D, m_tilesetTextures[0]));
+    
     glCheck(glEnableVertexAttribArray(0));
     glCheck(glEnableVertexAttribArray(1));
     glCheck(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));

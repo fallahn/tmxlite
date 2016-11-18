@@ -28,6 +28,7 @@ source distribution.
 #include <Game.hpp>
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #include <iostream>
 
@@ -71,11 +72,14 @@ int main()
 			SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &value);
 			std::cout << "." << value << std::endl;
 			
+            IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
+            
 			Game game;
 			game.run(window);
 		}
     }
     
+    IMG_Quit();
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
     SDL_Quit();

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stddef.h>
-#include <GLExtensions.hpp>
+#include <OpenGL.hpp>
 
 #if defined(__APPLE__)
 #include <dlfcn.h>

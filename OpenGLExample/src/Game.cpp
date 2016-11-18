@@ -26,12 +26,14 @@ source distribution.
 *********************************************************************/
 
 #include <Game.hpp>
-#include <GLExtensions.hpp>
+#include <OpenGL.hpp>
 #include <GLCheck.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <tmxlite/Map.hpp>
+
+#include <SDL2/SDL_image.h>
 
 #include <cassert>
 #include <array>
@@ -55,6 +57,10 @@ Game::~Game()
     if(m_shader)
     {
         glCheck(glDeleteProgram(m_shader));
+    }
+    for(const auto& t : m_tileTextures)
+    {
+        glCheck(glDeleteTextures(1, &t));
     }
 }
 
@@ -125,6 +131,9 @@ void Game::draw(SDL_Window* window)
     glCheck(glClear(GL_COLOR_BUFFER_BIT));
     glCheck(glUseProgram(m_shader));
     
+    //glCheck(glActiveTexture(GL_TEXTURE0));
+    //glCheck(glBindTexture(GL_TEXTURE_2D, m_tileTextures[0]));
+    
     for(const auto& layer : m_mapLayers)
     {
         layer->draw();
@@ -136,24 +145,40 @@ void Game::draw(SDL_Window* window)
 
 void Game::loadMap()
 {
-    //create shared resources, shader and tileset textures
-    initGLStuff();
-    
     tmx::Map map;
-    map.load("assets/demo.tmx");
+    map.load("assets/demo.tmx");    
     
+    //create shared resources, shader and tileset textures
+    initGLStuff(map);
+        
     //TODO pass reference to shader and textures to each layer
-    m_mapLayers.emplace_back(std::make_unique<MapLayer>(map, 0));
+    m_mapLayers.emplace_back(std::make_unique<MapLayer>(map, 0, m_tileTextures));
 }
 
 
-void Game::initGLStuff()
+void Game::initGLStuff(const tmx::Map& map)
 {
     m_projectionMatrix = glm::ortho(0.f, 800.f, 600.f, 0.f, -0.1f, 100.f);
     
     loadShader();
     glCheck(glUseProgram(m_shader));
     glCheck(glUniformMatrix4fv(glGetUniformLocation(m_shader, "u_projectionMatrix"), 1, GL_FALSE, &m_projectionMatrix[0][0]));
+    
+    //we'll make sure the current tile texture is active in 0, and lookup texture is active in 1
+    glCheck(glUniform1i(glGetUniformLocation(m_shader, "u_tileMap"), 0));
+    glCheck(glUniform1i(glGetUniformLocation(m_shader, "u_lookupMap"), 1));
+    
+    const auto& tilesets = map.getTilesets();
+    for(const auto& ts : tilesets)
+    {
+        loadTexture(ts.getImagePath());
+    }    
+    
+    
+    glCheck(glClearColor(0.6f, 0.8f, 0.92f, 1.f));
+    glCheck(glEnable(GL_BLEND));
+    glCheck(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    glCheck(glBlendEquation(GL_FUNC_ADD));
 }
 
 void Game::loadShader()
@@ -241,7 +266,46 @@ void Game::loadShader()
     glCheck(glDeleteShader(fragID));
 }
 
+void Game::loadTexture(const std::string& path)
+{
+    /*static unsigned char flunge[] = 
+    {
+        255, 128, 255, 128, 255, 128, 255, 128,
+        255, 128, 255, 128, 255, 128, 255, 128,
+        255, 128, 255, 128, 255, 128, 255, 128,
+        255, 128, 255, 128, 255, 128, 255, 128
+    };*/
+    
+    auto img = IMG_Load(path.c_str());
+    if(img)
+    {
+        SDL_LockSurface(img);
+        
+        m_tileTextures.emplace_back(0);
+        auto& texture = m_tileTextures.back();
+                        
+        GLint format = (img->format->BitsPerPixel == 32) ? GL_RGBA : GL_RGB;
+                
+        glCheck(glGenTextures(1, &texture));
+        glCheck(glBindTexture(GL_TEXTURE_2D, texture));
+        glCheck(glTexImage2D(GL_TEXTURE_2D, 0, format, img->w, img->h, 0, format, GL_UNSIGNED_BYTE, img->pixels));
+        //glCheck(glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, 4, 4, 0, GL_RG, GL_UNSIGNED_BYTE, flunge));
 
+        glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+        glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+        glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+        glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+        
+        SDL_UnlockSurface(img);
+        SDL_FreeSurface(img);
+        
+        std::cout << "Loaded " << path << std::endl;
+    }
+    else
+    {
+        std::cout << "Failed to load " << path << std::endl;
+    }
+}
 
 
 
