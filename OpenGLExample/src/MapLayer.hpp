@@ -38,7 +38,7 @@ namespace tmx
 class MapLayer final
 {
 public:
-    MapLayer(const tmx::Map&, int, const std::vector<unsigned>&);
+    MapLayer(const tmx::Map&, std::size_t, const std::vector<unsigned>&);
     ~MapLayer();
     
     MapLayer(const MapLayer&) = delete;
@@ -50,8 +50,15 @@ private:
 
     const std::vector<unsigned>& m_tilesetTextures;
 
-    unsigned m_vbo;
-    void createResources(const tmx::Map&);
+    struct Subset final
+    {
+        unsigned vbo = 0;
+        unsigned texture = 0;
+        unsigned lookup = 0;
+    };
+    std::vector<Subset> m_subsets;
+
+    void createSubsets(const tmx::Map&, std::size_t);
 };
 
 #endif //MAPLAYER_HPP_

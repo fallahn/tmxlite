@@ -4,7 +4,7 @@
   <property name="test map property" type="float" value="12.43"/>
  </properties>
  <tileset firstgid="1" source="../images/tilemap/platform.tsx"/>
- <tileset firstgid="42" name="tileset02" tilewidth="32" tileheight="32" tilecount="0" columns="6">
+ <tileset firstgid="43" name="tileset02" tilewidth="32" tileheight="32" tilecount="24" columns="6">
   <image source="../images/tilemap/tileset02.png" width="192" height="128"/>
  </tileset>
  <layer name="Far" width="200" height="40">
@@ -17,7 +17,7 @@
    <property name="test layer property" type="bool" value="true"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztm9tOwzAQBZcH4AX4ABBlKf3/byRVCUqjXBpnbe/WM9IRvFA5jcdeXzgJAExx+svzQgBaZeyHTPwO0CpL84cIfkDbDP3owY90Hmo3AEyZmz9EWH+kcOxyGOWnaotgD70fU+AG5OS9y8dKPqu17sKUH9RWABfm/KC2ygPrk1gs1VdgB+uSmOAHRCfnnIwfEJmpedlybsYPW8bvixoqNvjhH9b0Nrx2eRnlbeVv8MMnc3UD81IaS9/n0neJH3lJGbPuhZR5z9tciR/5SB2ztuCtP2mXr0z5LvcY/7Tsx9TYHmF893SWonLdh0+ZU9qTVv2gvt+HShkf5lLKkVb9gDRU6npR2hH8gDVUytVP3uot/IhLzhpRxa8TJecS/IAelVhOlHAEP+CMSv3+benIed97bn9yKcO9y8fB57aAt7MCL6jU79eWsTpvGX7mvXCuyfvnO0z8ZO/2GpX6/TlCoD1U6ve7KIF6bK2Tl873b6khVeKuwfGjHVTy3VW6ta4m+LGFW8Zyi/tZKvXfOcGPLaydt1mcvakwhkdMdLzv3argReRERsXn/w70qNR/v6Q9P1S2jcmlHdnaPuI3kVBJ73clHNnTPuIzUVDZ/6w5HbFoH/EX76jYjsk5HFHD9hFf8YhK3jMtq3V7387a75Dky5Ok3Qe2yvjMTQs++x5HSraT1E2Nuw5e7kBEaScpn1/FZUq6
+   eJztm9tOw0AMBc0DPAEfAKIY6P9/I6kgqA25NInXa3dnpCOeqJxmZ+89CgCMcfwNAPwHPwCmwQ+AafDDlrvaBYAp+GHLZ5fDIF9VK4I94AfU4qXL60LeqlX3A34ATIMfvrA+yQV++MC6JCf4AdkpOSbjB2RmbFy2HJvxw5bh+2IOlRv8iA9rehueujwO8rzwP/gRk6l5A+PSNua+z7nvEj/KsqXPuhW2jHvRxkr8KMfWPmsN0dqTdnkvlA+/x/ijZT/G+vYM/XuksxSVyzZ8LBxvT1r1g/n9PlR8fJiKlyOt+gHbUKnrhbcj+AFLqPjNn6LNt/AjLyXniCpxnfAcS/ADelRyOeHhCH7ACZX67dvSkdO+99T+5FzO9y7vzz63BaKdFURBpX67tozVecv5Z94Kpzl5/3yHkb/s3V6iUr89Zwi0h0r9dpclUI+18+S58/1r5pAqedfg+NEOKuXuKl07ryb4sYZr+nKL+1kq9d85wY81LJ23WZy9qdCHZ0x2ou/dquBF5mRGJeZvB3pU6r9f0p4fKuv6ZG9H1tZH4iYTKtvbnYcje+ojMZMFlf3PWtIRi/pIvERHxbZPLuGIGtZHYiUiKmXPtKzW7X2dtd8hKZcH2XYf2CrDMzd1fPY9jnjWSeqmxl2HKHcgstRJ/PMNRu5JzA==
   </data>
  </layer>
  <layer name="Near" width="200" height="40">
@@ -86,7 +86,7 @@
   </object>
  </objectgroup>
  <imagelayer name="Test Image Layer" offsetx="4224" offsety="1536">
-  <image source="../images/mask_test.png"/>
+  <image source="../images/mask_test.png" width="128" height="128"/>
   <properties>
    <property name="image layer property" value="buns"/>
   </properties>
