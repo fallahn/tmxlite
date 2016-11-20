@@ -139,8 +139,13 @@ private:
                             {
                                 m_chunkArrays.emplace_back(std::make_unique<ChunkArray>(*tr.find(ts->getImagePath())->second));
                                 auto texSize = m_chunkArrays.back()->getTextureSize();
-                                tsTileCount.x = texSize.x / tileSize.x;
-                                tsTileCount.y = texSize.y / tileSize.y;
+                                if (ts->getSpacing() > 0) {
+                                    tsTileCount.x = (texSize.x + 1) / (tileSize.x + ts->getSpacing());
+                                    tsTileCount.y = (texSize.y + 1) / (tileSize.y + ts->getSpacing());
+                                } else {
+                                    tsTileCount.x = texSize.x / tileSize.x;
+                                    tsTileCount.y = texSize.y / tileSize.y;
+                                }
                                 chunkArrayCreated = true;
                             }
                             auto& ca = m_chunkArrays.back();
@@ -148,8 +153,8 @@ private:
                             
                             auto idIndex = tileIDs[idx].ID - ts->getFirstGID();
                             sf::Vector2f tileIndex(idIndex % tsTileCount.x, idIndex / tsTileCount.x);
-                            tileIndex.x *= tileSize.x;
-                            tileIndex.y *= tileSize.y;
+                            tileIndex.x = tileIndex.x * tileSize.x + tileIndex.x * ts->getSpacing();
+                            tileIndex.y = tileIndex.y * tileSize.y + tileIndex.y * ts->getSpacing();
                             Tile tile = 
                             {
                                 sf::Vertex(tileOffset, vertColour, tileIndex),
