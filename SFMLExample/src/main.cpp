@@ -30,7 +30,7 @@ source distribution.
 
 #include <tmxlite/Map.hpp>
 
-#include "../../tmxlite/include/render/SFMLOrthogonalLayer.hpp"
+#include "SFMLOrthogonalLayer.hpp"
 
 int main()
 {

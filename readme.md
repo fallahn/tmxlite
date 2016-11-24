@@ -7,10 +7,10 @@ Supports tmx maps up to 0.16 with CSV, zlib and base64 compression. The parser
 is renderer agnostic, and is cross platform on Windows, linux and OS X. It 
 should reasonably work on mobile platforms too.
 
-As the library contains no specific rendering functions some classes for rendering
-with various libraries can be found in the `include/render` directory. These are meant
+As the library contains no specific rendering functions some example projects
+are included, along with the relevant CMake files. These are meant
 mostly for guidance and are not 100% optimised, but should get you off on the right
-foot when using libraries such as SFML or OpenGL directly. Examples for any specific
+foot when using libraries such as SFML or SDL2/OpenGL. Examples for any specific
 rendering library are welcome via a pull request.
 
 #####Building
