@@ -146,32 +146,30 @@ bool Map::load(const std::string& path)
     }
 
     attribString = mapNode.attribute("renderorder").as_string();
-    if (attribString.empty())
+    //this property is optional for older version of map files
+    if (!attribString.empty())
     {
-        Logger::log("missing render-order attribute, map not loaded.", Logger::Type::Error);
-        return reset();
-    }
-
-    if (attribString == "right-down")
-    {
-        m_renderOrder = RenderOrder::RightDown;
-    }
-    else if (attribString == "right-up")
-    {
-        m_renderOrder = RenderOrder::RightUp;
-    }
-    else if (attribString == "left-down")
-    {
-        m_renderOrder = RenderOrder::LeftDown;
-    }
-    else if (attribString == "left-up")
-    {
-        m_renderOrder = RenderOrder::LeftUp;
-    }
-    else
-    {
-        Logger::log(attribString + ": invalid render order. Map not loaded.", Logger::Type::Error);
-        return reset();
+        if (attribString == "right-down")
+        {
+            m_renderOrder = RenderOrder::RightDown;
+        }
+        else if (attribString == "right-up")
+        {
+            m_renderOrder = RenderOrder::RightUp;
+        }
+        else if (attribString == "left-down")
+        {
+            m_renderOrder = RenderOrder::LeftDown;
+        }
+        else if (attribString == "left-up")
+        {
+            m_renderOrder = RenderOrder::LeftUp;
+        }
+        else
+        {
+            Logger::log(attribString + ": invalid render order. Map not loaded.", Logger::Type::Error);
+            return reset();
+        }
     }
 
     unsigned width = mapNode.attribute("width").as_int();
