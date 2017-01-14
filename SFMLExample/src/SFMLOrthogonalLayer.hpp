@@ -53,6 +53,7 @@ https://github.com/fallahn/xygine/blob/master/xygine/src/components/ComponentTil
 #include <string>
 #include <limits>
 #include <iostream>
+#include <cmath>
 
 class MapLayer final : public sf::Drawable
 {
