@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="15" height="4" tilewidth="12" tileheight="12" nextobjectid="1">
+ <tileset firstgid="1" name="single set" tilewidth="12" tileheight="12" tilecount="480" columns="30">
+  <image source="tiles/cold_desert_set.png" width="360" height="192"/>
+ </tileset>
+ <tileset firstgid="481" name="collection set" tilewidth="24" tileheight="24" tilecount="26" columns="0">
+  <tile id="0">
+   <image width="24" height="24" source="tiles/cold_desert_set_000.png"/>
+  </tile>
+  <tile id="1">
+   <image width="24" height="24" source="tiles/cold_desert_set_001.png"/>
+  </tile>
+  <tile id="2">
+   <image width="24" height="24" source="tiles/cold_desert_set_002.png"/>
+  </tile>
+  <tile id="3">
+   <image width="24" height="24" source="tiles/cold_desert_set_003.png"/>
+  </tile>
+  <tile id="4">
+   <image width="24" height="24" source="tiles/cold_desert_set_004.png"/>
+  </tile>
+  <tile id="5">
+   <image width="24" height="24" source="tiles/cold_desert_set_005.png"/>
+  </tile>
+  <tile id="6">
+   <image width="24" height="24" source="tiles/cold_desert_set_006.png"/>
+  </tile>
+  <tile id="7">
+   <image width="24" height="24" source="tiles/cold_desert_set_007.png"/>
+  </tile>
+  <tile id="8">
+   <image width="24" height="24" source="tiles/cold_desert_set_008.png"/>
+  </tile>
+  <tile id="9">
+   <image width="24" height="24" source="tiles/cold_desert_set_009.png"/>
+  </tile>
+  <tile id="10">
+   <image width="24" height="24" source="tiles/cold_desert_set_010.png"/>
+  </tile>
+  <tile id="11">
+   <image width="24" height="24" source="tiles/cold_desert_set_011.png"/>
+  </tile>
+  <tile id="12">
+   <image width="24" height="24" source="tiles/cold_desert_set_012.png"/>
+  </tile>
+  <tile id="13">
+   <image width="24" height="24" source="tiles/cold_desert_set_013.png"/>
+  </tile>
+  <tile id="14">
+   <image width="24" height="24" source="tiles/cold_desert_set_014.png"/>
+  </tile>
+  <tile id="15">
+   <image width="24" height="24" source="tiles/cold_desert_set_015.png"/>
+  </tile>
+  <tile id="16">
+   <image width="24" height="24" source="tiles/cold_desert_set_110.png"/>
+  </tile>
+  <tile id="17">
+   <image width="24" height="24" source="tiles/cold_desert_set_111.png"/>
+  </tile>
+  <tile id="18">
+   <image width="24" height="24" source="tiles/cold_desert_set_112.png"/>
+  </tile>
+  <tile id="19">
+   <image width="24" height="24" source="tiles/cold_desert_set_113.png"/>
+  </tile>
+  <tile id="20">
+   <image width="24" height="24" source="tiles/cold_desert_set_114.png"/>
+  </tile>
+  <tile id="21">
+   <image width="24" height="24" source="tiles/cold_desert_set_115.png"/>
+  </tile>
+  <tile id="22">
+   <image width="24" height="24" source="tiles/cold_desert_set_116.png"/>
+  </tile>
+  <tile id="23">
+   <image width="24" height="24" source="tiles/cold_desert_set_117.png"/>
+  </tile>
+  <tile id="24">
+   <image width="24" height="24" source="tiles/cold_desert_set_118.png"/>
+  </tile>
+  <tile id="25">
+   <image width="24" height="24" source="tiles/cold_desert_set_119.png"/>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="15" height="4">
+  <data encoding="base64" compression="zlib">
+   eJxjYBhZAAAA8AAB
+  </data>
+ </layer>
+</map>

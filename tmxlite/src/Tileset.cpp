@@ -276,17 +276,25 @@ void Tileset::parseTileNode(const pugi::xml_node& node)
         }
         else if (name == "image")
         {
-            std::string attribString = node.attribute("source").as_string();
+            std::string attribString = child.attribute("source").as_string();
             if (attribString.empty())
             {
                 Logger::log("Tile image path missing", Logger::Type::Warning);
                 continue;
             }
             tile.imagePath = resolveFilePath(attribString, m_workingDir);
-            if (node.attribute("trans"))
+            if (child.attribute("trans"))
             {
-                attribString = node.attribute("trans").as_string();
+                attribString = child.attribute("trans").as_string();
                 m_transparencyColour = colourFromString(attribString);
+            }
+            if (child.attribute("width"))
+            {
+                tile.imageSize.x = child.attribute("width").as_uint();
+            }
+            if (child.attribute("height"))
+            {
+                tile.imageSize.y = child.attribute("height").as_uint();
             }
         }
         else if (name == "animation")

@@ -62,7 +62,7 @@ namespace tmx
         struct Tile final
         {
             std::uint32_t ID = 0;
-            std::array<std::int32_t, 4u> terrainIndices;
+            std::array<std::int32_t, 4u> terrainIndices{};
             std::uint32_t probability = 100;
 
             /*!
@@ -83,6 +83,7 @@ namespace tmx
             std::vector<Property> properties;
             ObjectGroup objectGroup;
             std::string imagePath;
+            Vector2u imageSize;
         };
             
         /*!
