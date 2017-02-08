@@ -63,12 +63,17 @@ namespace tmx
         colour to use as transparency
         */
         bool hasTransparency() const { return m_hasTransparency; }
+        /*!
+        \brief Returns the size of the image of the image layer in pixels.
+        */
+        const Vector2u& getImageSize() const { return m_imageSize; }
 
     private:
         std::string m_workingDir;
         std::string m_filePath;
         Colour m_transparencyColour;
         bool m_hasTransparency;
+        Vector2u m_imageSize;
     };
 }
 #endif //TMXLITE_IMAGELAYER_HPP_
