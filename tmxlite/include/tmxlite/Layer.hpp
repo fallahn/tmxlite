@@ -88,7 +88,7 @@ namespace tmx
         \brief Returns the offset from the top left corner
         of the layer, in pixels
         */
-        const Vector2u& getOffset() const { return m_offset; }
+        const Vector2i& getOffset() const { return m_offset; }
         /*!
         \brief Returns the list of properties of this layer
         */
@@ -99,14 +99,14 @@ namespace tmx
         void setName(const std::string& name) { m_name = name; }
         void setOpacity(float opacity) { m_opacity = opacity; }
         void setVisible(bool visible) { m_visible = visible; }
-        void setOffset(std::uint32_t x, std::uint32_t y) { m_offset = Vector2u(x, y); }
+        void setOffset(std::int32_t x, std::int32_t y) { m_offset = Vector2i(x, y); }
         void addProperty(const pugi::xml_node& node) { m_properties.emplace_back(); m_properties.back().parse(node); }
 
     private:
         std::string m_name;
         float m_opacity;
         bool m_visible;
-        Vector2u m_offset;
+        Vector2i m_offset;
 
         std::vector<Property> m_properties;
     };
