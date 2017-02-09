@@ -65,6 +65,13 @@ void ImageLayer::parse(const pugi::xml_node& node)
                 Logger::log("Image Layer has missing source property", Logger::Type::Warning);
                 return;
             }
+
+            if (child.attribute("width") &&  child.attribute("height"))
+            {
+            	m_imageSize.x = child.attribute("width").as_uint();
+            	m_imageSize.y = child.attribute("height").as_uint();
+            }
+
             m_filePath = resolveFilePath(attribName, m_workingDir);
             if (child.attribute("trans"))
             {
