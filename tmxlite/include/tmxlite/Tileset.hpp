@@ -109,6 +109,11 @@ namespace tmx
         */
         std::uint32_t getFirstGID() const { return m_firstGID; }
         /*!
+        \brief Returns the last GID of this tile set.
+        This is the ID of the last tile in the tile set.
+        */
+        std::uint32_t getLastGID() const { return m_firstGID + getTileCount(); }
+        /*!
         \brief Returns the name of this tile set.
         */
         const std::string& getName() const { return m_name; }
