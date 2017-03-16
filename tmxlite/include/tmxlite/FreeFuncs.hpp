@@ -56,6 +56,8 @@ René Nyffenegger rene.nyffenegger@adp-gmbh.ch
 #include <tmxlite/detail/Log.hpp>
 #include <tmxlite/Types.hpp>
 
+#include <tmxlite/Android.hpp>
+
 #include <string>
 #include <sstream>
 #include <vector>
@@ -130,7 +132,7 @@ namespace tmx
             }
         }
 
-        return std::move(ret);
+        return ret;
     }
 
     static inline Colour colourFromString(std::string str)
