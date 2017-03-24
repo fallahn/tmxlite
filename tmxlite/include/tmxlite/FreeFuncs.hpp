@@ -28,7 +28,7 @@ source distribution.
 /*********************************************************************
 base64_decode
 
-Copyright (C) 2004-2008 René Nyffenegger
+Copyright (C) 2004-2008 RenÃ© Nyffenegger
 This source code is provided 'as-is', without any express or implied
 warranty. In no event will the author be held liable for any damages
 arising from the use of this software.
@@ -46,13 +46,12 @@ appreciated but is not required.
 misrepresented as being the original source code.
 3. This notice may not be removed or altered from any source distribution.
 
-René Nyffenegger rene.nyffenegger@adp-gmbh.ch
+RenÃ© Nyffenegger rene.nyffenegger@adp-gmbh.ch
 *********************************************************************/
 
 #ifndef TMXLITE_TILE_FUNCS_HPP_
 #define TMXLITE_TILE_FUNCS_HPP_
 
-#include <tmxlite/detail/pugixml.hpp>
 #include <tmxlite/detail/Log.hpp>
 #include <tmxlite/Types.hpp>
 

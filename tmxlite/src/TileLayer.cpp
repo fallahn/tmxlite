@@ -27,7 +27,7 @@ source distribution.
 
 #include <tmxlite/FreeFuncs.hpp>
 #include <tmxlite/TileLayer.hpp>
-#include <tmxlite/detail/pugixml.hpp>
+#include "detail/pugixml.hpp"
 #include <tmxlite/detail/Log.hpp>
 
 #include <sstream>
