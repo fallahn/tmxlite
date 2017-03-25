@@ -55,7 +55,7 @@ René Nyffenegger rene.nyffenegger@adp-gmbh.ch
 #include <tmxlite/detail/Log.hpp>
 #include <tmxlite/Types.hpp>
 
-#include <tmxlite/Android.hpp>
+#include <tmxlite/Detail/Android.hpp>
 
 #include <string>
 #include <sstream>

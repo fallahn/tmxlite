@@ -25,7 +25,6 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#include <tmxlite/Android.hpp>
 
 #include "detail/pugixml.hpp"
 #include <tmxlite/Map.hpp>
@@ -34,7 +33,7 @@ source distribution.
 #include <tmxlite/ImageLayer.hpp>
 #include <tmxlite/TileLayer.hpp>
 #include <tmxlite/detail/Log.hpp>
-
+#include <tmxlite/Detail/Android.hpp>
 
 #include <queue>
 

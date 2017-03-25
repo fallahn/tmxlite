@@ -40,9 +40,4 @@
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\tmxlite\include\tmxlite\Android.hpp">
-      <Filter>include</Filter>
-    </ClInclude>
-  </ItemGroup>
 </Project>

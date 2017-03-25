@@ -200,9 +200,6 @@
     <ClCompile Include="..\tmxlite\src\TileLayer.cpp" />
     <ClCompile Include="..\tmxlite\src\Tileset.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\tmxlite\include\tmxlite\Android.hpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>
