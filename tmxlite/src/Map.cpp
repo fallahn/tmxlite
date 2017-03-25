@@ -25,6 +25,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
+#include "detail/pugixml.hpp"
 #include <tmxlite/Map.hpp>
 #include <tmxlite/FreeFuncs.hpp>
 #include <tmxlite/ObjectGroup.hpp>

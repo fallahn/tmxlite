@@ -26,7 +26,7 @@ source distribution.
 *********************************************************************/
 
 #include <tmxlite/Property.hpp>
-#include <tmxlite/detail/pugixml.hpp>
+#include "detail/pugixml.hpp"
 #include <tmxlite/detail/Log.hpp>
 
 using namespace tmx;
