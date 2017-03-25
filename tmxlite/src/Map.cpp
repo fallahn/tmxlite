@@ -33,7 +33,7 @@ source distribution.
 #include <tmxlite/ImageLayer.hpp>
 #include <tmxlite/TileLayer.hpp>
 #include <tmxlite/detail/Log.hpp>
-#include <tmxlite/Detail/Android.hpp>
+#include <tmxlite/detail/Android.hpp>
 
 #include <queue>
 
