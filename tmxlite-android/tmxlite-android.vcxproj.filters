@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="..\tmxlite\src\Android.hpp" />
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="src">
       <UniqueIdentifier>{7e2b9f2c-60e4-4e22-ab24-562f7e88d5e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{f4b7a58c-5eff-4ef0-ad43-c0ca58641de3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -31,14 +30,19 @@
     <ClCompile Include="..\tmxlite\src\Property.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\tmxlite\src\pugixml.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\tmxlite\src\TileLayer.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\tmxlite\src\Tileset.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\tmxlite\src\detail\pugixml.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\tmxlite\include\tmxlite\Android.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

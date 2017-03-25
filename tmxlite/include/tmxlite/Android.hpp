@@ -24,9 +24,10 @@ and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any
 source distribution.
 *********************************************************************/
-#ifdef __ANDROID__
+
 #ifndef ANDROID_INC_HPP_
 #define ANDROID_INC_HPP_
+#ifdef __ANDROID__
 
 #include <string>
 #include <sstream>
@@ -42,13 +43,11 @@ namespace std
 		os << value;
 		return os.str();
 	}
-
-	int stoi(const std::string& str)
-	{
-		return std::strtol(str.c_str(), 0, 10);
-	}
 }
 
+#define STOI(str) std::strtol(str.c_str(), 0, 10)
+#else
+#define STOI(str) std::stoi(str)
 
-#endif // ANDROID_INC_HPP_
 #endif // __ANDROID__
+#endif // ANDROID_INC_HPP_

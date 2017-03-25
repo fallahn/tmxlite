@@ -25,6 +25,8 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
+#include <tmxlite/Android.hpp>
+
 #include "detail/pugixml.hpp"
 #include <tmxlite/Map.hpp>
 #include <tmxlite/FreeFuncs.hpp>
@@ -32,6 +34,7 @@ source distribution.
 #include <tmxlite/ImageLayer.hpp>
 #include <tmxlite/TileLayer.hpp>
 #include <tmxlite/detail/Log.hpp>
+
 
 #include <queue>
 
@@ -114,8 +117,8 @@ bool Map::load(const std::string& path)
         return reset();
     }
 
-    m_version.upper = std::stoi(attribString.substr(0, pointPos));
-    m_version.lower = std::stoi(attribString.substr(pointPos + 1));
+    m_version.upper = STOI(attribString.substr(0, pointPos));
+    m_version.lower = STOI(attribString.substr(pointPos + 1));
 
     attribString = mapNode.attribute("orientation").as_string();
     if (attribString.empty())
