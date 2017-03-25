@@ -264,6 +264,7 @@
     <ClInclude Include="include\tmxlite\Types.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\detail\pugixml.cpp" />
     <ClCompile Include="src\FreeFuncs.cpp" />
     <ClCompile Include="src\ImageLayer.cpp" />
     <ClCompile Include="src\Map.cpp" />
@@ -271,7 +272,6 @@
     <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\ObjectGroup.cpp" />
     <ClCompile Include="src\Property.cpp" />
-    <ClCompile Include="src\pugixml.cpp" />
     <ClCompile Include="src\TileLayer.cpp" />
     <ClCompile Include="src\Tileset.cpp" />
   </ItemGroup>
