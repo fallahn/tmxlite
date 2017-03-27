@@ -180,7 +180,6 @@ void Game::initGLStuff(const tmx::Map& map)
 void Game::loadShader()
 {
     GLuint vertID = glCreateShader(GL_VERTEX_SHADER);
-    GLuint fragID = glCreateShader(GL_FRAGMENT_SHADER);
     
     //compile / check vert shader
     auto srcPtr = vertexShader.c_str();
@@ -209,6 +208,7 @@ void Game::loadShader()
     }
     
     //compile / check frag shader
+    GLuint fragID = glCreateShader(GL_FRAGMENT_SHADER);    
     srcPtr = fragmentShader.c_str();
     glCheck(glShaderSource(fragID, 1, &srcPtr, nullptr));
     glCheck(glCompileShader(fragID));
