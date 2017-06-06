@@ -57,8 +57,8 @@ void ObjectGroup::parse(const pugi::xml_node& node)
         m_colour = colourFromString(attribString);
     }
 
-    setOpacity(node.attribute("opacity").as_float());
-    setVisible(node.attribute("visible").as_bool());
+    setOpacity(node.attribute("opacity").as_float(1.f));
+    setVisible(node.attribute("visible").as_bool(true));
     setOffset(node.attribute("offsetx").as_int(), node.attribute("offsety").as_int());
 
     attribString = node.attribute("draworder").as_string();
