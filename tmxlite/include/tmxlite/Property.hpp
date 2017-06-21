@@ -29,6 +29,7 @@ source distribution.
 #define TMXLITE_PROPERTY_HPP_
 
 #include <tmxlite/Config.hpp>
+#include <tmxlite/Types.hpp>
 
 #include <string>
 #include <cassert>
@@ -57,6 +58,8 @@ namespace tmx
             Float,
             Int,
             String,
+            Colour,
+            File,
             Undef
         };
             
@@ -94,6 +97,15 @@ namespace tmx
         \brief Returns the property's value as a string
         */
         const std::string& getStringValue() const { assert(m_type == Type::String); return m_stringValue; }
+        /*!
+        \brief Returns the property's value as a Colour struct
+        */
+        const Colour& getColourValue() const { assert(m_type == Type::Colour); return m_colourValue; }
+        /*!
+        \brief Returns the file path property as a string, relative to the map file
+        */
+        const std::string& getFileValue() const { assert(m_type == Type::File); return m_stringValue; }
+
 
     private:
         union
@@ -104,6 +116,7 @@ namespace tmx
         };
         std::string m_stringValue;
         std::string m_name;
+        Colour m_colourValue;
 
         Type m_type;
     };

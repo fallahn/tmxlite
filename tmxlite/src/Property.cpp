@@ -28,6 +28,7 @@ source distribution.
 #include <tmxlite/Property.hpp>
 #include "detail/pugixml.hpp"
 #include <tmxlite/detail/Log.hpp>
+#include <tmxlite/FreeFuncs.hpp>
 
 using namespace tmx;
 
@@ -59,20 +60,32 @@ void Property::parse(const pugi::xml_node& node)
     }
     else if (attribData == "int")
     {
-        m_intValue = node.attribute("value").as_int();
+        m_intValue = node.attribute("value").as_int(0);
         m_type = Type::Int;
         return;
     }
     else if (attribData == "float")
     {
-        m_floatValue = node.attribute("value").as_float();
+        m_floatValue = node.attribute("value").as_float(0.f);
         m_type = Type::Float;
         return;
     }
-    else
+    else if(attribData == "string")
     {
         m_stringValue = node.attribute("value").as_string();
         m_type = Type::String;
+        return;
+    }
+    else if (attribData == "color")
+    {
+        m_colourValue = colourFromString(node.attribute("value").as_string("#FFFFFFFF"));
+        m_type = Type::Colour;
+        return;
+    }
+    else if (attribData == "file")
+    {
+        m_stringValue = node.attribute("value").as_string();
+        m_type = Type::File;
         return;
     }
 }

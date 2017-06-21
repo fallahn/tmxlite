@@ -3,7 +3,7 @@ tmxlite
 
 A lightweight C++14 parsing library for tmx map files created with the Tiled
 map editor. Requires no external linking, all dependencies are included.
-Supports tmx maps up to 0.16 with CSV, zlib and base64 compression. The parser
+Supports tmx maps up to 0.18 with CSV, zlib and base64 compression. The parser
 is renderer agnostic, and is cross platform on Windows, linux and OS X. It 
 has also been successfully built for Android too.
 
