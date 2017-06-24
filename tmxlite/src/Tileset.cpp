@@ -258,6 +258,7 @@ void Tileset::parseTileNode(const pugi::xml_node& node)
     }
 
     tile.probability = node.attribute("probability").as_int(100);
+    tile.type = node.attribute("type").as_string();
 
     const auto& children = node.children();
     for (const auto& child : children)

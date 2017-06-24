@@ -84,6 +84,7 @@ namespace tmx
             ObjectGroup objectGroup;
             std::string imagePath;
             Vector2u imageSize;
+            std::string type;
         };
             
         /*!
