@@ -43,12 +43,41 @@ namespace pugi
 namespace tmx
 {
     /*!
+    \brief Contains the text information stored in a Text object.
+    */
+    struct Text final
+    {
+        std::string fontFamily;
+        std::uint32_t pixelSize = 16; //!< pixels, not points
+        bool wrap = false;
+        Colour colour;
+        bool bold = false;
+        bool italic = false;
+        bool underline = false;
+        bool strikethough = false;
+        bool kerning = true;
+
+        enum class HAlign
+        {
+            Left, Centre, Right
+        }hAlign = HAlign::Left;
+
+        enum class VAlign
+        {
+            Top, Centre, Bottom
+        }vAlign = VAlign::Top;
+
+        std::string content; //!< actual string content
+    };
+    
+    /*!
     \brief Objects are stored in ObjectGroup layers.
     Objects may be rectangular, elliptical, polygonal or
     a polyline. Rectangular and elliptical Objects have their
     size determined via the AABB, whereas polygon and polyline
     shapes are defined by a list of points. Objects are 
-    rectangular by default.
+    rectangular by default. Since version 1.0 Objects also
+    support Text nodes.
     */
     class TMXLITE_EXPORT_API Object final
     {
@@ -58,11 +87,11 @@ namespace tmx
             Rectangle,
             Ellipse,
             Polygon,
-            Polyline
+            Polyline,
+            Text
         };
 
         Object();
-        ~Object() = default;
 
         /*!
         \brief Attempts to parse the given xml node and
@@ -124,6 +153,16 @@ namespace tmx
         */
         const std::vector<Property>& getProperties() const { return m_properties; }
 
+        /*!
+        \brief Returns a Text struct containing informationo about any text
+        this object may have, such as font data and formatting.
+        If an object does not contain any text information this struct will
+        be populated with default values. Use getShape() to determine
+        if this object is in fact a text object.
+        */
+        const Text& getText() const { return m_textData; }
+        Text& getText() { return m_textData; }
+
     private:
         std::uint32_t m_UID;
         std::string m_name;
@@ -138,7 +177,10 @@ namespace tmx
         std::vector<Vector2f> m_points;
         std::vector<Property> m_properties;
 
+        Text m_textData;
+
         void parsePoints(const pugi::xml_node&);
+        void parseText(const pugi::xml_node&);
     };
 }
 

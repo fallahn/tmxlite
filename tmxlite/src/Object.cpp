@@ -26,6 +26,7 @@ source distribution.
 *********************************************************************/
 
 #include <tmxlite/Object.hpp>
+#include <tmxlite/FreeFuncs.hpp>
 #include "detail/pugixml.hpp"
 #include <tmxlite/detail/Log.hpp>
 
@@ -91,6 +92,11 @@ void Object::parse(const pugi::xml_node& node)
             m_shape = Shape::Polyline;
             parsePoints(child);
         }
+        else if (attribString == "text")
+        {
+            m_shape = Shape::Text;
+            parseText(child);
+        }
     }
 }
 
@@ -131,4 +137,47 @@ void Object::parsePoints(const pugi::xml_node& node)
     {
         Logger::log("Points for polygon or polyline object are missing", Logger::Type::Warning);
     }
+}
+
+void Object::parseText(const pugi::xml_node& node)
+{
+    m_textData.bold = node.attribute("bold").as_bool(false);
+    m_textData.colour = colourFromString(node.attribute("color").as_string("#FFFFFFFF"));
+    m_textData.fontFamily = node.attribute("fontfamily").as_string();
+    m_textData.italic = node.attribute("italic").as_bool(false);
+    m_textData.kerning = node.attribute("kerning").as_bool(true);
+    m_textData.pixelSize = node.attribute("pixelsize").as_uint(16);
+    m_textData.strikethough = node.attribute("strikeout").as_bool(false);
+    m_textData.underline = node.attribute("underline").as_bool(false);
+    m_textData.wrap = node.attribute("wrap").as_bool(false);
+
+    std::string alignment = node.attribute("halign").as_string("left");
+    if (alignment == "left")
+    {
+        m_textData.hAlign = Text::HAlign::Left;
+    }
+    else if (alignment == "center")
+    {
+        m_textData.hAlign = Text::HAlign::Centre;
+    }
+    else if (alignment == "right")
+    {
+        m_textData.hAlign = Text::HAlign::Right;
+    }
+
+    alignment = node.attribute("valign").as_string("top");
+    if (alignment == "top")
+    {
+        m_textData.vAlign = Text::VAlign::Top;
+    }
+    else if (alignment == "center")
+    {
+        m_textData.vAlign = Text::VAlign::Centre;
+    }
+    else if (alignment == "bottom")
+    {
+        m_textData.vAlign = Text::VAlign::Bottom;
+    }
+
+    m_textData.content = node.text().as_string();
 }
