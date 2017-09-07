@@ -116,9 +116,9 @@ namespace tmx
         */
         const Vector2f& getPosition() const { return m_position; }
         /*!
-        \brief Returns the global Axis Align Bounding Box.
+        \brief Returns the global Axis Aligned Bounding Box.
         The AABB is positioned via the left and top properties, and
-        define the Objects width and height. This can be used to derive
+        define the Object's width and height. This can be used to derive
         the shape of the Object if it is rectangular or elliptical.
         */
         const FloatRect& getAABB() const { return m_AABB; }
@@ -154,7 +154,7 @@ namespace tmx
         const std::vector<Property>& getProperties() const { return m_properties; }
 
         /*!
-        \brief Returns a Text struct containing informationo about any text
+        \brief Returns a Text struct containing information about any text
         this object may have, such as font data and formatting.
         If an object does not contain any text information this struct will
         be populated with default values. Use getShape() to determine

@@ -107,7 +107,7 @@ namespace tmx
         /*!
         \brief Returns the first GID of this tile set.
         This the ID of the first tile in the tile set, so that
-        each tile set guarentees a unique set of IDs
+        each tile set guarantees a unique set of IDs
         */
         std::uint32_t getFirstGID() const { return m_firstGID; }
         /*!
