@@ -47,6 +47,44 @@ namespace tmx
     using Vector2i = Vector2<int>;
     using Vector2u = Vector2<unsigned>;
 
+    template <typename T>
+    Vector2<T> operator + (const Vector2<T>& l, const Vector2<T>& r);
+
+    template <typename T>
+    Vector2<T>& operator += (Vector2<T>& l, const Vector2<T>& r);
+
+    template <typename T>
+    Vector2<T> operator - (const Vector2<T>& l, const Vector2<T>& r);
+
+    template <typename T>
+    Vector2<T>& operator -= (Vector2<T>& l, const Vector2<T>& r);
+
+    template <typename T>
+    Vector2<T> operator * (const Vector2<T>& l, const Vector2<T>& r);
+
+    template <typename T>
+    Vector2<T>& operator *= (Vector2<T>& l, const Vector2<T>& r);
+
+    template <typename T>
+    Vector2<T> operator * (const Vector2<T>& l, T r);
+
+    template <typename T>
+    Vector2<T>& operator *= (Vector2<T>& l, T r);
+
+    template <typename T>
+    Vector2<T> operator / (const Vector2<T>& l, const Vector2<T>& r);
+
+    template <typename T>
+    Vector2<T>& operator /= (Vector2<T>& l, const Vector2<T>& r);
+
+    template <typename T>
+    Vector2<T> operator / (const Vector2<T>& l, T r);
+
+    template <typename T>
+    Vector2<T>& operator /= (Vector2<T>& l, T r);
+
+#include "Types.inl"
+
     /*!
     \brief Describes a rectangular area, such as an AABB (axis aligned bounding box)
     */

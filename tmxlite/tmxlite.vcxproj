@@ -275,6 +275,9 @@
     <ClCompile Include="src\TileLayer.cpp" />
     <ClCompile Include="src\Tileset.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="include\tmxlite\Types.inl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
