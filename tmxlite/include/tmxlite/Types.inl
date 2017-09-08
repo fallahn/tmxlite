@@ -78,7 +78,7 @@ Vector2<T>& operator *= (Vector2<T>& l, T r)
 {
     l.x *= r;
     l.y *= r;
-    return l
+    return l;
 }
 
 template <typename T>
