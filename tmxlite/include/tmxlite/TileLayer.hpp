@@ -43,8 +43,8 @@ namespace tmx
         */
         struct Tile final
         {
-            std::uint32_t ID = 0; //< Global ID of the tile
-            std::uint8_t flipFlags = 0; //< Flags marking if the tile should be flipped when drawn
+            std::uint32_t ID = 0; //!< Global ID of the tile
+            std::uint8_t flipFlags = 0; //!< Flags marking if the tile should be flipped when drawn
         };
 
         /*!

@@ -101,7 +101,7 @@ namespace tmx
         /*!
         \brief Attempts to parse the tilemap at the given location.
         \param std::string Path to map file to try to parse
-        \returns true if map was parsed successful else returns false.
+        \returns true if map was parsed successfully else returns false.
         In debug mode this will attempt to log any errors to the console.
         */
         bool load(const std::string&);
@@ -127,7 +127,7 @@ namespace tmx
         const Vector2u& getTileCount() const { return m_tileCount; }
         /*!
         \brief Returns the size of the tile grid in this map.
-        Actual tile sizes may vary and will be exteded / shrunk about
+        Actual tile sizes may vary and will be extended / shrunk about
         the bottom left corner of the tile.
         */
         const Vector2u& getTileSize() const { return m_tileSize; }
