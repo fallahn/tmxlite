@@ -28,6 +28,8 @@ source distribution.
 #ifndef TMXLITE_TYPES_HPP_
 #define TMXLITE_TYPES_HPP_
 
+#include <tmxlite/Config.hpp>
+
 #include <cstdint>
 
 namespace tmx
@@ -104,7 +106,7 @@ namespace tmx
     \brief Contains the red, green, blue and alpha values of a colour
     in the range 0 - 255.
     */
-    struct Colour final
+    struct TMXLITE_EXPORT_API Colour final
     {
         Colour(std::uint8_t red = 0, std::uint8_t green = 0, std::uint8_t blue = 0, std::uint8_t alpha = 255)
             : r(red), g(green), b(blue), a(alpha) {}

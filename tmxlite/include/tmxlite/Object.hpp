@@ -45,7 +45,7 @@ namespace tmx
     /*!
     \brief Contains the text information stored in a Text object.
     */
-    struct Text final
+    struct TMXLITE_EXPORT_API Text final
     {
         std::string fontFamily;
         std::uint32_t pixelSize = 16; //!< pixels, not points
