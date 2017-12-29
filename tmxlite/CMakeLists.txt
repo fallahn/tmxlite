@@ -11,6 +11,14 @@ endif()
 
 SET(PROJECT_STATIC_RUNTIME FALSE CACHE BOOL "Use statically linked standard/runtime libraries?")
 
+if(CMAKE_COMPILER_IS_GNUCXX OR APPLE)
+  if(PROJECT_STATIC_RUNTIME)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -static")
+  else()
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+  endif()
+endif()
+
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
