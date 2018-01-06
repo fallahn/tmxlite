@@ -260,17 +260,17 @@ bool Map::load(const std::string& path)
         }
         else if (name == "layer")
         {
-            m_layers.emplace_back(std::make_unique<TileLayer>(m_tileCount.x * m_tileCount.y));
+            m_layers.emplace_back(std::unique_ptr<TileLayer>(new TileLayer(m_tileCount.x * m_tileCount.y)));
             m_layers.back()->parse(node);
         }
         else if (name == "objectgroup")
         {
-            m_layers.emplace_back(std::make_unique<ObjectGroup>());
+            m_layers.emplace_back(std::unique_ptr<ObjectGroup>(new ObjectGroup()));
             m_layers.back()->parse(node);
         }
         else if (name == "imagelayer")
         {
-            m_layers.emplace_back(std::make_unique<ImageLayer>(m_workingDirectory));
+            m_layers.emplace_back(std::unique_ptr<ImageLayer>(new ImageLayer(m_workingDirectory)));
             m_layers.back()->parse(node);
         }
         else if (name == "properties")
