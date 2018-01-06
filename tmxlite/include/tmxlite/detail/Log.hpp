@@ -43,6 +43,18 @@ source distribution.
 #include <Windows.h>
 #endif //_MSC_VER
 
+
+#ifdef __ANDROID__
+	#include <android/log.h>
+
+
+	#define  LOG_TAG    "TMXlite-Debug" 
+	//#define  ALOG(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+
+	#define LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+	#define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
+#endif // __ANDROID__
+
 namespace tmx
 {
     /*!
@@ -91,11 +103,24 @@ namespace tmx
 
             if (output == Output::Console || output == Output::All)
             {
-                (type == Type::Error) ?
-                    std::cerr << outstring << std::endl
-                    :
+                if (type == Type::Error) {
+#ifdef __ANDROID__	
+					
+					int outstringLength = outstring.length();
+					char outstring_chararray[outstringLength+1];
+					strcpy(outstring_chararray, outstring.c_str()); 
+					LOGE("%s",outstring_chararray);
+#endif
+                    std::cerr << outstring << std::endl;
+				}else{
+#ifdef __ANDROID__
+					int outstringLength = outstring.length();
+					char outstring_chararray[outstringLength+1];
+					strcpy(outstring_chararray, outstring.c_str()); 
+					LOGI("%s", outstring_chararray);
+#endif
                     std::cout << outstring << std::endl;
-                
+                }
                 const std::size_t maxBuffer = 30;
                 buffer().push_back(outstring);
                 if (buffer().size() > maxBuffer)buffer().pop_front(); //no majick here pl0x

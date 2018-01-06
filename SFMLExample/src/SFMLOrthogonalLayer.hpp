@@ -55,8 +55,16 @@ https://github.com/fallahn/xygine/blob/master/xygine/src/components/ComponentTil
 #include <iostream>
 #include <cmath>
 
+
+
+
 class MapLayer final : public sf::Drawable
 {
+	
+	
+
+
+
 public:
 
 
@@ -91,8 +99,9 @@ public:
     const sf::FloatRect& getGlobalBounds() const { return m_globalBounds; }
 
 private:
-
-    sf::Vector2f m_chunkSize = sf::Vector2f(1024.f, 1024.f);
+	//increasing m_chunkSize by 4; fixes render problems when mapsize != chunksize
+	//sf::Vector2f m_chunkSize = sf::Vector2f(1024.f, 1024.f);
+    sf::Vector2f m_chunkSize = sf::Vector2f(4096.f, 4096.f);
     sf::Vector2u m_chunkCount;
     sf::FloatRect m_globalBounds;
 
@@ -103,7 +112,15 @@ private:
     {
     public:
         using Ptr = std::unique_ptr<Chunk>;
-        using Tile = std::array<sf::Vertex, 4u>;
+		
+		// the Android OpenGL driver isn't capable of rendering quads,
+		// so we need to use two triangles per tile instead
+#ifdef __ANDROID__        
+		using Tile = std::array<sf::Vertex, 6u>;
+#endif		
+#ifndef __ANDROID__
+		using Tile = std::array<sf::Vertex, 4u>;
+#endif		
         Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tilesets,
             const sf::Vector2f& position, const sf::Vector2f& tileCount, std::size_t rowSize,  TextureResource& tr)
         {
@@ -138,7 +155,11 @@ private:
                             //ID must belong to this set - so add a tile
                             if (!chunkArrayCreated)
                             {
-                                m_chunkArrays.emplace_back(std::make_unique<ChunkArray>(*tr.find(ts->getImagePath())->second));
+								// replace all usages of make_unique with unique_ptr,
+								// to be able to compile with C++11 (make_unique is the only function of c++14 that is used)
+                                
+								//m_chunkArrays.emplace_back(std::make_unique<ChunkArray>(*tr.find(ts->getImagePath())->second));
+								m_chunkArrays.emplace_back(std::unique_ptr<ChunkArray>(new ChunkArray(*tr.find(ts->getImagePath())->second)));
                                 auto texSize = m_chunkArrays.back()->getTextureSize();
                                 tsTileCount.x = texSize.x / tileSize.x;
                                 tsTileCount.y = texSize.y / tileSize.y;
@@ -153,10 +174,20 @@ private:
                             tileIndex.y *= tileSize.y;
                             Tile tile = 
                             {
+#ifndef __ANDROID__								
                                 sf::Vertex(tileOffset, vertColour, tileIndex),
                                 sf::Vertex(tileOffset + sf::Vector2f(tileSize.x, 0.f), vertColour, tileIndex + sf::Vector2f(tileSize.x, 0.f)),
                                 sf::Vertex(tileOffset + sf::Vector2f(tileSize.x, tileSize.y), vertColour, tileIndex + sf::Vector2f(tileSize.x, tileSize.y)),
                                 sf::Vertex(tileOffset + sf::Vector2f(0.f, tileSize.y), vertColour, tileIndex + sf::Vector2f(0.f, tileSize.y))
+#endif
+#ifdef __ANDROID__								
+								sf::Vertex(tileOffset, vertColour, tileIndex),
+								sf::Vertex(tileOffset + sf::Vector2f(tileSize.x, 0.f), vertColour, tileIndex + sf::Vector2f(tileSize.x, 0.f)),
+								sf::Vertex(tileOffset + sf::Vector2f(tileSize.x, tileSize.y), vertColour, tileIndex + sf::Vector2f(tileSize.x, tileSize.y)),
+								sf::Vertex(tileOffset, vertColour, tileIndex),
+								sf::Vertex(tileOffset + sf::Vector2f(0.f, tileSize.y), vertColour, tileIndex + sf::Vector2f(0.f, tileSize.y)),
+								sf::Vertex(tileOffset + sf::Vector2f(tileSize.x, tileSize.y), vertColour, tileIndex + sf::Vector2f(tileSize.x, tileSize.y))
+#endif
                             };
                             ca->addTile(tile);
                         }
@@ -197,7 +228,12 @@ private:
             void draw(sf::RenderTarget& rt, sf::RenderStates states) const override
             {
                 states.texture = &m_texture;
+#ifndef __ANDROID__
                 rt.draw(m_vertices.data(), m_vertices.size(), sf::Quads, states);
+#endif
+#ifdef __ANDROID__				
+				rt.draw(m_vertices.data(), m_vertices.size(), sf::Triangles, states);
+#endif				
             }
         };
 
@@ -240,7 +276,8 @@ private:
         for (const auto ts : usedTileSets)
         {
             const auto& path = ts->getImagePath();
-            std::unique_ptr<sf::Texture> newTexture = std::make_unique<sf::Texture>();
+            //std::unique_ptr<sf::Texture> newTexture = std::make_unique<sf::Texture>();
+			std::unique_ptr<sf::Texture> newTexture = std::unique_ptr<sf::Texture>(new sf::Texture());
             sf::Image img;
             if (!img.loadFromFile(path))
             {
@@ -270,8 +307,10 @@ private:
         {
             for (auto x = 0u; x < m_chunkCount.x; ++x)
             {
-                m_chunks.emplace_back(std::make_unique<Chunk>(layer, usedTileSets, 
-                    sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y), tileCount, map.getTileCount().x, m_textureResource));
+                //m_chunks.emplace_back(std::make_unique<Chunk>(layer, usedTileSets, 
+                //    sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y), tileCount, map.getTileCount().x, m_textureResource));
+				m_chunks.emplace_back(std::unique_ptr<Chunk>(new Chunk(layer, usedTileSets, 
+                    sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y), tileCount, map.getTileCount().x, m_textureResource)));	
             }
         }
     }
