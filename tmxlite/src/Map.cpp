@@ -46,9 +46,9 @@ namespace
         //TODO this doesn't actually check that there is a file at the
         //end of the path, or that it's even a valid path...
 
-        static auto searchFunc = [](const char seperator, const std::string& path)->std::string
+        static auto searchFunc = [](const char separator, const std::string& path)->std::string
         {
-            std::size_t i = path.rfind(seperator, path.length());
+            std::size_t i = path.rfind(separator, path.length());
             if (i != std::string::npos)
             {
                 return(path.substr(0, i + 1));
@@ -94,7 +94,8 @@ bool Map::load(const std::string& path)
 
     m_workingDirectory = getFilePath(path);
     std::replace(m_workingDirectory.begin(), m_workingDirectory.end(), '\\', '/');
-    if (m_workingDirectory.find_last_of('/') == m_workingDirectory.size() - 1)
+    if (m_workingDirectory.find_last_of('/') == m_workingDirectory.size() - 1
+        && !m_workingDirectory.empty())
     {
         m_workingDirectory.pop_back();
     }
@@ -260,17 +261,17 @@ bool Map::load(const std::string& path)
         }
         else if (name == "layer")
         {
-            m_layers.emplace_back(std::unique_ptr<TileLayer>(new TileLayer(m_tileCount.x * m_tileCount.y)));
+            m_layers.emplace_back(std::make_unique<TileLayer>(m_tileCount.x * m_tileCount.y));
             m_layers.back()->parse(node);
         }
         else if (name == "objectgroup")
         {
-            m_layers.emplace_back(std::unique_ptr<ObjectGroup>(new ObjectGroup()));
+            m_layers.emplace_back(std::make_unique<ObjectGroup>());
             m_layers.back()->parse(node);
         }
         else if (name == "imagelayer")
         {
-            m_layers.emplace_back(std::unique_ptr<ImageLayer>(new ImageLayer(m_workingDirectory)));
+            m_layers.emplace_back(std::make_unique<ImageLayer>(m_workingDirectory));
             m_layers.back()->parse(node);
         }
         else if (name == "properties")

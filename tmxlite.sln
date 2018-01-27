@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tmxlite", "tmxlite\tmxlite.vcxproj", "{0BC0C535-FEBB-4A83-8197-AF74FA26E100}"
 EndProject
@@ -34,8 +34,8 @@ Global
 		{0BC0C535-FEBB-4A83-8197-AF74FA26E100}.Release|ARM64.ActiveCfg = ReleaseStatic|x64
 		{0BC0C535-FEBB-4A83-8197-AF74FA26E100}.Release|x64.ActiveCfg = ReleaseStatic|x64
 		{0BC0C535-FEBB-4A83-8197-AF74FA26E100}.Release|x64.Build.0 = ReleaseStatic|x64
-		{0BC0C535-FEBB-4A83-8197-AF74FA26E100}.Release|x86.ActiveCfg = ReleaseShared|Win32
-		{0BC0C535-FEBB-4A83-8197-AF74FA26E100}.Release|x86.Build.0 = ReleaseShared|Win32
+		{0BC0C535-FEBB-4A83-8197-AF74FA26E100}.Release|x86.ActiveCfg = ReleaseStatic|Win32
+		{0BC0C535-FEBB-4A83-8197-AF74FA26E100}.Release|x86.Build.0 = ReleaseStatic|Win32
 		{4C5C8EE4-25F6-4121-B23D-89CD8D9FD74E}.Debug|ARM.ActiveCfg = Debug|Win32
 		{4C5C8EE4-25F6-4121-B23D-89CD8D9FD74E}.Debug|ARM64.ActiveCfg = Debug|Win32
 		{4C5C8EE4-25F6-4121-B23D-89CD8D9FD74E}.Debug|x64.ActiveCfg = Debug|x64
@@ -61,5 +61,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1C0A9D68-993C-407F-8D74-43EE88E9D733}
 	EndGlobalSection
 EndGlobal
