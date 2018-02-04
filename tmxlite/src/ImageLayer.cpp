@@ -75,7 +75,7 @@ void ImageLayer::parse(const pugi::xml_node& node)
             m_filePath = resolveFilePath(attribName, m_workingDir);
             if (child.attribute("trans"))
             {
-                attribName = node.attribute("trans").as_string();
+                attribName = child.attribute("trans").as_string();
                 m_transparencyColour = colourFromString(attribName);
                 m_hasTransparency = true;
             }
