@@ -84,6 +84,12 @@ namespace tmx
             ObjectGroup objectGroup;
             std::string imagePath;
             Vector2u imageSize;
+            /*!
+                \brief The position of the tile within the image.
+
+                Used for an image tileset
+            */
+            Vector2u imagePosition;
             std::string type;
         };
             
@@ -206,6 +212,7 @@ namespace tmx
         void parsePropertyNode(const pugi::xml_node&);
         void parseTerrainNode(const pugi::xml_node&);
         void parseTileNode(const pugi::xml_node&);
+        void createMissingTile(std::uint32_t ID);
     };
 }
 
