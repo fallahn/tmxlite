@@ -86,8 +86,6 @@ namespace tmx
             Vector2u imageSize;
             /*!
                 \brief The position of the tile within the image.
-
-                Used for an image tileset
             */
             Vector2u imagePosition;
             std::string type;
