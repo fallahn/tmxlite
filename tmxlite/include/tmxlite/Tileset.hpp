@@ -85,7 +85,7 @@ namespace tmx
             std::string imagePath;
             Vector2u imageSize;
             /*!
-                \brief The position of the tile within the image.
+            \brief The position of the tile within the image.
             */
             Vector2u imagePosition;
             std::string type;
@@ -178,7 +178,7 @@ namespace tmx
         const std::vector<Terrain>& getTerrainTypes() const { return m_terrainTypes; }
         /*!
         \brief Returns a reference to the vector of tile data used by
-        tiles which make up this tile set, if it is a collection of images.
+        tiles which make up this tile set.
         */
         const std::vector<Tile>& getTiles() const { return m_tiles; }
 
