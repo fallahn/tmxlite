@@ -65,7 +65,7 @@ René Nyffenegger rene.nyffenegger@adp-gmbh.ch
 namespace tmx
 {
     //using inline here just to supress unused warnings on gcc
-    bool decompress(const char* source, std::vector<unsigned char>& dest, int inSize, int expectedSize);
+    bool decompress(const char* source, std::vector<unsigned char>& dest, std::size_t inSize, std::size_t expectedSize);
 
     static inline std::string base64_decode(std::string const& encoded_string)
     {
@@ -80,7 +80,7 @@ namespace tmx
             return (isalnum(c) || (c == '+') || (c == '/'));
         };
 
-        int in_len = encoded_string.size();
+        auto in_len = encoded_string.size();
         int i = 0;
         int j = 0;
         int in_ = 0;

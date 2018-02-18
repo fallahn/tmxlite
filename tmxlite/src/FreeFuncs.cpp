@@ -31,7 +31,7 @@ source distribution.
 
 #include <cstring>
 
-bool tmx::decompress(const char* source, std::vector<unsigned char>& dest, int inSize, int expectedSize)
+bool tmx::decompress(const char* source, std::vector<unsigned char>& dest, std::size_t inSize, std::size_t expectedSize)
 {
     if (!source)
     {
@@ -39,16 +39,16 @@ bool tmx::decompress(const char* source, std::vector<unsigned char>& dest, int i
         return false;
     }
 
-    int currentSize = expectedSize;
+    int currentSize = static_cast<int>(expectedSize);
     std::vector<unsigned char> byteArray(expectedSize / sizeof(unsigned char));
     z_stream stream;
     stream.zalloc = Z_NULL;
     stream.zfree = Z_NULL;
     stream.opaque = Z_NULL;
     stream.next_in = (Bytef*)source;
-    stream.avail_in = inSize;
+    stream.avail_in = static_cast<unsigned int>(inSize);
     stream.next_out = (Bytef*)byteArray.data();
-    stream.avail_out = expectedSize;
+    stream.avail_out = static_cast<unsigned int>(expectedSize);
 
     //we'd prefer to use inflateInit2 but it appears 
     //to be incorrect in miniz. This is fine for zlib
