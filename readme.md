@@ -1,6 +1,8 @@
 tmxlite
 -------
 
+[![Build Status](https://img.shields.io/travis/fallahn/tmxlite.svg?branch=master&label=*nix)](https://travis-ci.org/fallahn/tmxlite)
+
 A lightweight C++14 parsing library for tmx map files created with the Tiled
 map editor. Requires no external linking, all dependencies are included.
 Supports tmx maps up to 0.18 with CSV, zlib and base64 compression. The parser
@@ -20,7 +22,7 @@ can be built as both static or shared libraries, or simply include the source
 files in your own project.
 
 /*********************************************************************  
-Matt Marchant 2016 - 2017  
+Matt Marchant 2016 - 2018  
 http://trederia.blogspot.com  
 
 tmxlite - Zlib license.  
