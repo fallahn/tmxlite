@@ -156,6 +156,15 @@ void Tileset::parse(pugi::xml_node node)
             parseTileNode(node);
         }
     }
+
+    // If the tsx file does not declare every tile, we create the missing ones
+    if (m_tiles.size() != getTileCount())
+    {
+        for (std::uint32_t ID = 0 ; ID < getTileCount() ; ID++)
+        {
+            createMissingTile(ID);
+        }
+    }
 }
 
 //private
@@ -259,6 +268,17 @@ void Tileset::parseTileNode(const pugi::xml_node& node)
 
     tile.probability = node.attribute("probability").as_int(100);
     tile.type = node.attribute("type").as_string();
+    
+    // By default, we set the tile's values as in an Image tileset
+    tile.imagePath = m_imagePath;
+    tile.imageSize = m_tileSize;
+
+    if (m_columnCount != 0) {
+        int rowIndex = tile.ID % m_columnCount;
+        int columnIndex = tile.ID / m_columnCount;
+        tile.imagePosition.x = rowIndex * m_tileSize.x;
+        tile.imagePosition.y = columnIndex * m_tileSize.y;
+    }
 
     const auto& children = node.children();
     for (const auto& child : children)
@@ -285,6 +305,9 @@ void Tileset::parseTileNode(const pugi::xml_node& node)
                 continue;
             }
             tile.imagePath = resolveFilePath(attribString, m_workingDir);
+
+            tile.imagePosition = tmx::Vector2u(0, 0);
+
             if (child.attribute("trans"))
             {
                 attribString = child.attribute("trans").as_string();
@@ -310,5 +333,27 @@ void Tileset::parseTileNode(const pugi::xml_node& node)
             }
         }
     }
+    m_tiles.push_back(tile);
+}
+
+void Tileset::createMissingTile(std::uint32_t ID)
+{
+    // First, we check if the tile does not yet exist
+    for (auto &tile : m_tiles)
+    {
+        if (tile.ID == ID)
+            return;
+    }
+
+    Tile tile;
+    tile.ID = ID;
+    tile.imagePath = m_imagePath;
+    tile.imageSize = m_tileSize;
+
+    int rowIndex = ID % m_columnCount;
+    int columnIndex = ID / m_columnCount;
+    tile.imagePosition.x = rowIndex * m_tileSize.x;
+    tile.imagePosition.y = columnIndex * m_tileSize.y;
+
     m_tiles.push_back(tile);
 }
