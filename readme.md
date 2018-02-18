@@ -2,6 +2,7 @@ tmxlite
 -------
 
 [![Build Status](https://img.shields.io/travis/fallahn/tmxlite.svg?branch=master&label=*nix)](https://travis-ci.org/fallahn/tmxlite)
+[![Build status](https://ci.appveyor.com/api/projects/status/qhhh1geu47uoi2lj/branch/master?svg=true)](https://ci.appveyor.com/project/fallahn/tmxlite/branch/master)
 
 A lightweight C++14 parsing library for tmx map files created with the Tiled
 map editor. Requires no external linking, all dependencies are included.

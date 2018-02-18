@@ -2,6 +2,10 @@
 language: c++
 sudo: true
 
+before_script:
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 90; fi
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90; fi
+
 script:
  - mkdir build && cd build
  - cmake ../tmxlite
