@@ -65,7 +65,7 @@ void Object::parse(const pugi::xml_node& node)
     m_AABB.height = node.attribute("height").as_float();
     m_rotation = node.attribute("rotation").as_float();
     m_tileID = node.attribute("gid").as_uint();
-    m_visible = node.attribute("visible").as_bool();
+    m_visible = node.attribute("visible").as_bool(true);
 
     for (const auto& child : node.children())
     {
