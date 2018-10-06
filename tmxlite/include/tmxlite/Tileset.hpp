@@ -182,6 +182,21 @@ namespace tmx
         */
         const std::vector<Tile>& getTiles() const { return m_tiles; }
 
+        /**
+         * \brief Checks if a tiled ID is in the range of the first ID and the last ID
+         * \param a_id Tile ID
+         * \return 
+         */
+        bool hasTile(std::uint32_t a_id) const { return a_id >= m_firstGID && a_id <= getLastGID(); };
+
+
+        /**
+         * \brief queries tiles and returns a tile with the given ID. Checks if the TileID is part of the Tileset with `hasTile(a_id)`
+         * \param a_id Tile ID. The Tile ID will be corrected internally.
+         * \return In case of a success it returns the correct tile. In terms of failure it will return a nullptr.
+         */
+        const Tile* getTile(std::uint32_t a_id) const;
+
     private:
 
         std::string m_workingDir;
