@@ -167,20 +167,23 @@ void Tileset::parse(pugi::xml_node node)
     }
 }
 
-const Tileset::Tile* Tileset::getTile(std::uint32_t a_id) const
+const Tileset::Tile* Tileset::getTile(std::uint32_t id) const
 {
-    if (!hasTile(a_id))
+    if (!hasTile(id))
+    {
         return nullptr;
+    }
+    
     //corrects the ID. Indiecies and ID`s are diffrent.
-    a_id = (getLastGID() - m_firstGID) - (getLastGID() - a_id);
-    const auto itr = std::find_if(m_tiles.begin(), m_tiles.end(), [&a_id](const Tile& a_Tile) ->bool {
-            return a_Tile.ID == a_id;
-     });
+    id = (getLastGID() - m_firstGID) - (getLastGID() - id);
+    
+    const auto itr = std::find_if(m_tiles.begin(), m_tiles.end(), 
+        [id](const Tile& tile)
+    {
+            return tile.ID == id;
+    });
 
-    if (itr != m_tiles.end())
-        return &(*itr);
-    else
-    return nullptr;
+    return (itr == m_tiles.end()) ? nullptr : &(*itr);
 }
 
 //private
