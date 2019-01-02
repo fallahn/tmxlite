@@ -86,6 +86,7 @@ namespace tmx
         {
             Rectangle,
             Ellipse,
+            Point,
             Polygon,
             Polyline,
             Text
@@ -103,18 +104,22 @@ namespace tmx
         \brief Returns the unique ID of the Object
         */
         std::uint32_t getUID() const { return m_UID; }
+        
         /*!
         \brief Returns the name of the Object
         */
         const std::string& getName() const { return m_name; }
+        
         /*!
         \brief Returns the type of the Object, as defined in the editor
         */
         const std::string& getType() const { return m_type; }
+        
         /*!
         \brief Returns the position of the Object in pixels
         */
         const Vector2f& getPosition() const { return m_position; }
+        
         /*!
         \brief Returns the global Axis Aligned Bounding Box.
         The AABB is positioned via the left and top properties, and
@@ -122,24 +127,29 @@ namespace tmx
         the shape of the Object if it is rectangular or elliptical.
         */
         const FloatRect& getAABB() const { return m_AABB; }
+        
         /*!
         \brief Returns the rotation of the Object in degrees clockwise
         */
         float getRotation() const { return m_rotation; }
+        
         /*!
         \brief Returns the global tile ID associated with the Object
         if there is one. This is used to draw the Object (and therefore
         the Object must be rectangular)
         */
         uint32_t getTileID() const { return m_tileID; }
+        
         /*!
         \brief Returns whether or not the Object is visible
         */
         bool visible() const { return m_visible; }
+        
         /*!
         \brief Returns the Shape type of the Object
         */
         Shape getShape() const { return m_shape; }
+        
         /*!
         \brief Returns a reference to the vector of points which
         make up the Object. If the Object is rectangular or elliptical
@@ -147,6 +157,7 @@ namespace tmx
         relative to the object position.
         */
         const std::vector<Vector2f>& getPoints() const { return m_points; }
+        
         /*!
         \brief Returns a reference to the vector of properties belonging to
         the Object.
@@ -181,6 +192,7 @@ namespace tmx
 
         void parsePoints(const pugi::xml_node&);
         void parseText(const pugi::xml_node&);
+        void parseTemplate(const std::string&);
     };
 }
 

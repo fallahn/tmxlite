@@ -67,6 +67,12 @@ void Object::parse(const pugi::xml_node& node)
     m_tileID = node.attribute("gid").as_uint();
     m_visible = node.attribute("visible").as_bool(true);
 
+    std::string templateStr = node.attribute("template").as_string();
+    if (!templateStr.empty())
+    {
+        parseTemplate(templateStr);
+    }
+
     for (const auto& child : node.children())
     {
         attribString = child.name();
@@ -81,6 +87,10 @@ void Object::parse(const pugi::xml_node& node)
         else if (attribString == "ellipse")
         {
             m_shape = Shape::Ellipse;
+        }
+        else if (attribString == "point")
+        {
+            m_shape = Shape::Point;
         }
         else if (attribString == "polygon")
         {
@@ -180,4 +190,9 @@ void Object::parseText(const pugi::xml_node& node)
     }
 
     m_textData.content = node.text().as_string();
+}
+
+void Object::parseTemplate(const std::string& path)
+{
+    Logger::log("Requested a template at " + path + " - but this is not yet implemented *sadface*", Logger::Type::Info);
 }
