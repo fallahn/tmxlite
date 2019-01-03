@@ -1,4 +1,4 @@
-#DOXYFILE = tmxlite/documentation/Doxyfile
+DOXYFILE = tmxlite/documentation
 INPUT = tmxlite/include/tmxlite
 CLASS_DIAGRAMS = YES
 PROJECT_NAME = tmxlite
