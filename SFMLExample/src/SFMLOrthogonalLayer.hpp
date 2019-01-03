@@ -28,9 +28,7 @@ source distribution.
 /*
 Creates an SFML drawable from an Orthogonal tmx map layer.
 This is an example of drawing with SFML - not all features,
-such as tile flipping, are implemented. For a more detailed
-implementation, including artifact prevention, see:
-https://github.com/fallahn/xygine/blob/master/xygine/src/components/ComponentTileMapLayer.cpp
+such as tile flipping, are implemented.
 */
 
 #ifndef SFML_ORTHO_HPP_
@@ -56,15 +54,8 @@ https://github.com/fallahn/xygine/blob/master/xygine/src/components/ComponentTil
 #include <cmath>
 
 
-
-
 class MapLayer final : public sf::Drawable
 {
-	
-	
-
-
-
 public:
 
 
@@ -88,7 +79,7 @@ public:
         }
         else
         {
-            std::cout << "Not a valid othogonal layer, nothing will be drawn." << std::endl;
+            std::cout << "Not a valid orthogonal layer, nothing will be drawn." << std::endl;
         }
     }
 
@@ -136,6 +127,13 @@ private:
             //go through the tiles and create the appropriate arrays
             for (const auto ts : tilesets)
             {
+                if(ts->getImagePath().empty())
+                {
+                    Logger::log("This example does not support Collection of Images tilesets", Logger::Type::Info);
+                    Logger::log("Chunks using " + ts->getName() + " will not be created", Logger::Type::Info);
+                    continue;
+                }
+
                 bool chunkArrayCreated = false;
                 auto tileSize = ts->getTileSize();
 
