@@ -19,6 +19,10 @@ Check out the following examples:
 * [OpenGL Example](https://github.com/fallahn/tmxlite/tree/master/OpenGLExample)
 * [SFML Example](https://github.com/fallahn/tmxlite/tree/master/SFMLExample)
 
+#### API Documentation
+Doxygen generated API documentation can be found online [here](https://codedocs.xyz/fallahn/tmxlite/) or generated with doxygen
+using the doxy file in the tmxlite/documentation/ directory.
+
 #### Important information 
 tmxlite uses [pugixml](https://pugixml.org/) and [miniz](https://github.com/richgel999/miniz) which are included in the repository.
 

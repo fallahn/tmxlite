@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.0)
 project(tmxlite)
 SET(PROJECT_NAME tmxlite)
 
-
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
 
 if(NOT TMXLITE_STATIC_LIB)
@@ -10,6 +9,7 @@ if(NOT TMXLITE_STATIC_LIB)
 endif()
 
 SET(PROJECT_STATIC_RUNTIME FALSE CACHE BOOL "Use statically linked standard/runtime libraries?")
+#option(BUILD_DOC "Build documentation" OFF)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR APPLE)
   if(PROJECT_STATIC_RUNTIME)
