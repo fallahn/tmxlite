@@ -1,1 +1,6 @@
-DOXYFILE = tmxlite/documentation/Doxyfile
+#DOXYFILE = tmxlite/documentation/Doxyfile
+INPUT = tmxlite/include/tmxlite
+CLASS_DIAGRAMS = YES
+PROJECT_NAME = tmxlite
+PROJECT_BRIEF = "lightweight Tiled tmx map parser for C++"
+MARKDOWN_SUPPORT = YES
