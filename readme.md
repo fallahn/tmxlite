@@ -14,6 +14,9 @@ As the library contains no specific rendering functions some example projects ar
 #### Building
 Either use the included Visual Studio project file if you are on Windows or the CMake file to generate project files for your compiler of choice. tmxlite can be built as both static or shared libraries, or simply include the source files in your own project.
 
+#### Quick Start
+There is a getting started page on the Github wiki [here](https://github.com/fallahn/tmxlite/wiki/Quick-Start).
+
 #### Examples
 Check out the following examples:
 * [OpenGL Example](https://github.com/fallahn/tmxlite/tree/master/OpenGLExample)
@@ -28,7 +31,7 @@ tmxlite uses [pugixml](https://pugixml.org/) and [miniz](https://github.com/rich
 
 ***
 
-Matt Marchant 2016 - 2018
+Matt Marchant 2016 - 2019
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
