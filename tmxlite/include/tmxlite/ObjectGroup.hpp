@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016
+Matt Marchant 2016 - 2019
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -81,6 +81,13 @@ namespace tmx
         std::vector<Property> m_properties;
         std::vector<Object> m_objects;
     };
+
+    template <>
+    inline ObjectGroup& Layer::getLayerAs<ObjectGroup>()
+    {
+        assert(getType() == Type::Object);
+        return *dynamic_cast<ObjectGroup*>(this);
+    }
 }
 
 #endif //TMXLITE_OBJECTGROUP_HPP_

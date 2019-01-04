@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016
+Matt Marchant 2016 - 2019
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -78,6 +78,13 @@ namespace tmx
 
         void createTiles(const std::vector<std::uint32_t>&);
     };
+
+    template <>
+    inline TileLayer& Layer::getLayerAs<TileLayer>()
+    {
+        assert(getType() == Type::Tile);
+        return *dynamic_cast<TileLayer*>(this);
+    }
 }
 
 #endif //TMXLITE_TILE_LAYER_HPP_

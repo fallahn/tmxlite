@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016
+Matt Marchant 2016 - 2019
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -75,5 +75,12 @@ namespace tmx
         bool m_hasTransparency;
         Vector2u m_imageSize;
     };
+
+    template <>
+    inline ImageLayer& Layer::getLayerAs<ImageLayer>()
+    {
+        assert(getType() == Type::Image);
+        return *dynamic_cast<ImageLayer*>(this);
+    }
 }
 #endif //TMXLITE_IMAGELAYER_HPP_

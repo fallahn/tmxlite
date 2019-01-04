@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016
+Matt Marchant 2016 - 2019
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -26,6 +26,7 @@ source distribution.
 *********************************************************************/
 
 #include <tmxlite/Map.hpp>
+#include <tmxlite/ObjectGroup.hpp>
 
 #include <iostream>
 
@@ -33,7 +34,7 @@ int main()
 {
     tmx::Map map;
 
-    if (map.load("maps/tilesettest.tmx"))
+    if (map.load("maps/platform.tmx"))
     {
         std::cout << "Loaded Map version: " << map.getVersion().upper << ", " << map.getVersion().lower << std::endl;
         
@@ -56,7 +57,7 @@ int main()
 
             if(layer->getType() == tmx::Layer::Type::Object)
             {
-                const auto& objects = dynamic_cast<tmx::ObjectGroup*>(layer.get())->getObjects();
+                const auto& objects = layer->getLayerAs<tmx::ObjectGroup>().getObjects();
                 std::cout << "Found " << objects.size() << " objects in layer" << std::endl;
                 for(const auto& object : objects)
                 {

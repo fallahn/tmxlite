@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016
+Matt Marchant 2016 - 2019
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -44,6 +44,9 @@ namespace pugi
 namespace tmx
 {
     class Map;
+    class TileLayer;
+    class ObjectGroup;
+    class ImageLayer;
     /*!
     \brief Represents a layer of a tmx format tile map.
     This is an abstract base class from which all layer
@@ -57,6 +60,12 @@ namespace tmx
         explicit Layer() : m_opacity(1.f), m_visible(true) {};
         virtual ~Layer() = default;
 
+        /*
+        \brief Layer type as returned by getType()
+        Tile: this layer is a TileLayer type
+        Object: This layer is an ObjectGroup type
+        Image: This layer is an ImageLayer type
+        */
         enum class Type
         {
             Tile,
@@ -65,30 +74,54 @@ namespace tmx
         };
 
         /*!
-        \brief Returns a Type value representing the concrete type
+        \brief Returns a Type value representing the concrete type.
+        Use this when deciding which conrete layer type to use when
+        calling the templated function getLayerAs<T>()
         */
         virtual Type getType() const = 0;
+
+        /*!
+        \brief Use this to get a reference to the concrete layer type
+        which this layer points to.
+        Use getType() to return the type value of this layer and determine
+        if the concrete type is TileLayer, ObjectGroup or ImageLayer
+        */
+        template <typename T>
+        T& getLayerAs();
+        /*{
+            throw("Not a valid layer type");
+            return *dynamic_cast<T*>(this);
+        }*/
+
+        template <typename T>
+        const T& getLayerAs() const { return getLayerAs<T>(); }
+
         /*!
         \brief Attempts to parse the specific node layer type
         */
         virtual void parse(const pugi::xml_node&) = 0;
+
         /*!
         \brief Returns the name of the layer
         */
         const std::string& getName() const { return m_name; }
+
         /*!
         \brief Returns the opacity value for the layer
         */
         float getOpacity() const { return m_opacity; }
+
         /*!
         \brief Returns whether this layer is visible or not
         */
         bool getVisible() const { return m_visible; }
+
         /*!
         \brief Returns the offset from the top left corner
         of the layer, in pixels
         */
         const Vector2i& getOffset() const { return m_offset; }
+
         /*!
         \brief Returns the list of properties of this layer
         */
