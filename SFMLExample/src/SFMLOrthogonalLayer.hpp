@@ -129,8 +129,8 @@ private:
             {
                 if(ts->getImagePath().empty())
                 {
-                    Logger::log("This example does not support Collection of Images tilesets", Logger::Type::Info);
-                    Logger::log("Chunks using " + ts->getName() + " will not be created", Logger::Type::Info);
+                    tmx::Logger::log("This example does not support Collection of Images tilesets", tmx::Logger::Type::Info);
+                    tmx::Logger::log("Chunks using " + ts->getName() + " will not be created", tmx::Logger::Type::Info);
                     continue;
                 }
 
@@ -327,7 +327,7 @@ private:
             for (auto x = posX; x < posX + 2; ++x)
             {
                 auto idx = y * int(m_chunkCount.x) + x;
-                if (idx >= 0 && idx < m_chunks.size() && !m_chunks[idx]->empty())
+                if (idx >= 0u && idx < m_chunks.size() && !m_chunks[idx]->empty())
                 {
                     visible.push_back(m_chunks[idx].get());
                 }
