@@ -118,7 +118,7 @@ namespace tmx
         \brief Returns the last GID of this tile set.
         This is the ID of the last tile in the tile set.
         */
-        std::uint32_t getLastGID() const { return m_firstGID + getTileCount() - 1; }
+        std::uint32_t getLastGID() const;
         /*!
         \brief Returns the name of this tile set.
         */

@@ -165,6 +165,15 @@ void Tileset::parse(pugi::xml_node node)
             createMissingTile(ID);
         }
     }
+
+    //sort these just to make sure when we request last GID we get the corrtect value
+    std::sort(m_tiles.begin(), m_tiles.end(), [](const Tile& t1, const Tile& t2) {return t1.ID < t2.ID; });
+}
+
+std::uint32_t Tileset::getLastGID() const
+{
+    assert(!m_tiles.empty());
+    return m_firstGID + m_tiles.back().ID;
 }
 
 const Tileset::Tile* Tileset::getTile(std::uint32_t id) const
@@ -174,7 +183,7 @@ const Tileset::Tile* Tileset::getTile(std::uint32_t id) const
         return nullptr;
     }
     
-    //corrects the ID. Indiecies and ID`s are diffrent.
+    //corrects the ID. Indices and IDs are different.
     id = (getLastGID() - m_firstGID) - (getLastGID() - id);
     
     const auto itr = std::find_if(m_tiles.begin(), m_tiles.end(), 
