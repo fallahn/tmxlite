@@ -188,6 +188,7 @@ private:
 								sf::Vertex(tileOffset + sf::Vector2f(tileSize.x, tileSize.y), vertColour, tileIndex + sf::Vector2f(tileSize.x, tileSize.y))
 #endif
                             };
+                            DoFlips(tileIDs[idx].flipFlags,&tile[0].texCoords,&tile[1].texCoords,&tile[2].texCoords,&tile[3].texCoords);
                             ca->addTile(tile);
                         }
                     }
@@ -201,6 +202,108 @@ private:
         Chunk& operator = (const Chunk&) = delete;
 
         bool empty() const { return m_chunkArrays.empty(); }
+        void FlipY(sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
+        {
+            //Flip Y
+            sf::Vector2f tmp = *v0;
+            v0->y = v2->y;
+            v1->y = v2->y;
+            v2->y = tmp.y ;
+            v3->y = v2->y  ;
+        }
+
+        void FlipX(sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
+        {
+            //Flip X
+            sf::Vector2f tmp = *v0;
+            v0->x = v1->x;
+            v1->x = tmp.x;
+            v2->x = v3->x;
+            v3->x = v0->x ;
+        }
+
+        void FlipD(sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
+        {
+            //Diagonal flip
+            sf::Vector2f tmp = *v1;
+            v1->x = v3->x;
+            v1->y = v3->y;
+            v3->x = tmp.x;
+            v3->y = tmp.y;
+        }
+
+        void DoFlips(std::uint8_t bits, sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
+        {
+            //0000 = no change
+            //0100 = vertical = swap y axis
+            //1000 = horizontal = swap x axis
+            //1100 = horiz + vert = swap both axes = horiz+vert = rotate 180 degrees
+            //0010 = diag = rotate 90 degrees right and swap x axis
+            //0110 = diag+vert = rotate 270 degrees right
+            //1010 = horiz+diag = rotate 90 degrees right
+            //1110 = horiz+vert+diag = rotate 90 degrees right and swap y axis
+            if(!(bits & tmx::TileLayer::FlipFlag::Horizontal) &&
+               !(bits & tmx::TileLayer::FlipFlag::Vertical) &&
+               !(bits & tmx::TileLayer::FlipFlag::Diagonal) )
+            {
+                //Shortcircuit tests for nothing to do
+                return;
+            }
+            else if(!(bits & tmx::TileLayer::FlipFlag::Horizontal) &&
+                (bits & tmx::TileLayer::FlipFlag::Vertical) &&
+               !(bits & tmx::TileLayer::FlipFlag::Diagonal) )
+            {
+                //0100
+                FlipY(v0,v1,v2,v3);
+            }
+            else if((bits & tmx::TileLayer::FlipFlag::Horizontal) &&
+               !(bits & tmx::TileLayer::FlipFlag::Vertical) &&
+               !(bits & tmx::TileLayer::FlipFlag::Diagonal) )
+            {
+                //1000
+                FlipX(v0,v1,v2,v3);
+            }
+            else if((bits & tmx::TileLayer::FlipFlag::Horizontal) &&
+               (bits & tmx::TileLayer::FlipFlag::Vertical) &&
+               !(bits & tmx::TileLayer::FlipFlag::Diagonal) )
+            {
+                //1100
+                FlipY(v0,v1,v2,v3);
+                FlipX(v0,v1,v2,v3);
+            }
+            else if(!(bits & tmx::TileLayer::FlipFlag::Horizontal) &&
+               !(bits & tmx::TileLayer::FlipFlag::Vertical) &&
+               (bits & tmx::TileLayer::FlipFlag::Diagonal) )
+            {
+                //0010
+                FlipD(v0,v1,v2,v3);
+            }
+            else if(!(bits & tmx::TileLayer::FlipFlag::Horizontal) &&
+                (bits & tmx::TileLayer::FlipFlag::Vertical) &&
+                (bits & tmx::TileLayer::FlipFlag::Diagonal) )
+            {
+                //0110
+                FlipX(v0,v1,v2,v3);
+                FlipD(v0,v1,v2,v3);
+            }
+            else if((bits & tmx::TileLayer::FlipFlag::Horizontal) &&
+                !(bits & tmx::TileLayer::FlipFlag::Vertical) &&
+                (bits & tmx::TileLayer::FlipFlag::Diagonal) )
+            {
+                //1010
+                FlipY(v0,v1,v2,v3);
+                FlipD(v0,v1,v2,v3);
+           }
+            else if((bits & tmx::TileLayer::FlipFlag::Horizontal) &&
+               (bits & tmx::TileLayer::FlipFlag::Vertical) &&
+               (bits & tmx::TileLayer::FlipFlag::Diagonal) )
+            {
+                //1110
+                FlipY(v0,v1,v2,v3);
+                FlipX(v0,v1,v2,v3);
+                FlipD(v0,v1,v2,v3);
+            }
+        }
     private:
         class ChunkArray final : public sf::Drawable
         {
