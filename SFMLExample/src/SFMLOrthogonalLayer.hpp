@@ -27,8 +27,8 @@ source distribution.
 
 /*
 Creates an SFML drawable from an Orthogonal tmx map layer.
-This is an example of drawing with SFML - not all features,
-such as tile flipping, are implemented.
+This is an example of drawing with SFML - not all features
+are implemented.
 */
 
 #ifndef SFML_ORTHO_HPP_
@@ -188,7 +188,7 @@ private:
 								sf::Vertex(tileOffset + sf::Vector2f(tileSize.x, tileSize.y), vertColour, tileIndex + sf::Vector2f(tileSize.x, tileSize.y))
 #endif
                             };
-                            DoFlips(tileIDs[idx].flipFlags,&tile[0].texCoords,&tile[1].texCoords,&tile[2].texCoords,&tile[3].texCoords);
+                            doFlips(tileIDs[idx].flipFlags,&tile[0].texCoords,&tile[1].texCoords,&tile[2].texCoords,&tile[3].texCoords);
                             ca->addTile(tile);
                         }
                     }
@@ -202,7 +202,7 @@ private:
         Chunk& operator = (const Chunk&) = delete;
 
         bool empty() const { return m_chunkArrays.empty(); }
-        void FlipY(sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
+        void flipY(sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
         {
             //Flip Y
             sf::Vector2f tmp = *v0;
@@ -212,7 +212,7 @@ private:
             v3->y = v2->y  ;
         }
 
-        void FlipX(sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
+        void flipX(sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
         {
             //Flip X
             sf::Vector2f tmp = *v0;
@@ -222,7 +222,7 @@ private:
             v3->x = v0->x ;
         }
 
-        void FlipD(sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
+        void flipD(sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
         {
             //Diagonal flip
             sf::Vector2f tmp = *v1;
@@ -232,7 +232,7 @@ private:
             v3->y = tmp.y;
         }
 
-        void DoFlips(std::uint8_t bits, sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
+        void doFlips(std::uint8_t bits, sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
         {
             //0000 = no change
             //0100 = vertical = swap y axis
@@ -254,54 +254,54 @@ private:
                !(bits & tmx::TileLayer::FlipFlag::Diagonal) )
             {
                 //0100
-                FlipY(v0,v1,v2,v3);
+                flipY(v0,v1,v2,v3);
             }
             else if((bits & tmx::TileLayer::FlipFlag::Horizontal) &&
                !(bits & tmx::TileLayer::FlipFlag::Vertical) &&
                !(bits & tmx::TileLayer::FlipFlag::Diagonal) )
             {
                 //1000
-                FlipX(v0,v1,v2,v3);
+                flipX(v0,v1,v2,v3);
             }
             else if((bits & tmx::TileLayer::FlipFlag::Horizontal) &&
                (bits & tmx::TileLayer::FlipFlag::Vertical) &&
                !(bits & tmx::TileLayer::FlipFlag::Diagonal) )
             {
                 //1100
-                FlipY(v0,v1,v2,v3);
-                FlipX(v0,v1,v2,v3);
+                flipY(v0,v1,v2,v3);
+                flipX(v0,v1,v2,v3);
             }
             else if(!(bits & tmx::TileLayer::FlipFlag::Horizontal) &&
                !(bits & tmx::TileLayer::FlipFlag::Vertical) &&
                (bits & tmx::TileLayer::FlipFlag::Diagonal) )
             {
                 //0010
-                FlipD(v0,v1,v2,v3);
+                flipD(v0,v1,v2,v3);
             }
             else if(!(bits & tmx::TileLayer::FlipFlag::Horizontal) &&
                 (bits & tmx::TileLayer::FlipFlag::Vertical) &&
                 (bits & tmx::TileLayer::FlipFlag::Diagonal) )
             {
                 //0110
-                FlipX(v0,v1,v2,v3);
-                FlipD(v0,v1,v2,v3);
+                flipX(v0,v1,v2,v3);
+                flipD(v0,v1,v2,v3);
             }
             else if((bits & tmx::TileLayer::FlipFlag::Horizontal) &&
                 !(bits & tmx::TileLayer::FlipFlag::Vertical) &&
                 (bits & tmx::TileLayer::FlipFlag::Diagonal) )
             {
                 //1010
-                FlipY(v0,v1,v2,v3);
-                FlipD(v0,v1,v2,v3);
+                flipY(v0,v1,v2,v3);
+                flipD(v0,v1,v2,v3);
            }
             else if((bits & tmx::TileLayer::FlipFlag::Horizontal) &&
                (bits & tmx::TileLayer::FlipFlag::Vertical) &&
                (bits & tmx::TileLayer::FlipFlag::Diagonal) )
             {
                 //1110
-                FlipY(v0,v1,v2,v3);
-                FlipX(v0,v1,v2,v3);
-                FlipD(v0,v1,v2,v3);
+                flipY(v0,v1,v2,v3);
+                flipX(v0,v1,v2,v3);
+                flipD(v0,v1,v2,v3);
             }
         }
     private:
