@@ -407,6 +407,15 @@ private:
         {
             for (auto x = 0u; x < m_chunkCount.x; ++x)
             {
+                // calculate size of each Chunk (clip against map)
+                if ((x+1) * m_chunkSize.x > bounds.width)
+                {
+                    tileCount.x = (bounds.width - x * m_chunkSize.x) /  map.getTileSize().x;
+                }
+                if ((y+1) * m_chunkSize.y * map.getTileSize().y > bounds.height)
+                {
+                    tileCount.y = (bounds.height - y * m_chunkSize.y) /  map.getTileSize().y;
+                }
                 //m_chunks.emplace_back(std::make_unique<Chunk>(layer, usedTileSets, 
                 //    sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y), tileCount, map.getTileCount().x, m_textureResource));
 				m_chunks.emplace_back(std::unique_ptr<Chunk>(new Chunk(layer, usedTileSets, 
