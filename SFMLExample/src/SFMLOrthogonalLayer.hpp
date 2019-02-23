@@ -194,8 +194,6 @@ private:
                     }
                 }
             }
-            
-            setPosition(position);
         }
         ~Chunk() = default;
         Chunk(const Chunk&) = delete;
@@ -424,11 +422,13 @@ private:
         
         int posX = static_cast<int>(std::floor(viewCorner.x / m_chunkSize.x));
         int posY = static_cast<int>(std::floor(viewCorner.y / m_chunkSize.y));
+        int posX2 = static_cast<int>(std::ceil((viewCorner.x + view.getSize().x) / m_chunkSize.x));
+        int posY2 = static_cast<int>(std::ceil((viewCorner.y + view.getSize().x)/ m_chunkSize.y));
 
         std::vector<const Chunk*> visible;
-        for (auto y = posY; y < posY + 2; ++y)
+        for (auto y = posY; y < posY2; ++y)
         {
-            for (auto x = posX; x < posX + 2; ++x)
+            for (auto x = posX; x < posX2; ++x)
             {
                 auto idx = y * int(m_chunkCount.x) + x;
                 if (idx >= 0u && idx < m_chunks.size() && !m_chunks[idx]->empty())
