@@ -194,8 +194,6 @@ private:
                     }
                 }
             }
-            
-            setPosition(position);
         }
         ~Chunk() = default;
         Chunk(const Chunk&) = delete;
@@ -409,6 +407,15 @@ private:
         {
             for (auto x = 0u; x < m_chunkCount.x; ++x)
             {
+                // calculate size of each Chunk (clip against map)
+                if ((x+1) * m_chunkSize.x > bounds.width)
+                {
+                    tileCount.x = (bounds.width - x * m_chunkSize.x) /  map.getTileSize().x;
+                }
+                if ((y+1) * m_chunkSize.y * map.getTileSize().y > bounds.height)
+                {
+                    tileCount.y = (bounds.height - y * m_chunkSize.y) /  map.getTileSize().y;
+                }
                 //m_chunks.emplace_back(std::make_unique<Chunk>(layer, usedTileSets, 
                 //    sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y), tileCount, map.getTileCount().x, m_textureResource));
 				m_chunks.emplace_back(std::unique_ptr<Chunk>(new Chunk(layer, usedTileSets, 
@@ -424,11 +431,13 @@ private:
         
         int posX = static_cast<int>(std::floor(viewCorner.x / m_chunkSize.x));
         int posY = static_cast<int>(std::floor(viewCorner.y / m_chunkSize.y));
+        int posX2 = static_cast<int>(std::ceil((viewCorner.x + view.getSize().x) / m_chunkSize.x));
+        int posY2 = static_cast<int>(std::ceil((viewCorner.y + view.getSize().x)/ m_chunkSize.y));
 
         std::vector<const Chunk*> visible;
-        for (auto y = posY; y < posY + 2; ++y)
+        for (auto y = posY; y < posY2; ++y)
         {
-            for (auto x = posX; x < posX + 2; ++x)
+            for (auto x = posX; x < posX2; ++x)
             {
                 auto idx = y * int(m_chunkCount.x) + x;
                 if (idx >= 0u && idx < m_chunks.size() && !m_chunks[idx]->empty())
