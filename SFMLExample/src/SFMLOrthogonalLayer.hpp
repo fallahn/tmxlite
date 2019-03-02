@@ -70,7 +70,8 @@ public:
             const auto tileSize = map.getTileSize();
             m_chunkSize.x = std::floor(m_chunkSize.x / tileSize.x) * tileSize.x;
             m_chunkSize.y = std::floor(m_chunkSize.y / tileSize.y) * tileSize.y;
-
+            m_MapTileSize.x = map.getTileSize().x;
+            m_MapTileSize.y = map.getTileSize().y;
             const auto& layer = *dynamic_cast<const tmx::TileLayer*>(layers[idx].get());
             createChunks(map, layer);
 
@@ -90,11 +91,39 @@ public:
 
     const sf::FloatRect& getGlobalBounds() const { return m_globalBounds; }
 
+    void setTile(int tileX, int tileY, tmx::TileLayer::Tile tile, bool refresh=true)
+    {
+        sf::Vector2u chunkLocale;
+        const auto& selectedChunk = getChunkAndTransform(tileX, tileY, chunkLocale);
+        selectedChunk->setTile(chunkLocale.x, chunkLocale.y, tile, refresh);
+    }
+
+    tmx::TileLayer::Tile getTile(int tileX, int tileY)
+    {
+        sf::Vector2u chunkLocale;
+        const auto& selectedChunk = getChunkAndTransform(tileX, tileY, chunkLocale);
+        return selectedChunk->getTile(chunkLocale.x, chunkLocale.y);
+    }
+    void setColor(int tileX, int tileY, sf::Color color, bool refresh=true)
+    {
+        sf::Vector2u chunkLocale;
+        const auto& selectedChunk = getChunkAndTransform(tileX, tileY, chunkLocale);
+        selectedChunk->setColor(chunkLocale.x, chunkLocale.y, color, refresh);
+    }
+
+    sf::Color getColor(int tileX, int tileY)
+    {
+        sf::Vector2u chunkLocale;
+        const auto& selectedChunk = getChunkAndTransform(tileX, tileY, chunkLocale);
+        return selectedChunk->getColor(chunkLocale.x, chunkLocale.y);
+    }
+
 private:
 	//increasing m_chunkSize by 4; fixes render problems when mapsize != chunksize
 	//sf::Vector2f m_chunkSize = sf::Vector2f(1024.f, 1024.f);
-    sf::Vector2f m_chunkSize = sf::Vector2f(4096.f, 4096.f);
+    sf::Vector2f m_chunkSize = sf::Vector2f(512.f, 512.f);
     sf::Vector2u m_chunkCount;
+    sf::Vector2u m_MapTileSize;   // general Tilesize of Map
     sf::FloatRect m_globalBounds;
 
     using TextureResource = std::map<std::string, std::unique_ptr<sf::Texture>>;
@@ -116,16 +145,19 @@ private:
         Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tilesets,
             const sf::Vector2f& position, const sf::Vector2f& tileCount, const sf::Vector2u& tileSize, std::size_t rowSize,  TextureResource& tr)
         {
-            auto opacity = static_cast<sf::Uint8>(layer.getOpacity() /  1.f * 255.f);
-            sf::Color vertColour = sf::Color::White;
-            vertColour.a = opacity;
-
+            setPosition(position);
+            layerOpacity = static_cast<sf::Uint8>(layer.getOpacity() /  1.f * 255.f);
+            sf::Color vertColour = sf::Color(200,200,200,255);
+            vertColour.a = layerOpacity;
             auto offset = layer.getOffset();
-            sf::Vector2f layerOffset(offset.x, offset.y);
-
+            layerOffset.x = offset.x;
+            layerOffset.x = offset.y;
+            chunkTileCount.x = tileCount.x;
+            chunkTileCount.y = tileCount.y;
+            mapTileSize = tileSize;
             const auto& tileIDs = layer.getTiles();
-            
-            //go through the tiles and create the appropriate arrays
+
+            //go through the tiles and create all arrays (for latter manipulation)
             for (const auto ts : tilesets)
             {
                 if(ts->getImagePath().empty())
@@ -134,63 +166,63 @@ private:
                     tmx::Logger::log("Chunks using " + ts->getName() + " will not be created", tmx::Logger::Type::Info);
                     continue;
                 }
-
-                bool chunkArrayCreated = false;
-                auto tileSetSize = ts->getTileSize();
-
-                sf::Vector2u tsTileCount;
-
-                std::size_t xPos = static_cast<std::size_t>(position.x / tileSize.x);
-                std::size_t yPos = static_cast<std::size_t>(position.y / tileSize.y);
-
-                for (auto y = yPos; y < yPos + tileCount.y; ++y)
+                m_chunkArrays.emplace_back(std::unique_ptr<ChunkArray>(new ChunkArray(*tr.find(ts->getImagePath())->second, *ts)));
+            }
+            std::size_t xPos = static_cast<std::size_t>(position.x / tileSize.x);
+            std::size_t yPos = static_cast<std::size_t>(position.y / tileSize.y);
+            for (auto y = yPos; y < yPos + tileCount.y; ++y)
+            {
+                for (auto x = xPos; x < xPos + tileCount.x; ++x)
                 {
-                    for (auto x = xPos; x < xPos + tileCount.x; ++x)
+                    auto idx = (y * rowSize + x);
+                    m_chunkTileIDs.emplace_back(tileIDs[idx]);
+                    m_chunkColors.emplace_back(vertColour);
+                }
+            }
+            generateTiles();
+        }
+
+        void generateTiles()
+        {
+            for (const auto& ca : m_chunkArrays)
+            {
+                sf::Uint32 idx = 0;
+                std::size_t xPos = static_cast<std::size_t>(getPosition().x / mapTileSize.x);
+                std::size_t yPos = static_cast<std::size_t>(getPosition().y / mapTileSize.y);
+                for (auto y = yPos; y < yPos + chunkTileCount.y; ++y)
+                {
+                    for (auto x = xPos; x < xPos + chunkTileCount.x; ++x)
                     {
-                        auto idx = (y * rowSize + x);
-                        if (idx < tileIDs.size() && tileIDs[idx].ID >= ts->getFirstGID()
-                            && tileIDs[idx].ID < (ts->getFirstGID() + ts->getTileCount()))
+                        if (idx < m_chunkTileIDs.size() && m_chunkTileIDs[idx].ID >= ca->m_firstGID
+                            && m_chunkTileIDs[idx].ID < ca->m_lastGID)
                         {
-                            //ID must belong to this set - so add a tile
-                            if (!chunkArrayCreated)
+                            sf::Vector2f tileOffset(x * mapTileSize.x, y * mapTileSize.y + mapTileSize.y - ca->tileSetSize.y);
+
+                            auto idIndex = m_chunkTileIDs[idx].ID - ca->m_firstGID;
+                            sf::Vector2f tileIndex(idIndex % ca->tsTileCount.x, idIndex / ca->tsTileCount.x);
+                            tileIndex.x *= ca->tileSetSize.x;
+                            tileIndex.y *= ca->tileSetSize.y;
+                            Tile tile =
                             {
-								// replace all usages of make_unique with unique_ptr,
-								// to be able to compile with C++11 (make_unique is the only function of c++14 that is used)
-                                
-								//m_chunkArrays.emplace_back(std::make_unique<ChunkArray>(*tr.find(ts->getImagePath())->second));
-								m_chunkArrays.emplace_back(std::unique_ptr<ChunkArray>(new ChunkArray(*tr.find(ts->getImagePath())->second)));
-                                auto texSize = m_chunkArrays.back()->getTextureSize();
-                                tsTileCount.x = texSize.x / tileSetSize.x;
-                                tsTileCount.y = texSize.y / tileSetSize.y;
-                                chunkArrayCreated = true;
-                            }
-                            auto& ca = m_chunkArrays.back();
-                            sf::Vector2f tileOffset(x * tileSize.x, y * tileSize.y + tileSize.y - tileSetSize.y);
-                            
-                            auto idIndex = tileIDs[idx].ID - ts->getFirstGID();
-                            sf::Vector2f tileIndex(idIndex % tsTileCount.x, idIndex / tsTileCount.x);
-                            tileIndex.x *= tileSetSize.x;
-                            tileIndex.y *= tileSetSize.y;
-                            Tile tile = 
-                            {
-#ifndef __ANDROID__								
-                                sf::Vertex(tileOffset, vertColour, tileIndex),
-                                sf::Vertex(tileOffset + sf::Vector2f(tileSetSize.x, 0.f), vertColour, tileIndex + sf::Vector2f(tileSetSize.x, 0.f)),
-                                sf::Vertex(tileOffset + sf::Vector2f(tileSetSize.x, tileSetSize.y), vertColour, tileIndex + sf::Vector2f(tileSetSize.x, tileSetSize.y)),
-                                sf::Vertex(tileOffset + sf::Vector2f(0.f, tileSetSize.y), vertColour, tileIndex + sf::Vector2f(0.f, tileSetSize.y))
+#ifndef __ANDROID__
+                                sf::Vertex(tileOffset - getPosition(), m_chunkColors[idx], tileIndex),
+                                sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, 0.f), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, 0.f)),
+                                sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y)),
+                                sf::Vertex(tileOffset - getPosition() + sf::Vector2f(0.f, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(0.f, ca->tileSetSize.y))
 #endif
 #ifdef __ANDROID__								
-								sf::Vertex(tileOffset, vertColour, tileIndex),
-								sf::Vertex(tileOffset + sf::Vector2f(tileSetSize.x, 0.f), vertColour, tileIndex + sf::Vector2f(tileSetSize.x, 0.f)),
-								sf::Vertex(tileOffset + sf::Vector2f(tileSetSize.x, tileSetSize.y), vertColour, tileIndex + sf::Vector2f(tileSetSize.x, tileSetSize.y)),
-								sf::Vertex(tileOffset, vertColour, tileIndex),
-								sf::Vertex(tileOffset + sf::Vector2f(0.f, tileSetSize.y), vertColour, tileIndex + sf::Vector2f(0.f, tileSetSize.y)),
-								sf::Vertex(tileOffset + sf::Vector2f(tileSetSize.x, tileSetSize.y), vertColour, tileIndex + sf::Vector2f(tileSetSize.x, tileSetSize.y))
+								sf::Vertex(tileOffset - getPosition(), m_chunkColors[idx], tileIndex),
+								sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, 0.f), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, 0.f)),
+								sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y)),
+								sf::Vertex(tileOffset - getPosition(), m_chunkColors[idx], tileIndex),
+								sf::Vertex(tileOffset - getPosition() + sf::Vector2f(0.f, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(0.f, ca->tileSetSize.y)),
+								sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y))
 #endif
                             };
-                            doFlips(tileIDs[idx].flipFlags,&tile[0].texCoords,&tile[1].texCoords,&tile[2].texCoords,&tile[3].texCoords);
+                            doFlips(m_chunkTileIDs[idx].flipFlags,&tile[0].texCoords,&tile[1].texCoords,&tile[2].texCoords,&tile[3].texCoords);
                             ca->addTile(tile);
                         }
+                        idx++;
                     }
                 }
             }
@@ -198,7 +230,40 @@ private:
         ~Chunk() = default;
         Chunk(const Chunk&) = delete;
         Chunk& operator = (const Chunk&) = delete;
+        tmx::TileLayer::Tile getTile(int x, int y)
+        {
+            return m_chunkTileIDs[calcIndexFrom(x,y)];
+        }
+        void setTile(int x, int y, tmx::TileLayer::Tile tile, bool refresh)
+        {
+            m_chunkTileIDs[calcIndexFrom(x,y)] = tile;
+            maybeRegenerate(refresh);
+        }
+        sf::Color getColor(int x, int y)
+        {
+            return m_chunkColors[calcIndexFrom(x,y)];
+        }
+        void setColor(int x, int y, sf::Color color, bool refresh)
+        {
+            m_chunkColors[calcIndexFrom(x,y)] = color;
+            maybeRegenerate(refresh);
+        }
+        void maybeRegenerate(bool refresh)
+        {
+            if (refresh)
+            {
+                for (const auto& ca : m_chunkArrays)
+                {
+                    ca->reset();
+                }
+                generateTiles();
+            }
 
+        }
+        int calcIndexFrom(int x, int y)
+        {
+            return x + y * chunkTileCount.x;
+        }
         bool empty() const { return m_chunkArrays.empty(); }
         void flipY(sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
         {
@@ -307,12 +372,28 @@ private:
         {
         public:
             using Ptr = std::unique_ptr<ChunkArray>;
-            explicit ChunkArray(const sf::Texture& t)
-                : m_texture(t) {}
+            tmx::Vector2u tileSetSize;
+            sf::Vector2u tsTileCount;
+            std::uint32_t m_firstGID, m_lastGID;
+            explicit ChunkArray(const sf::Texture& t, const tmx::Tileset& ts)
+                : m_texture(t)
+            {
+                auto texSize = getTextureSize();
+                tileSetSize = ts.getTileSize();
+                tsTileCount.x = texSize.x / tileSetSize.x;
+                tsTileCount.y = texSize.y / tileSetSize.y;
+                m_firstGID = ts.getFirstGID();
+                m_lastGID = ts.getLastGID();
+            }
+
             ~ChunkArray() = default;
             ChunkArray(const ChunkArray&) = delete;
             ChunkArray& operator = (const ChunkArray&) = delete;
 
+            void reset()
+            {
+                m_vertices.clear();
+            }
             void addTile(const Chunk::Tile& tile)
             {
                 for (const auto& v : tile)
@@ -337,6 +418,12 @@ private:
             }
         };
 
+        sf::Uint8 layerOpacity;     // opacity of the layer
+        sf::Vector2f layerOffset;   // Layer offset
+        sf::Vector2u mapTileSize;   // general Tilesize of Map
+        sf::Vector2f chunkTileCount;   // chunk tilecount
+        std::vector<tmx::TileLayer::Tile> m_chunkTileIDs; // stores all tiles in this chunk for later manipulation
+        std::vector<sf::Color> m_chunkColors; // stores colors for extended color effects
         std::vector<ChunkArray::Ptr> m_chunkArrays;
         void draw(sf::RenderTarget& rt, sf::RenderStates states) const override
         {
@@ -350,6 +437,14 @@ private:
 
     std::vector<Chunk::Ptr> m_chunks;
     mutable std::vector<const Chunk*> m_visibleChunks;
+    Chunk::Ptr& getChunkAndTransform(int x, int y, sf::Vector2u& chunkRelative)
+    {
+        uint32_t chunkX = floor((x * m_MapTileSize.x) / m_chunkSize.x);
+        uint32_t chunkY = floor((y * m_MapTileSize.y) / m_chunkSize.y);
+        chunkRelative.x = ((x * m_MapTileSize.x) - chunkX * m_chunkSize.x ) / m_MapTileSize.x ;
+        chunkRelative.y = ((y * m_MapTileSize.y) - chunkY * m_chunkSize.y ) / m_MapTileSize.y ;
+        return  m_chunks[chunkX + chunkY * m_chunkCount.x];
+    }
     void createChunks(const tmx::Map& map, const tmx::TileLayer& layer)
     {
         //look up all the tile sets and load the textures
@@ -402,10 +497,10 @@ private:
         m_chunkCount.y = static_cast<sf::Uint32>(std::ceil(bounds.height / m_chunkSize.y));
 
         sf::Vector2u tileSize(map.getTileSize().x, map.getTileSize().y);
-        sf::Vector2f tileCount(m_chunkSize.x / tileSize.x, m_chunkSize.y / tileSize.y);
 
         for (auto y = 0u; y < m_chunkCount.y; ++y)
         {
+            sf::Vector2f tileCount(m_chunkSize.x / tileSize.x, m_chunkSize.y / tileSize.y);
             for (auto x = 0u; x < m_chunkCount.x; ++x)
             {
                 // calculate size of each Chunk (clip against map)
@@ -413,7 +508,7 @@ private:
                 {
                     tileCount.x = (bounds.width - x * m_chunkSize.x) /  map.getTileSize().x;
                 }
-                if ((y+1) * m_chunkSize.y * map.getTileSize().y > bounds.height)
+                if ((y+1) * m_chunkSize.y > bounds.height)
                 {
                     tileCount.y = (bounds.height - y * m_chunkSize.y) /  map.getTileSize().y;
                 }
