@@ -82,7 +82,7 @@ void Tileset::parse(pugi::xml_node node)
             m_workingDir = "";
         }
 
-        //see if doc can be opened       
+        //see if doc can be opened
         auto result = tsxDoc.load_file(path.c_str());
         if (!result)
         {
@@ -356,7 +356,7 @@ void Tileset::parseTileNode(const pugi::xml_node& node)
             {
                 Tile::Animation::Frame frame;
                 frame.duration = frameNode.attribute("duration").as_int();
-                frame.tileID = frameNode.attribute("tileid").as_int();
+                frame.tileID = frameNode.attribute("tileid").as_int() + m_firstGID;
                 tile.animation.frames.push_back(frame);
             }
         }
