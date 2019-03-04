@@ -194,7 +194,7 @@ private:
                     for (auto x = xPos; x < xPos + chunkTileCount.x; ++x)
                     {
                         if (idx < m_chunkTileIDs.size() && m_chunkTileIDs[idx].ID >= ca->m_firstGID
-                            && m_chunkTileIDs[idx].ID < ca->m_lastGID)
+                            && m_chunkTileIDs[idx].ID <= ca->m_lastGID)
                         {
                             sf::Vector2f tileOffset(x * mapTileSize.x, y * mapTileSize.y + mapTileSize.y - ca->tileSetSize.y);
 
