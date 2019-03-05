@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016
+(c) Matt Marchant & contributors 2016 - 2019
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -72,7 +72,7 @@ public:
             m_chunkSize.y = std::floor(m_chunkSize.y / tileSize.y) * tileSize.y;
             m_MapTileSize.x = map.getTileSize().x;
             m_MapTileSize.y = map.getTileSize().y;
-            const auto& layer = *dynamic_cast<const tmx::TileLayer*>(layers[idx].get());
+            const auto& layer = layers[idx]->getLayerAs<tmx::TileLayer>();
             createChunks(map, layer);
 
             auto mapSize = map.getBounds();
@@ -91,7 +91,7 @@ public:
 
     const sf::FloatRect& getGlobalBounds() const { return m_globalBounds; }
 
-    void setTile(int tileX, int tileY, tmx::TileLayer::Tile tile, bool refresh=true)
+    void setTile(int tileX, int tileY, tmx::TileLayer::Tile tile, bool refresh = true)
     {
         sf::Vector2u chunkLocale;
         const auto& selectedChunk = getChunkAndTransform(tileX, tileY, chunkLocale);
@@ -104,7 +104,7 @@ public:
         const auto& selectedChunk = getChunkAndTransform(tileX, tileY, chunkLocale);
         return selectedChunk->getTile(chunkLocale.x, chunkLocale.y);
     }
-    void setColor(int tileX, int tileY, sf::Color color, bool refresh=true)
+    void setColor(int tileX, int tileY, sf::Color color, bool refresh = true)
     {
         sf::Vector2u chunkLocale;
         const auto& selectedChunk = getChunkAndTransform(tileX, tileY, chunkLocale);
@@ -132,7 +132,7 @@ private:
     struct AnimationState
     {
         sf::Vector2u tileCords;
-        sf::Time start_time;
+        sf::Time startTime;
         tmx::Tileset::Tile animTile;
         std::uint8_t flipFlags;
     };
@@ -152,13 +152,12 @@ private:
 #endif
         Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tilesets,
             const sf::Vector2f& position, const sf::Vector2f& tileCount, const sf::Vector2u& tileSize,
-            std::size_t rowSize,  TextureResource& tr, std::map<uint32_t, tmx::Tileset::Tile> animTiles)
+            std::size_t rowSize,  TextureResource& tr, const std::map<std::uint32_t, tmx::Tileset::Tile>& animTiles)
             : m_animTiles(animTiles)
         {
             setPosition(position);
             layerOpacity = static_cast<sf::Uint8>(layer.getOpacity() /  1.f * 255.f);
-            sf::Color vertColour = sf::Color(200,200,200,255);
-            vertColour.a = layerOpacity;
+            sf::Color vertColour = sf::Color(200 ,200, 200, layerOpacity);
             auto offset = layer.getOffset();
             layerOffset.x = offset.x;
             layerOffset.x = offset.y;
@@ -168,7 +167,7 @@ private:
             const auto& tileIDs = layer.getTiles();
 
             //go through the tiles and create all arrays (for latter manipulation)
-            for (const auto ts : tilesets)
+            for (const auto& ts : tilesets)
             {
                 if(ts->getImagePath().empty())
                 {
@@ -176,7 +175,7 @@ private:
                     tmx::Logger::log("Chunks using " + ts->getName() + " will not be created", tmx::Logger::Type::Info);
                     continue;
                 }
-                m_chunkArrays.emplace_back(std::unique_ptr<ChunkArray>(new ChunkArray(*tr.find(ts->getImagePath())->second, *ts)));
+                m_chunkArrays.emplace_back(std::make_unique<ChunkArray>(*tr.find(ts->getImagePath())->second, *ts));
             }
             std::size_t xPos = static_cast<std::size_t>(position.x / tileSize.x);
             std::size_t yPos = static_cast<std::size_t>(position.y / tileSize.y);
@@ -192,7 +191,7 @@ private:
             generateTiles(true);
         }
 
-        void generateTiles(bool registerAnimation=false)
+        void generateTiles(bool registerAnimation = false)
         {
             if (registerAnimation)
             {
@@ -210,11 +209,11 @@ private:
                         if (idx < m_chunkTileIDs.size() && m_chunkTileIDs[idx].ID >= ca->m_firstGID
                             && m_chunkTileIDs[idx].ID <= ca->m_lastGID)
                         {
-                            if (registerAnimation && m_animTiles.find( m_chunkTileIDs[idx].ID) != m_animTiles.end())
+                            if (registerAnimation && m_animTiles.find(m_chunkTileIDs[idx].ID) != m_animTiles.end())
                             {
                                 AnimationState as;
                                 as.animTile = m_animTiles[m_chunkTileIDs[idx].ID];
-                                as.start_time = sf::milliseconds(0);
+                                as.startTime = sf::milliseconds(0);
                                 as.tileCords = sf::Vector2u(x,y);
                                 m_activeAnimations.push_back(as);
                             }
@@ -447,7 +446,7 @@ private:
         sf::Vector2f chunkTileCount;   // chunk tilecount
         std::vector<tmx::TileLayer::Tile> m_chunkTileIDs; // stores all tiles in this chunk for later manipulation
         std::vector<sf::Color> m_chunkColors; // stores colors for extended color effects
-        std::map<uint32_t, tmx::Tileset::Tile> m_animTiles;    // animation catalog
+        std::map<std::uint32_t, tmx::Tileset::Tile> m_animTiles;    // animation catalogue
         std::vector<AnimationState> m_activeAnimations;     // Animations to be done in this chunk
         std::vector<ChunkArray::Ptr> m_chunkArrays;
         void draw(sf::RenderTarget& rt, sf::RenderStates states) const override
@@ -493,11 +492,11 @@ private:
 
         sf::Image fallback;
         fallback.create(2, 2, sf::Color::Magenta);
-        for (const auto ts : usedTileSets)
+        for (const auto& ts : usedTileSets)
         {
             const auto& path = ts->getImagePath();
             //std::unique_ptr<sf::Texture> newTexture = std::make_unique<sf::Texture>();
-			std::unique_ptr<sf::Texture> newTexture = std::unique_ptr<sf::Texture>(new sf::Texture());
+			std::unique_ptr<sf::Texture> newTexture = std::make_unique<sf::Texture>();
             sf::Image img;
             if (!img.loadFromFile(path))
             {
@@ -529,18 +528,18 @@ private:
             for (auto x = 0u; x < m_chunkCount.x; ++x)
             {
                 // calculate size of each Chunk (clip against map)
-                if ((x+1) * m_chunkSize.x > bounds.width)
+                if ((x + 1) * m_chunkSize.x > bounds.width)
                 {
                     tileCount.x = (bounds.width - x * m_chunkSize.x) /  map.getTileSize().x;
                 }
-                if ((y+1) * m_chunkSize.y > bounds.height)
+                if ((y + 1) * m_chunkSize.y > bounds.height)
                 {
                     tileCount.y = (bounds.height - y * m_chunkSize.y) /  map.getTileSize().y;
                 }
                 //m_chunks.emplace_back(std::make_unique<Chunk>(layer, usedTileSets,
                 //    sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y), tileCount, map.getTileCount().x, m_textureResource));
-				m_chunks.emplace_back(std::unique_ptr<Chunk>(new Chunk(layer, usedTileSets,
-                    sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y), tileCount, tileSize, map.getTileCount().x, m_textureResource, map.getAnimatedTiles())));
+				m_chunks.emplace_back(std::make_unique<Chunk>(layer, usedTileSets,
+                    sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y), tileCount, tileSize, map.getTileCount().x, m_textureResource, map.getAnimatedTiles()));
             }
         }
     }
@@ -587,12 +586,12 @@ private:
         {
             for (AnimationState& as : c->getActiveAnimations())
             {
-                sf::Time delta = elapsed - as.start_time;
+                sf::Time delta = elapsed - as.startTime;
                 auto overallDuration = sf::milliseconds(0);
                 tmx::TileLayer::Tile tile;
                 tile.ID = as.animTile.animation.frames[0].tileID;
                 tile.flipFlags = 0; // TODO: get flipFlags from original tmx::TileLayer::Tile
-                for(auto frame : as.animTile.animation.frames)
+                for(const auto& frame : as.animTile.animation.frames)
                 {
                     overallDuration += sf::milliseconds(frame.duration);
                     if (delta < overallDuration)    // found frame to display
@@ -603,7 +602,7 @@ private:
                 }
                 if (delta > overallDuration)    // loop the animation by resetting start time
                 {
-                    as.start_time = elapsed;
+                    as.startTime = elapsed;
                 }
                 setTile(as.tileCords.x, as.tileCords.y, tile);
             }

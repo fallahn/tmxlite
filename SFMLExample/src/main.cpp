@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016
+(c) Matt Marchant & contributors 2016 - 2019
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -43,7 +43,7 @@ int main()
     MapLayer layerOne(map, 1);
     MapLayer layerTwo(map, 2);
 
-    sf::Clock global_clock;
+    sf::Clock globalClock;
     while (window.isOpen())
     {
         sf::Event event;
@@ -53,7 +53,7 @@ int main()
                 window.close();
         }
 
-        sf::Time duration = global_clock.getElapsedTime();
+        sf::Time duration = globalClock.getElapsedTime();
         layerZero.update(duration);
 
         window.clear(sf::Color::Black);

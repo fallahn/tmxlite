@@ -293,7 +293,7 @@ bool Map::load(const std::string& path)
     {
         for(const auto& tile : ts.getTiles())
         {
-            if (tile.animation.frames.size()!=0)
+            if (!tile.animation.frames.empty())
             {
                 m_animTiles[tile.ID + ts.getFirstGID()] = tile;
             }

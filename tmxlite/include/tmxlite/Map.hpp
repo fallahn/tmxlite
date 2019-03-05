@@ -179,7 +179,7 @@ namespace tmx
         /*!
         \brief Returns a Hashmap of all animated tiles accessible by TileID
         */
-        const std::map<uint32_t, Tileset::Tile>& getAnimatedTiles() const { return m_animTiles; }
+        const std::map<std::uint32_t, Tileset::Tile>& getAnimatedTiles() const { return m_animTiles; }
 
 
     private:
@@ -201,7 +201,8 @@ namespace tmx
         std::vector<Tileset> m_tilesets;
         std::vector<Layer::Ptr> m_layers;
         std::vector<Property> m_properties;
-        std::map<uint32_t, Tileset::Tile> m_animTiles;
+        std::map<std::uint32_t, Tileset::Tile> m_animTiles;
+
         //always returns false so we can return this
         //on load failure
         bool reset();
