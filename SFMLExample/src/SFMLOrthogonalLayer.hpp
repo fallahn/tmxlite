@@ -63,7 +63,7 @@ public:
     MapLayer(const tmx::Map& map, std::size_t idx)
     {
         const auto& layers = map.getLayers();
-        if (map.getOrientation() == tmx::Orientation::Orthogonal && 
+        if (map.getOrientation() == tmx::Orientation::Orthogonal &&
             idx < layers.size() && layers[idx]->getType() == tmx::Layer::Type::Tile)
         {
             //round the chunk size to the nearest tile
@@ -129,21 +129,31 @@ private:
     using TextureResource = std::map<std::string, std::unique_ptr<sf::Texture>>;
     TextureResource m_textureResource;
 
-    class Chunk final : public sf::Transformable, public sf::Drawable 
+    struct AnimationState
+    {
+        sf::Vector2u tileCords;
+        sf::Time start_time;
+        tmx::Tileset::Tile animTile;
+        std::uint8_t flipFlags;
+    };
+
+    class Chunk final : public sf::Transformable, public sf::Drawable
     {
     public:
         using Ptr = std::unique_ptr<Chunk>;
-		
+
 		// the Android OpenGL driver isn't capable of rendering quads,
 		// so we need to use two triangles per tile instead
-#ifdef __ANDROID__        
+#ifdef __ANDROID__
 		using Tile = std::array<sf::Vertex, 6u>;
-#endif		
+#endif
 #ifndef __ANDROID__
 		using Tile = std::array<sf::Vertex, 4u>;
-#endif		
+#endif
         Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tilesets,
-            const sf::Vector2f& position, const sf::Vector2f& tileCount, const sf::Vector2u& tileSize, std::size_t rowSize,  TextureResource& tr)
+            const sf::Vector2f& position, const sf::Vector2f& tileCount, const sf::Vector2u& tileSize,
+            std::size_t rowSize,  TextureResource& tr, std::map<uint32_t, tmx::Tileset::Tile> animTiles)
+            : m_animTiles(animTiles)
         {
             setPosition(position);
             layerOpacity = static_cast<sf::Uint8>(layer.getOpacity() /  1.f * 255.f);
@@ -179,11 +189,15 @@ private:
                     m_chunkColors.emplace_back(vertColour);
                 }
             }
-            generateTiles();
+            generateTiles(true);
         }
 
-        void generateTiles()
+        void generateTiles(bool registerAnimation=false)
         {
+            if (registerAnimation)
+            {
+                m_activeAnimations.clear();
+            }
             for (const auto& ca : m_chunkArrays)
             {
                 sf::Uint32 idx = 0;
@@ -194,9 +208,18 @@ private:
                     for (auto x = xPos; x < xPos + chunkTileCount.x; ++x)
                     {
                         if (idx < m_chunkTileIDs.size() && m_chunkTileIDs[idx].ID >= ca->m_firstGID
-                            && m_chunkTileIDs[idx].ID < ca->m_lastGID)
+                            && m_chunkTileIDs[idx].ID <= ca->m_lastGID)
                         {
-                            sf::Vector2f tileOffset(x * mapTileSize.x, y * mapTileSize.y + mapTileSize.y - ca->tileSetSize.y);
+                            if (registerAnimation && m_animTiles.find( m_chunkTileIDs[idx].ID) != m_animTiles.end())
+                            {
+                                AnimationState as;
+                                as.animTile = m_animTiles[m_chunkTileIDs[idx].ID];
+                                as.start_time = sf::milliseconds(0);
+                                as.tileCords = sf::Vector2u(x,y);
+                                m_activeAnimations.push_back(as);
+                            }
+
+                            sf::Vector2f tileOffset(x * mapTileSize.x, (float)y * mapTileSize.y + mapTileSize.y - ca->tileSetSize.y);
 
                             auto idIndex = m_chunkTileIDs[idx].ID - ca->m_firstGID;
                             sf::Vector2f tileIndex(idIndex % ca->tsTileCount.x, idIndex / ca->tsTileCount.x);
@@ -210,7 +233,7 @@ private:
                                 sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y)),
                                 sf::Vertex(tileOffset - getPosition() + sf::Vector2f(0.f, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(0.f, ca->tileSetSize.y))
 #endif
-#ifdef __ANDROID__								
+#ifdef __ANDROID__
 								sf::Vertex(tileOffset - getPosition(), m_chunkColors[idx], tileIndex),
 								sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, 0.f), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, 0.f)),
 								sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y)),
@@ -230,7 +253,8 @@ private:
         ~Chunk() = default;
         Chunk(const Chunk&) = delete;
         Chunk& operator = (const Chunk&) = delete;
-        tmx::TileLayer::Tile getTile(int x, int y)
+        std::vector<AnimationState>& getActiveAnimations() { return m_activeAnimations; }
+        tmx::TileLayer::Tile getTile(int x, int y) const
         {
             return m_chunkTileIDs[calcIndexFrom(x,y)];
         }
@@ -239,7 +263,7 @@ private:
             m_chunkTileIDs[calcIndexFrom(x,y)] = tile;
             maybeRegenerate(refresh);
         }
-        sf::Color getColor(int x, int y)
+        sf::Color getColor(int x, int y) const
         {
             return m_chunkColors[calcIndexFrom(x,y)];
         }
@@ -258,9 +282,8 @@ private:
                 }
                 generateTiles();
             }
-
         }
-        int calcIndexFrom(int x, int y)
+        int calcIndexFrom(int x, int y) const
         {
             return x + y * chunkTileCount.x;
         }
@@ -412,9 +435,9 @@ private:
 #ifndef __ANDROID__
                 rt.draw(m_vertices.data(), m_vertices.size(), sf::Quads, states);
 #endif
-#ifdef __ANDROID__				
+#ifdef __ANDROID__
 				rt.draw(m_vertices.data(), m_vertices.size(), sf::Triangles, states);
-#endif				
+#endif
             }
         };
 
@@ -424,6 +447,8 @@ private:
         sf::Vector2f chunkTileCount;   // chunk tilecount
         std::vector<tmx::TileLayer::Tile> m_chunkTileIDs; // stores all tiles in this chunk for later manipulation
         std::vector<sf::Color> m_chunkColors; // stores colors for extended color effects
+        std::map<uint32_t, tmx::Tileset::Tile> m_animTiles;    // animation catalog
+        std::vector<AnimationState> m_activeAnimations;     // Animations to be done in this chunk
         std::vector<ChunkArray::Ptr> m_chunkArrays;
         void draw(sf::RenderTarget& rt, sf::RenderStates states) const override
         {
@@ -436,7 +461,7 @@ private:
     };
 
     std::vector<Chunk::Ptr> m_chunks;
-    mutable std::vector<const Chunk*> m_visibleChunks;
+    mutable std::vector<Chunk*> m_visibleChunks;
     Chunk::Ptr& getChunkAndTransform(int x, int y, sf::Vector2u& chunkRelative)
     {
         uint32_t chunkX = floor((x * m_MapTileSize.x) / m_chunkSize.x);
@@ -512,10 +537,10 @@ private:
                 {
                     tileCount.y = (bounds.height - y * m_chunkSize.y) /  map.getTileSize().y;
                 }
-                //m_chunks.emplace_back(std::make_unique<Chunk>(layer, usedTileSets, 
+                //m_chunks.emplace_back(std::make_unique<Chunk>(layer, usedTileSets,
                 //    sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y), tileCount, map.getTileCount().x, m_textureResource));
-				m_chunks.emplace_back(std::unique_ptr<Chunk>(new Chunk(layer, usedTileSets, 
-                    sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y), tileCount, tileSize, map.getTileCount().x, m_textureResource)));
+				m_chunks.emplace_back(std::unique_ptr<Chunk>(new Chunk(layer, usedTileSets,
+                    sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y), tileCount, tileSize, map.getTileCount().x, m_textureResource, map.getAnimatedTiles())));
             }
         }
     }
@@ -524,13 +549,13 @@ private:
     {
         sf::Vector2f viewCorner = view.getCenter();
         viewCorner -= view.getSize() / 2.f;
-        
+
         int posX = static_cast<int>(std::floor(viewCorner.x / m_chunkSize.x));
         int posY = static_cast<int>(std::floor(viewCorner.y / m_chunkSize.y));
         int posX2 = static_cast<int>(std::ceil((viewCorner.x + view.getSize().x) / m_chunkSize.x));
         int posY2 = static_cast<int>(std::ceil((viewCorner.y + view.getSize().x)/ m_chunkSize.y));
 
-        std::vector<const Chunk*> visible;
+        std::vector<Chunk*> visible;
         for (auto y = posY; y < posY2; ++y)
         {
             for (auto x = posX; x < posX2; ++x)
@@ -555,6 +580,36 @@ private:
             rt.draw(*c, states);
         }
     }
+    public:
+    void update(sf::Time elapsed)
+    {
+        for (auto& c : m_visibleChunks)
+        {
+            for (AnimationState& as : c->getActiveAnimations())
+            {
+                sf::Time delta = elapsed - as.start_time;
+                auto overallDuration = sf::milliseconds(0);
+                tmx::TileLayer::Tile tile;
+                tile.ID = as.animTile.animation.frames[0].tileID;
+                tile.flipFlags = 0; // TODO: get flipFlags from original tmx::TileLayer::Tile
+                for(auto frame : as.animTile.animation.frames)
+                {
+                    overallDuration += sf::milliseconds(frame.duration);
+                    if (delta < overallDuration)    // found frame to display
+                    {
+                        tile.ID = frame.tileID;
+                        break;
+                    }
+                }
+                if (delta > overallDuration)    // loop the animation by resetting start time
+                {
+                    as.start_time = elapsed;
+                }
+                setTile(as.tileCords.x, as.tileCords.y, tile);
+            }
+        }
+    }
+
 };
 
 #endif //SFML_ORTHO_HPP_

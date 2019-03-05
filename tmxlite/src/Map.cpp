@@ -288,6 +288,17 @@ bool Map::load(const std::string& path)
             LOG("Unidentified name " + name + ": node skipped", Logger::Type::Warning);
         }
     }
+    // fill animated tiles for easier lookup into map
+    for(const auto& ts : m_tilesets)
+    {
+        for(const auto& tile : ts.getTiles())
+        {
+            if (tile.animation.frames.size()!=0)
+            {
+                m_animTiles[tile.ID + ts.getFirstGID()] = tile;
+            }
+        }
+    }
 
     return true;
 }

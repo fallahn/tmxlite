@@ -43,6 +43,7 @@ int main()
     MapLayer layerOne(map, 1);
     MapLayer layerTwo(map, 2);
 
+    sf::Clock global_clock;
     while (window.isOpen())
     {
         sf::Event event;
@@ -51,6 +52,9 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+
+        sf::Time duration = global_clock.getElapsedTime();
+        layerZero.update(duration);
 
         window.clear(sf::Color::Black);
         window.draw(layerZero);
