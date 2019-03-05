@@ -559,7 +559,7 @@ private:
         {
             for (auto x = posX; x < posX2; ++x)
             {
-                auto idx = y * int(m_chunkCount.x) + x;
+                std::size_t idx = y * int(m_chunkCount.x) + x;
                 if (idx >= 0u && idx < m_chunks.size() && !m_chunks[idx]->empty())
                 {
                     visible.push_back(m_chunks[idx].get());
