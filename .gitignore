@@ -6,3 +6,5 @@ ReleaseStatic
 /tmxlite/bin
 Debug
 Release
+
+*.swp
