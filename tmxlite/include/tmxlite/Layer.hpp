@@ -58,7 +58,7 @@ namespace tmx
     public:
         using Ptr = std::unique_ptr<Layer>;
 
-        explicit Layer() : m_opacity(1.f), m_visible(true) {};
+        Layer() : m_opacity(1.f), m_visible(true) {};
         virtual ~Layer() = default;
 
         /*
