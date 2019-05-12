@@ -32,6 +32,7 @@ source distribution.
 #include <tmxlite/ObjectGroup.hpp>
 #include <tmxlite/ImageLayer.hpp>
 #include <tmxlite/TileLayer.hpp>
+#include <tmxlite/LayerGroup.hpp>
 #include <tmxlite/detail/Log.hpp>
 #include <tmxlite/detail/Android.hpp>
 
@@ -282,6 +283,11 @@ bool Map::load(const std::string& path)
                 m_properties.emplace_back();
                 m_properties.back().parse(child);
             }
+        }
+        else if (name == "group")
+        {
+            m_layers.emplace_back(std::make_unique<LayerGroup>(m_workingDirectory, m_tileCount));
+            m_layers.back()->parse(node);
         }
         else
         {
