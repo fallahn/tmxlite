@@ -41,10 +41,10 @@ namespace tmx
 
         LayerGroup(const std::string& workDir, const Vector2u& tileCount);
         ~LayerGroup() = default;
-		LayerGroup(const LayerGroup&) = delete;
-		const LayerGroup& operator = (const LayerGroup&) = delete;
-		LayerGroup(LayerGroup&&) = default;
-		LayerGroup& operator = (LayerGroup&&) = default;
+        LayerGroup(const LayerGroup&) = delete;
+        const LayerGroup& operator = (const LayerGroup&) = delete;
+        LayerGroup(LayerGroup&&) = default;
+        LayerGroup& operator = (LayerGroup&&) = default;
 
 
         Type getType() const override { return Layer::Type::Group; }
