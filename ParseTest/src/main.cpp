@@ -27,6 +27,7 @@ source distribution.
 
 #include <tmxlite/Map.hpp>
 #include <tmxlite/ObjectGroup.hpp>
+#include <tmxlite/LayerGroup.hpp>
 
 #include <iostream>
 
@@ -37,7 +38,7 @@ int main()
     if (map.load("maps/platform.tmx"))
     {
         std::cout << "Loaded Map version: " << map.getVersion().upper << ", " << map.getVersion().lower << std::endl;
-        
+
         const auto& mapProperties = map.getProperties();
         std::cout << "Map has " << mapProperties.size() << " properties" << std::endl;
         for (const auto& prop : mapProperties)
@@ -54,6 +55,18 @@ int main()
         {
             std::cout << "Found Layer: " << layer->getName() << std::endl;
             std::cout << "Layer Type: " << int(layer->getType()) << std::endl;
+
+            if (layer->getType() == tmx::Layer::Type::Group)
+            {
+                std::cout << "Checking sublayers" << std::endl;
+                const auto& sublayers = layer->getLayerAs<tmx::LayerGroup>().getLayers();
+                std::cout << "LayerGroup has " << sublayers.size() << " layers" << std::endl;
+                for (const auto& sublayer : sublayers)
+                {
+                    std::cout << "Found Layer: " << sublayer->getName() << std::endl;
+                    std::cout << "Layer Type: " << int(sublayer->getType()) << std::endl;
+                }
+            }
 
             if(layer->getType() == tmx::Layer::Type::Object)
             {
