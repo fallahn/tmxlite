@@ -7,24 +7,30 @@
  <tileset firstgid="43" name="tileset02" tilewidth="32" tileheight="32" tilecount="24" columns="6">
   <image source="../images/tilemap/tileset02.png" width="192" height="128"/>
  </tileset>
- <layer name="Far" width="200" height="40">
-  <data encoding="base64" compression="zlib">
-   eJzt2VsKwyAQBdCsoo8VNN3/BvvbQC1Em9iZOQeE/AQcyFXjLAuc69YxIKuePMgLVckCtNkz4LvrjgGVXHYMqGZPPuSFSuQCPrt3Dshudt/jOfAuZLfOngD8MfmANvkY43ya22P2BIKzvkCbfECbfECb8ykAAABnqNb/qlYvY6rdX0avV77PVe3+Mnq90fMNv/a+Z8gHbK2NZ2B7Jox+PqQO/8rQZi0HAAAAiCf7nWf2+jhW9v5u9vo41sj3E2Ftlg9GjPTMIvTbIswRYKYXswgSvA==
-  </data>
- </layer>
- <layer name="Middle" width="200" height="40">
+ <group name="TestGroup">
   <properties>
-   <property name="test layer property" type="bool" value="true"/>
+   <property name="layer group prop" value="hello"/>
+   <property name="another property" type="bool" value="false"/>
   </properties>
-  <data encoding="base64" compression="zlib">
-   eJztm9tOw0AMBc0DPAEfAKIY6P9/I6kgqA25NInXa3dnpCOeqJxmZ+89CgCMcfwNAPwHPwCmwQ+AafDDlrvaBYAp+GHLZ5fDIF9VK4I94AfU4qXL60LeqlX3A34ATIMfvrA+yQV++MC6JCf4AdkpOSbjB2RmbFy2HJvxw5bh+2IOlRv8iA9rehueujwO8rzwP/gRk6l5A+PSNua+z7nvEj/KsqXPuhW2jHvRxkr8KMfWPmsN0dqTdnkvlA+/x/ijZT/G+vYM/XuksxSVyzZ8LBxvT1r1g/n9PlR8fJiKlyOt+gHbUKnrhbcj+AFLqPjNn6LNt/AjLyXniCpxnfAcS/ADelRyOeHhCH7ACZX67dvSkdO+99T+5FzO9y7vzz63BaKdFURBpX67tozVecv5Z94Kpzl5/3yHkb/s3V6iUr89Zwi0h0r9dpclUI+18+S58/1r5pAqedfg+NEOKuXuKl07ryb4sYZr+nKL+1kq9d85wY81LJ23WZy9qdCHZ0x2ou/dquBF5mRGJeZvB3pU6r9f0p4fKuv6ZG9H1tZH4iYTKtvbnYcje+ojMZMFlf3PWtIRi/pIvERHxbZPLuGIGtZHYiUiKmXPtKzW7X2dtd8hKZcH2XYf2CrDMzd1fPY9jnjWSeqmxl2HKHcgstRJ/PMNRu5JzA==
-  </data>
- </layer>
- <layer name="Near" width="200" height="40">
-  <data encoding="base64" compression="zlib">
-   eJzt2+FqwjAUBtDihO2fbnPv/6rbYGUxNOuqbW9izoEgIsqF+jVpczsMAAAAAACkPqILgIq9RxdA1U7RBQSTDyiTjz4dowtoxJr5eP0a52T0PjfX7PDzuuUxajmDY+3mD7byFF3AHcba5YN7nSfGt0PxG/WLzke6FnsLqgFKovNBXVwrXhvnvsswPT9ODed5lvC/YU/5+t45HwCgX+la0HUJsIaWexBga3M9CM+7VAH1SNedf/Ug9JCNUm8G9Mxzm1CmrwfKWsrHXN/RlP/s7S/9TfqR58N9PPiV5+PWZ4n0YPGI1soHPKJL9r7lZ+0AAAAgZQ+Bnr3MfO4eKb3LM5Lujy29Rzq3t3ZLX8VeTkPd9QHU4hO/Kwa1
-  </data>
- </layer>
+  <layer name="Far" width="200" height="40">
+   <data encoding="base64" compression="zlib">
+    eJzt2VsKwyAQBdCsoo8VNN3/BvvbQC1Em9iZOQeE/AQcyFXjLAuc69YxIKuePMgLVckCtNkz4LvrjgGVXHYMqGZPPuSFSuQCPrt3Dshudt/jOfAuZLfOngD8MfmANvkY43ya22P2BIKzvkCbfECbfECb8ykAAABnqNb/qlYvY6rdX0avV77PVe3+Mnq90fMNv/a+Z8gHbK2NZ2B7Jox+PqQO/8rQZi0HAAAAiCf7nWf2+jhW9v5u9vo41sj3E2Ftlg9GjPTMIvTbIswRYKYXswgSvA==
+   </data>
+  </layer>
+  <layer name="Middle" width="200" height="40">
+   <properties>
+    <property name="test layer property" type="bool" value="true"/>
+   </properties>
+   <data encoding="base64" compression="zlib">
+    eJztm9tOw0AMBc0DPAEfAKIY6P9/I6kgqA25NInXa3dnpCOeqJxmZ+89CgCMcfwNAPwHPwCmwQ+AafDDlrvaBYAp+GHLZ5fDIF9VK4I94AfU4qXL60LeqlX3A34ATIMfvrA+yQV++MC6JCf4AdkpOSbjB2RmbFy2HJvxw5bh+2IOlRv8iA9rehueujwO8rzwP/gRk6l5A+PSNua+z7nvEj/KsqXPuhW2jHvRxkr8KMfWPmsN0dqTdnkvlA+/x/ijZT/G+vYM/XuksxSVyzZ8LBxvT1r1g/n9PlR8fJiKlyOt+gHbUKnrhbcj+AFLqPjNn6LNt/AjLyXniCpxnfAcS/ADelRyOeHhCH7ACZX67dvSkdO+99T+5FzO9y7vzz63BaKdFURBpX67tozVecv5Z94Kpzl5/3yHkb/s3V6iUr89Zwi0h0r9dpclUI+18+S58/1r5pAqedfg+NEOKuXuKl07ryb4sYZr+nKL+1kq9d85wY81LJ23WZy9qdCHZ0x2ou/dquBF5mRGJeZvB3pU6r9f0p4fKuv6ZG9H1tZH4iYTKtvbnYcje+ojMZMFlf3PWtIRi/pIvERHxbZPLuGIGtZHYiUiKmXPtKzW7X2dtd8hKZcH2XYf2CrDMzd1fPY9jnjWSeqmxl2HKHcgstRJ/PMNRu5JzA==
+   </data>
+  </layer>
+  <layer name="Near" width="200" height="40">
+   <data encoding="base64" compression="zlib">
+    eJzt2+FqwjAUBtDihO2fbnPv/6rbYGUxNOuqbW9izoEgIsqF+jVpczsMAAAAAACkPqILgIq9RxdA1U7RBQSTDyiTjz4dowtoxJr5eP0a52T0PjfX7PDzuuUxajmDY+3mD7byFF3AHcba5YN7nSfGt0PxG/WLzke6FnsLqgFKovNBXVwrXhvnvsswPT9ODed5lvC/YU/5+t45HwCgX+la0HUJsIaWexBga3M9CM+7VAH1SNedf/Ug9JCNUm8G9Mxzm1CmrwfKWsrHXN/RlP/s7S/9TfqR58N9PPiV5+PWZ4n0YPGI1soHPKJL9r7lZ+0AAAAgZQ+Bnr3MfO4eKb3LM5Lujy29Rzq3t3ZLX8VeTkPd9QHU4hO/Kwa1
+   </data>
+  </layer>
+ </group>
  <objectgroup name="Objects" offsetx="1" offsety="-2">
   <properties>
    <property name="another object layer property" value="salmon"/>

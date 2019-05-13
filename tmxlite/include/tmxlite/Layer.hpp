@@ -47,6 +47,7 @@ namespace tmx
     class TileLayer;
     class ObjectGroup;
     class ImageLayer;
+    class LayerGroup;
     /*!
     \brief Represents a layer of a tmx format tile map.
     This is an abstract base class from which all layer
@@ -57,7 +58,7 @@ namespace tmx
     public:
         using Ptr = std::unique_ptr<Layer>;
 
-        explicit Layer() : m_opacity(1.f), m_visible(true) {};
+        Layer() : m_opacity(1.f), m_visible(true) {};
         virtual ~Layer() = default;
 
         /*
@@ -65,12 +66,14 @@ namespace tmx
         Tile: this layer is a TileLayer type
         Object: This layer is an ObjectGroup type
         Image: This layer is an ImageLayer type
+        Group: This layer is a LayerGroup type
         */
         enum class Type
         {
             Tile,
             Object,
-            Image
+            Image,
+            Group
         };
 
         /*!
@@ -84,7 +87,7 @@ namespace tmx
         \brief Use this to get a reference to the concrete layer type
         which this layer points to.
         Use getType() to return the type value of this layer and determine
-        if the concrete type is TileLayer, ObjectGroup or ImageLayer
+        if the concrete type is TileLayer, ObjectGroup, ImageLayer, or LayerGroup
         */
         template <typename T>
         T& getLayerAs();

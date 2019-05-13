@@ -255,6 +255,7 @@
     <ClInclude Include="include\tmxlite\FreeFuncs.hpp" />
     <ClInclude Include="include\tmxlite\ImageLayer.hpp" />
     <ClInclude Include="include\tmxlite\Layer.hpp" />
+    <ClInclude Include="include\tmxlite\LayerGroup.hpp" />
     <ClInclude Include="include\tmxlite\Map.hpp" />
     <ClInclude Include="include\tmxlite\Object.hpp" />
     <ClInclude Include="include\tmxlite\ObjectGroup.hpp" />
@@ -267,6 +268,7 @@
     <ClCompile Include="src\detail\pugixml.cpp" />
     <ClCompile Include="src\FreeFuncs.cpp" />
     <ClCompile Include="src\ImageLayer.cpp" />
+    <ClCompile Include="src\LayerGroup.cpp" />
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\miniz.c" />
     <ClCompile Include="src\Object.cpp" />
