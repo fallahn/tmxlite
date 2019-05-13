@@ -5,7 +5,7 @@ tmxlite
 [![Build status](https://ci.appveyor.com/api/projects/status/qhhh1geu47uoi2lj/branch/master?svg=true)](https://ci.appveyor.com/project/fallahn/tmxlite/branch/master)
 
 #### Description
-A lightweight C++14 parsing library for tmx map files created with the Tiled map editor. Requires no external linking, all dependencies are included. Supports tmx maps up to 0.18 with CSV, zlib and base64 compression. The parser is renderer agnostic, and is cross platform on Windows, linux and OS X. It has also been successfully built for Android too.
+A lightweight C++14 parsing library for tmx map files created with the Tiled map editor. Requires no external linking, all dependencies are included. Supports tmx maps up to 1.0 (see [here](https://doc.mapeditor.org/en/stable/reference/tmx-changelog/#tiled-1-0)) with CSV, zlib and base64 compression. The parser is renderer agnostic, and is cross platform on Windows, linux and OS X. It has also been successfully built for Android too.
 
 As the library contains no specific rendering functions some example projects are included, along with the relevant CMake files. These are meant mostly for guidance and are not 100% optimised, but should get you off on the right foot when using libraries such as SFML or SDL2/OpenGL. Examples for any specific rendering library are welcome via a pull request.
 
@@ -31,7 +31,7 @@ tmxlite uses [pugixml](https://pugixml.org/) and [miniz](https://github.com/rich
 
 ***
 
-Matt Marchant 2016 - 2019
+Matt Marchant & contributors 2016 - 2019
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -58,4 +58,3 @@ source distribution.
 ***
 
 A big thanks goes to all who have contributed to tmxlite via the github community.
-
