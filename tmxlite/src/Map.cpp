@@ -93,13 +93,17 @@ bool Map::load(const std::string& path)
         return false;
     }
 
-    m_workingDirectory = getFilePath(path);
+    //make sure we have consistent path separators
+    m_workingDirectory = path;
     std::replace(m_workingDirectory.begin(), m_workingDirectory.end(), '\\', '/');
-    if (m_workingDirectory.find_last_of('/') == m_workingDirectory.size() - 1
-        && !m_workingDirectory.empty())
+    m_workingDirectory = getFilePath(m_workingDirectory);
+
+    if (!m_workingDirectory.empty() &&
+        m_workingDirectory.back() == '/')
     {
         m_workingDirectory.pop_back();
     }
+    
 
     //find the map node and bail if it doesn't exist
     auto mapNode = doc.child("map");
