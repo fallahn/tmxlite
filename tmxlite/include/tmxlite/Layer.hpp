@@ -61,7 +61,7 @@ namespace tmx
         Layer() : m_opacity(1.f), m_visible(true) {};
         virtual ~Layer() = default;
 
-        /*
+        /*!
         \brief Layer type as returned by getType()
         Tile: this layer is a TileLayer type
         Object: This layer is an ObjectGroup type

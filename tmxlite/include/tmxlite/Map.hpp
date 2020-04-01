@@ -206,8 +206,6 @@ namespace tmx
         //always returns false so we can return this
         //on load failure
         bool reset();
-
-        struct Key {};
     };
 }
 #endif //TMXLITE_MAP_HPP_

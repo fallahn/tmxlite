@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016
+Matt Marchant 2016 - 2020
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
