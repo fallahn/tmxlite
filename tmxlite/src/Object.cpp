@@ -69,12 +69,6 @@ void Object::parse(const pugi::xml_node& node, Map* map)
     m_tileID = node.attribute("gid").as_uint();
     m_visible = node.attribute("visible").as_bool(true);
 
-    std::string templateStr = node.attribute("template").as_string();
-    if (!templateStr.empty() && map)
-    {
-        parseTemplate(templateStr, map);
-    }
-
     for (const auto& child : node.children())
     {
         attribString = child.name();
@@ -109,6 +103,14 @@ void Object::parse(const pugi::xml_node& node, Map* map)
             m_shape = Shape::Text;
             parseText(child);
         }
+    }
+
+    //parse templates last so we know which properties
+    //ought to be overridden
+    std::string templateStr = node.attribute("template").as_string();
+    if (!templateStr.empty() && map)
+    {
+        parseTemplate(templateStr, map);
     }
 }
 
@@ -284,9 +286,90 @@ void Object::parseTemplate(const std::string& path, Map* map)
             m_points = obj.m_points;
         }
 
-        //TODO compare properties and only copy ones that don't exist
+        //compare properties and only copy ones that don't exist
+        for (const auto& p : obj.m_properties)
+        {
+            auto result = std::find_if(m_properties.begin(), m_properties.end(), 
+                [&p](const Property& a)
+                {
+                    return a.getName() == p.getName();
+                });
 
-        //TODO get default value of Text and apply template if default
+            if (result == m_properties.end())
+            {
+                m_properties.push_back(p);
+            }
+        }
 
+
+        if (m_shape == Shape::Text)
+        {
+            //check each text property and update as necessary
+            //TODO this makes he assumption we prefer the template
+            //properties over the default ones - this might not
+            //actually be the case....
+            const auto& otherText = obj.m_textData;
+            if (m_textData.fontFamily.empty())
+            {
+                m_textData.fontFamily = otherText.fontFamily;
+            }
+
+            if (m_textData.pixelSize == 16)
+            {
+                m_textData.pixelSize = otherText.pixelSize;
+            }
+
+            //TODO this isn't actually right if we *want* to be false
+            //and the template is set to true...
+            if (m_textData.wrap == false)
+            {
+                m_textData.wrap = otherText.wrap;
+            }
+
+            if (m_textData.colour == Colour())
+            {
+                m_textData.colour = otherText.colour;
+            }
+
+            if (m_textData.bold == false)
+            {
+                m_textData.bold = otherText.bold;
+            }
+
+            if (m_textData.italic == false)
+            {
+                m_textData.italic = otherText.italic;
+            }
+
+            if (m_textData.underline == false)
+            {
+                m_textData.underline = otherText.underline;
+            }
+
+            if (m_textData.strikethough == false)
+            {
+                m_textData.strikethough = otherText.strikethough;
+            }
+
+            if (m_textData.kerning == true)
+            {
+                m_textData.kerning = otherText.kerning;
+            }
+
+            if (m_textData.hAlign == Text::HAlign::Left)
+            {
+                m_textData.hAlign = otherText.hAlign;
+            }
+
+            if (m_textData.vAlign == Text::VAlign::Top)
+            {
+                m_textData.vAlign = otherText.vAlign;
+            }
+
+            if (m_textData.content.empty())
+            {
+                m_textData.content = otherText.content;
+            }
+        }
     }
 }

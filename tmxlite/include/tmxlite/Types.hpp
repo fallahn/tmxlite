@@ -111,6 +111,19 @@ namespace tmx
         Colour(std::uint8_t red = 0, std::uint8_t green = 0, std::uint8_t blue = 0, std::uint8_t alpha = 255)
             : r(red), g(green), b(blue), a(alpha) {}
         std::uint8_t r, g, b, a;
+
+        bool operator == (const Colour& other)
+        {
+            return other.r == r
+                && other.g == g
+                && other.b == b
+                && other.a == a;
+        }
+
+        bool operator != (const Colour& other)
+        {
+            return !(*this == other);
+        }
     };
 }
 

@@ -197,7 +197,7 @@ namespace tmx
 
         /*!
         \brief Returns an unordered_map of tilesets used by templated objects.
-        If Object::getTileSetName() is not empty it can be used to retreive a tileset
+        If Object::getTilesetName() is not empty it can be used to retreive a tileset
         from this map. Otherwise the object's tileset can be found from in the map's
         global tilesets returned by getTilesets().
         */

@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2019
+Matt Marchant 2016 - 2020
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -35,7 +35,7 @@ int main()
 {
     tmx::Map map;
 
-    if (map.load("maps/untitled.tmx"))
+    if (map.load("maps/tilesettest.tmx"))
     {
         std::cout << "Loaded Map version: " << map.getVersion().upper << ", " << map.getVersion().lower << std::endl;
 

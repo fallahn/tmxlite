@@ -330,5 +330,8 @@ bool Map::reset()
     m_layers.clear();
     m_properties.clear();
 
+    m_templateObjects.clear();
+    m_templateTilesets.clear();
+
     return false;
 }
