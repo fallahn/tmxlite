@@ -25,8 +25,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#ifndef TMXLITE_TILESET_HPP_
-#define TMXLITE_TILESET_HPP_
+#pragma once
 
 #include <tmxlite/Config.hpp>
 #include <tmxlite/Property.hpp>
@@ -43,6 +42,8 @@ namespace pugi
 
 namespace tmx
 {
+    class Map;
+
     /*!
     \brief Represents a Tileset node as loaded
     from a *.tmx format tile map via the tmx::Map
@@ -107,7 +108,7 @@ namespace tmx
         If node parsing fails an error is printed in the console
         and the Tileset remains in an uninitialised state.
         */
-        void parse(pugi::xml_node);
+        void parse(pugi::xml_node, Map*);
         /*!
         \brief Returns the first GID of this tile set.
         This the ID of the first tile in the tile set, so that
@@ -182,18 +183,18 @@ namespace tmx
         */
         const std::vector<Tile>& getTiles() const { return m_tiles; }
 
-        /**
-         * \brief Checks if a tiled ID is in the range of the first ID and the last ID
-         * \param id Tile ID
-         * \return 
+        /*!
+         \brief Checks if a tiled ID is in the range of the first ID and the last ID
+         \param id Tile ID
+         \return 
          */
         bool hasTile(std::uint32_t id) const { return id >= m_firstGID && id <= getLastGID(); };
 
 
-        /**
-         * \brief queries tiles and returns a tile with the given ID. Checks if the TileID is part of the Tileset with `hasTile(a_id)`
-         * \param id Tile ID. The Tile ID will be corrected internally.
-         * \return In case of a success it returns the correct tile. In terms of failure it will return a nullptr.
+        /*!
+         \brief queries tiles and returns a tile with the given ID. Checks if the TileID is part of the Tileset with `hasTile(id)`
+         \param id Tile ID. The Tile ID will be corrected internally.
+         \return In case of a success it returns the correct tile. In terms of failure it will return a nullptr.
          */
         const Tile* getTile(std::uint32_t id) const;
 
@@ -224,9 +225,7 @@ namespace tmx
         void parseOffsetNode(const pugi::xml_node&);
         void parsePropertyNode(const pugi::xml_node&);
         void parseTerrainNode(const pugi::xml_node&);
-        void parseTileNode(const pugi::xml_node&);
+        void parseTileNode(const pugi::xml_node&, Map*);
         void createMissingTile(std::uint32_t ID);
     };
 }
-
-#endif //TMXLITE_TILESET_HPP_

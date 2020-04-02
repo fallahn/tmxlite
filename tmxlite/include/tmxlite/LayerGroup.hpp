@@ -24,8 +24,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#ifndef TMXLITE_LAYER_GROUP_HPP_
-#define TMXLITE_LAYER_GROUP_HPP_
+#pragma once
 
 #include <tmxlite/Config.hpp>
 #include <tmxlite/Layer.hpp>
@@ -53,7 +52,7 @@ namespace tmx
 
 
         Type getType() const override { return Layer::Type::Group; }
-        void parse(const pugi::xml_node&) override;
+        void parse(const pugi::xml_node&, Map*) override;
 
         /*!
         \brief Returns a reference to the vector containing the layer data.
@@ -78,5 +77,3 @@ namespace tmx
         return *dynamic_cast<LayerGroup*>(this);
     }
 }
-
-#endif //TMXLITE_LAYER_GROUP_HPP_

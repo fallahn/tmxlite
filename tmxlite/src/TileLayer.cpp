@@ -41,7 +41,7 @@ TileLayer::TileLayer(std::size_t tileCount)
 }
 
 //public
-void TileLayer::parse(const pugi::xml_node& node)
+void TileLayer::parse(const pugi::xml_node& node, Map*)
 {
     std::string attribName = node.name();
     if (attribName != "layer")

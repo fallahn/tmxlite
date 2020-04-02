@@ -25,8 +25,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#ifndef TMXLITE_LAYER_HPP_
-#define TMXLITE_LAYER_HPP_
+#pragma once
 
 #include <tmxlite/Config.hpp>
 #include <tmxlite/Property.hpp>
@@ -61,7 +60,7 @@ namespace tmx
         Layer() : m_opacity(1.f), m_visible(true) {};
         virtual ~Layer() = default;
 
-        /*
+        /*!
         \brief Layer type as returned by getType()
         Tile: this layer is a TileLayer type
         Object: This layer is an ObjectGroup type
@@ -102,7 +101,7 @@ namespace tmx
         /*!
         \brief Attempts to parse the specific node layer type
         */
-        virtual void parse(const pugi::xml_node&) = 0;
+        virtual void parse(const pugi::xml_node&, Map* = nullptr) = 0;
 
         /*!
         \brief Returns the name of the layer
@@ -147,5 +146,3 @@ namespace tmx
         std::vector<Property> m_properties;
     };
 }
-
-#endif //TMXLITE_LAYER_HPP_

@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016
+Matt Marchant 2016 - 2020
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -25,8 +25,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#ifndef TMXLITE_OBJECT_HPP_
-#define TMXLITE_OBJECT_HPP_
+#pragma once
 
 #include <tmxlite/Config.hpp>
 #include <tmxlite/Property.hpp>
@@ -42,6 +41,8 @@ namespace pugi
 
 namespace tmx
 {
+    class Map;
+
     /*!
     \brief Contains the text information stored in a Text object.
     */
@@ -98,7 +99,7 @@ namespace tmx
         \brief Attempts to parse the given xml node and
         read the Object properties if it is valid.
         */
-        void parse(const pugi::xml_node&);
+        void parse(const pugi::xml_node&, Map*);
 
         /*!
         \brief Returns the unique ID of the Object
@@ -174,6 +175,14 @@ namespace tmx
         const Text& getText() const { return m_textData; }
         Text& getText() { return m_textData; }
 
+        /*!
+        \brief Returns the tileset name used by this object if it is derived 
+        from a template, else returns an empty string.
+        If the string is not empty use it to index the unordered_map returned
+        by Map::getTemplateTilesets()
+        */
+        const std::string& getTilesetName() const { return m_tilesetName; }
+
     private:
         std::uint32_t m_UID;
         std::string m_name;
@@ -190,10 +199,10 @@ namespace tmx
 
         Text m_textData;
 
+        std::string m_tilesetName;
+
         void parsePoints(const pugi::xml_node&);
         void parseText(const pugi::xml_node&);
-        void parseTemplate(const std::string&);
+        void parseTemplate(const std::string&, Map*);
     };
 }
-
-#endif //TMXLITE_OBJECT_HPP_
