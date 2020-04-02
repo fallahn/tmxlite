@@ -25,8 +25,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#ifndef TMXLITE_MAP_HPP_
-#define TMXLITE_MAP_HPP_
+#pragma once
 
 #include <tmxlite/Tileset.hpp>
 #include <tmxlite/Layer.hpp>
@@ -233,4 +232,3 @@ namespace tmx
         bool reset();
     };
 }
-#endif //TMXLITE_MAP_HPP_

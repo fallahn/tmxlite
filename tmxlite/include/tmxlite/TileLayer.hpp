@@ -25,8 +25,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#ifndef TMXLITE_TILELAYER_HPP_
-#define TMXLITE_TILELAYER_HPP_
+#pragma once
 
 #include <tmxlite/Layer.hpp>
 
@@ -86,5 +85,3 @@ namespace tmx
         return *dynamic_cast<TileLayer*>(this);
     }
 }
-
-#endif //TMXLITE_TILE_LAYER_HPP_

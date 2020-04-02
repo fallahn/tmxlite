@@ -49,8 +49,7 @@ misrepresented as being the original source code.
 René Nyffenegger rene.nyffenegger@adp-gmbh.ch
 *********************************************************************/
 
-#ifndef TMXLITE_TILE_FUNCS_HPP_
-#define TMXLITE_TILE_FUNCS_HPP_
+#pragma once
 
 #include <tmxlite/detail/Android.hpp>
 #include <tmxlite/detail/Log.hpp>
@@ -200,5 +199,3 @@ namespace tmx
 #endif
     }
 }
-
-#endif //TMXLITE_TILE_FUNCS_HPP_

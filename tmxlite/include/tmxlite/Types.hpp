@@ -25,8 +25,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#ifndef TMXLITE_TYPES_HPP_
-#define TMXLITE_TYPES_HPP_
+#pragma once
 
 #include <tmxlite/Config.hpp>
 
@@ -126,5 +125,3 @@ namespace tmx
         }
     };
 }
-
-#endif //TMXLITE_TYPES_HPP_

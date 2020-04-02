@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016
+Matt Marchant 2016 - 2020
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -25,8 +25,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#ifndef TMXLITE_OBJECT_HPP_
-#define TMXLITE_OBJECT_HPP_
+#pragma once
 
 #include <tmxlite/Config.hpp>
 #include <tmxlite/Property.hpp>
@@ -207,5 +206,3 @@ namespace tmx
         void parseTemplate(const std::string&, Map*);
     };
 }
-
-#endif //TMXLITE_OBJECT_HPP_

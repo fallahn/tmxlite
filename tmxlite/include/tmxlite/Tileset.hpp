@@ -25,8 +25,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#ifndef TMXLITE_TILESET_HPP_
-#define TMXLITE_TILESET_HPP_
+#pragma once
 
 #include <tmxlite/Config.hpp>
 #include <tmxlite/Property.hpp>
@@ -230,5 +229,3 @@ namespace tmx
         void createMissingTile(std::uint32_t ID);
     };
 }
-
-#endif //TMXLITE_TILESET_HPP_

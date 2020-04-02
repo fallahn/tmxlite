@@ -25,8 +25,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#ifndef TMXLITE_CONFIG_HPP_
-#define TMXLITE_CONFIG_HPP_
+#pragma once
 
 //check which platform we're on and create export macros as necessary
 #if !defined(TMXLITE_STATIC)
@@ -63,4 +62,3 @@ source distribution.
 #define TMXLITE_EXPORT_API
 
 #endif //TMXLITE_STATIC
-#endif //TMXLITE_CONFIG_HPP_

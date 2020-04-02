@@ -25,8 +25,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#ifndef TMXLITE_IMAGELAYER_HPP_
-#define TMXLITE_IMAGELAYER_HPP_
+#pragma once
 
 #include <tmxlite/Config.hpp>
 #include <tmxlite/Layer.hpp>
@@ -83,4 +82,3 @@ namespace tmx
         return *dynamic_cast<ImageLayer*>(this);
     }
 }
-#endif //TMXLITE_IMAGELAYER_HPP_
