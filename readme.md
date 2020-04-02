@@ -12,7 +12,7 @@ As the library contains no specific rendering functions some example projects ar
 ##### Other Features
 As well as full support for maps up to version 1.0, tmxlite also supports these features found in newer versions of the [tmx specification](https://doc.mapeditor.org/en/stable/reference/tmx-changelog/#tiled-1-0):
 
-* Object Templates - Templates (and any associated tile sets) are automatically loaded and parsed if found. Object properties are transparently handled so that objects can be read from an `ObjectGroup` as if they were unique instances. If an `Object` uses a templated tileset then `Object::getTilsetName()` will contain a non-empty string which can be used as a key with `Map::getTemplateTilesets()` to retreive the associated tileset data.
+* Object Templates - Templates (and any associated tile sets) are automatically loaded and parsed if found. Object properties are transparently handled so that objects can be read from an `ObjectGroup` as if they were unique instances. If an `Object` uses a templated tileset then `Object::getTilsetName()` will contain a non-empty string which can be used as a key with `Map::getTemplateTilesets()` to retrieve the associated tileset data.
 
 #### Building
 Either use the included Visual Studio project file if you are on Windows or the CMake file to generate project files for your compiler of choice. tmxlite can be built as both static or shared libraries, or simply include the source files in your own project.
