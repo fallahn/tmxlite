@@ -262,7 +262,7 @@ bool Map::load(const std::string& path)
         if (name == "tileset")
         {
             m_tilesets.emplace_back(m_workingDirectory);
-            m_tilesets.back().parse(node);
+            m_tilesets.back().parse(node, this);
         }
         else if (name == "layer")
         {
@@ -272,7 +272,7 @@ bool Map::load(const std::string& path)
         else if (name == "objectgroup")
         {
             m_layers.emplace_back(std::make_unique<ObjectGroup>());
-            m_layers.back()->parse(node);
+            m_layers.back()->parse(node, this);
         }
         else if (name == "imagelayer")
         {

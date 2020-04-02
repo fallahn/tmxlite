@@ -47,8 +47,10 @@ Tileset::Tileset(const std::string& workingDir)
 }
 
 //public
-void Tileset::parse(pugi::xml_node node)
+void Tileset::parse(pugi::xml_node node, Map* map)
 {
+    assert(map);
+
     std::string attribString = node.name();
     if (attribString != "tileset")
     {
@@ -153,7 +155,7 @@ void Tileset::parse(pugi::xml_node node)
         }
         else if (name == "tile")
         {
-            parseTileNode(node);
+            parseTileNode(node, map);
         }
     }
 
@@ -259,8 +261,10 @@ void Tileset::parseTerrainNode(const pugi::xml_node& node)
     }
 }
 
-void Tileset::parseTileNode(const pugi::xml_node& node)
+void Tileset::parseTileNode(const pugi::xml_node& node, Map* map)
 {
+    assert(map);
+
     Tile tile;
     tile.ID = node.attribute("id").as_int();
     if (node.attribute("terrain"))
@@ -322,7 +326,7 @@ void Tileset::parseTileNode(const pugi::xml_node& node)
         }
         else if (name == "objectgroup")
         {
-            tile.objectGroup.parse(child);
+            tile.objectGroup.parse(child, map);
         }
         else if (name == "image")
         {

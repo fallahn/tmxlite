@@ -27,6 +27,8 @@ source distribution.
 
 #include <tmxlite/Object.hpp>
 #include <tmxlite/FreeFuncs.hpp>
+#include <tmxlite/Map.hpp>
+#include <tmxlite/TileSet.hpp>
 #include "detail/pugixml.hpp"
 #include <tmxlite/detail/Log.hpp>
 
@@ -45,7 +47,7 @@ Object::Object()
 }
 
 //public
-void Object::parse(const pugi::xml_node& node)
+void Object::parse(const pugi::xml_node& node, Map* map)
 {
     std::string attribString = node.name();
     if (attribString != "object")
@@ -68,9 +70,9 @@ void Object::parse(const pugi::xml_node& node)
     m_visible = node.attribute("visible").as_bool(true);
 
     std::string templateStr = node.attribute("template").as_string();
-    if (!templateStr.empty())
+    if (!templateStr.empty() && map)
     {
-        parseTemplate(templateStr);
+        parseTemplate(templateStr, map);
     }
 
     for (const auto& child : node.children())
@@ -192,7 +194,99 @@ void Object::parseText(const pugi::xml_node& node)
     m_textData.content = node.text().as_string();
 }
 
-void Object::parseTemplate(const std::string& path)
+void Object::parseTemplate(const std::string& path, Map* map)
 {
-    Logger::log("Requested a template at " + path + " - but this is not yet implemented *sadface*", Logger::Type::Info);
+    assert(map);
+
+    auto& templateObjects = map->getTemplateObjects();
+    auto& templateTilesets = map->getTemplateTilesets();
+
+    //load the template if not already loaded
+    if (templateObjects.count(path) == 0)
+    {
+        auto templatePath = map->getWorkingDirectory() + "/" + path;
+
+        pugi::xml_document doc;
+        if (!doc.load_file(templatePath.c_str()))
+        {
+            Logger::log("Failed opening template file " + path, Logger::Type::Error);
+            return;
+        }
+
+        auto templateNode = doc.child("template");
+        if (!templateNode)
+        {
+            Logger::log("Template node missing from " + path, Logger::Type::Error);
+            return;
+        }
+
+        //if the template has a tileset load that (if not already loaded)
+        std::string tilesetName;
+        auto tileset = templateNode.child("tileset");
+        if (tileset)
+        {
+            tilesetName = tileset.attribute("source").as_string();
+            if (!tilesetName.empty() &&
+                templateTilesets.count(tilesetName) == 0)
+            {
+                templateTilesets.insert(std::make_pair(tilesetName, Tileset(map->getWorkingDirectory())));
+                templateTilesets.at(tilesetName).parse(tileset, map);
+            }
+        }
+
+        //parse the object - don't pass the map pointer here so there's
+        //no recursion if someone tried to get clever and put a template in a template
+        auto obj = templateNode.child("object");
+        if (obj)
+        {
+            templateObjects.insert(std::make_pair(path, Object()));
+            templateObjects[path].parse(obj, nullptr);
+            templateObjects[path].m_tilesetName = tilesetName;
+        }
+    }
+
+    //apply any non-overridden object properties from the template
+    if (templateObjects.count(path) != 0)
+    {
+        const auto& obj = templateObjects[path];
+        m_AABB.width = obj.m_AABB.width;
+        m_AABB.height = obj.m_AABB.height;
+
+        m_tilesetName = obj.m_tilesetName;
+
+        if (m_name.empty())
+        {
+            m_name = obj.m_name;
+        }
+
+        if (m_type.empty())
+        {
+            m_type = obj.m_type;
+        }
+
+        if (m_rotation == 0)
+        {
+            m_rotation = obj.m_rotation;
+        }
+
+        if (m_tileID == 0)
+        {
+            m_tileID = obj.m_tileID;
+        }
+
+        if (m_shape == Shape::Rectangle)
+        {
+            m_shape = obj.m_shape;
+        }
+
+        if (m_points.empty())
+        {
+            m_points = obj.m_points;
+        }
+
+        //TODO compare properties and only copy ones that don't exist
+
+        //TODO get default value of Text and apply template if default
+
+    }
 }

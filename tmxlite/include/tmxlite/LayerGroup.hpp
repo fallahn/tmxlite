@@ -53,7 +53,7 @@ namespace tmx
 
 
         Type getType() const override { return Layer::Type::Group; }
-        void parse(const pugi::xml_node&) override;
+        void parse(const pugi::xml_node&, Map*) override;
 
         /*!
         \brief Returns a reference to the vector containing the layer data.

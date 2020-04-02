@@ -41,7 +41,7 @@ LayerGroup::LayerGroup(const std::string& workingDir, const Vector2u& tileCount)
 }
 
 //public
-void LayerGroup::parse(const pugi::xml_node& node)
+void LayerGroup::parse(const pugi::xml_node& node, Map*)
 {
     std::string attribString = node.name();
     if (attribString != "group")

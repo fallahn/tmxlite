@@ -102,7 +102,7 @@ namespace tmx
         /*!
         \brief Attempts to parse the specific node layer type
         */
-        virtual void parse(const pugi::xml_node&) = 0;
+        virtual void parse(const pugi::xml_node&, Map* = nullptr) = 0;
 
         /*!
         \brief Returns the name of the layer

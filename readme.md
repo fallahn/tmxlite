@@ -31,7 +31,7 @@ tmxlite uses [pugixml](https://pugixml.org/) and [miniz](https://github.com/rich
 
 ***
 
-Matt Marchant & contributors 2016 - 2019
+Matt Marchant & contributors 2016 - 2020
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.

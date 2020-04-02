@@ -35,7 +35,7 @@ int main()
 {
     tmx::Map map;
 
-    if (map.load("maps/platform.tmx"))
+    if (map.load("maps/untitled.tmx"))
     {
         std::cout << "Loaded Map version: " << map.getVersion().upper << ", " << map.getVersion().lower << std::endl;
 
@@ -74,13 +74,18 @@ int main()
                 std::cout << "Found " << objects.size() << " objects in layer" << std::endl;
                 for(const auto& object : objects)
                 {
-                    std::cout << "Object " << object.getName() << std::endl;
+                    std::cout << "Object " << object.getUID() << ", " << object.getName() << std::endl;
                     const auto& properties = object.getProperties();
                     std::cout << "Object has " << properties.size() << " properties" << std::endl;
                     for(const auto& prop : properties)
                     {
                         std::cout << "Found property: " << prop.getName() << std::endl;
                         std::cout << "Type: " << int(prop.getType()) << std::endl;
+                    }
+
+                    if (!object.getTilesetName().empty())
+                    {
+                        std::cout << "Object uses template tile set " << object.getTilesetName() << "\n";
                     }
                 }
             }

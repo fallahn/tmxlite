@@ -40,8 +40,10 @@ ObjectGroup::ObjectGroup()
 }
 
 //public
-void ObjectGroup::parse(const pugi::xml_node& node)
+void ObjectGroup::parse(const pugi::xml_node& node, Map* map)
 {
+    assert(map);
+
     std::string attribString = node.name();
     if (attribString != "objectgroup")
     {
@@ -81,7 +83,7 @@ void ObjectGroup::parse(const pugi::xml_node& node)
         else if (attribString == "object")
         {
             m_objects.emplace_back();
-            m_objects.back().parse(child);
+            m_objects.back().parse(child, map);
         }
     }
 }

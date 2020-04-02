@@ -61,7 +61,7 @@ namespace tmx
         ~TileLayer() = default;
 
         Type getType() const override { return Layer::Type::Tile; }
-        void parse(const pugi::xml_node&) override;
+        void parse(const pugi::xml_node&, Map*) override;
 
         /*!
         \brief Returns the list of tiles used to make up the layer

@@ -43,6 +43,8 @@ namespace pugi
 
 namespace tmx
 {
+    class Map;
+
     /*!
     \brief Represents a Tileset node as loaded
     from a *.tmx format tile map via the tmx::Map
@@ -107,7 +109,7 @@ namespace tmx
         If node parsing fails an error is printed in the console
         and the Tileset remains in an uninitialised state.
         */
-        void parse(pugi::xml_node);
+        void parse(pugi::xml_node, Map*);
         /*!
         \brief Returns the first GID of this tile set.
         This the ID of the first tile in the tile set, so that
@@ -224,7 +226,7 @@ namespace tmx
         void parseOffsetNode(const pugi::xml_node&);
         void parsePropertyNode(const pugi::xml_node&);
         void parseTerrainNode(const pugi::xml_node&);
-        void parseTileNode(const pugi::xml_node&);
+        void parseTileNode(const pugi::xml_node&, Map*);
         void createMissingTile(std::uint32_t ID);
     };
 }

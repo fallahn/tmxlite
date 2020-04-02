@@ -32,10 +32,12 @@ source distribution.
 #include <tmxlite/Layer.hpp>
 #include <tmxlite/Property.hpp>
 #include <tmxlite/Types.hpp>
+#include <tmxlite/Object.hpp>
 
 #include <string>
 #include <vector>
 #include <map>
+#include <unordered_map>
 
 namespace tmx
 {
@@ -181,6 +183,26 @@ namespace tmx
         */
         const std::map<std::uint32_t, Tileset::Tile>& getAnimatedTiles() const { return m_animTiles; }
 
+        /*!
+        \brief Returns the current working directory of the map. Images and
+        other resources are loaded relative to this.
+        */
+        const std::string& getWorkingDirectory() const { return m_workingDirectory; }
+
+        /*!
+        \brief Returns an unordered_map of template objects indexed by file name
+        */
+        std::unordered_map<std::string, Object>& getTemplateObjects() { return m_templateObjects; }
+        const std::unordered_map<std::string, Object>& getTemplateObjects() const { return m_templateObjects; }
+
+        /*!
+        \brief Returns an unordered_map of tilesets used by templated objects.
+        If Object::getTileSetName() is not empty it can be used to retreive a tileset
+        from this map. Otherwise the object's tileset can be found from in the map's
+        global tilesets returned by getTilesets().
+        */
+        std::unordered_map<std::string, Tileset>& getTemplateTilesets() { return m_templateTilesets; }
+        const std::unordered_map<std::string, Tileset>& getTemplateTilesets() const { return m_templateTilesets; }
 
     private:
         Version m_version;
@@ -202,6 +224,9 @@ namespace tmx
         std::vector<Layer::Ptr> m_layers;
         std::vector<Property> m_properties;
         std::map<std::uint32_t, Tileset::Tile> m_animTiles;
+
+        std::unordered_map<std::string, Object> m_templateObjects;
+        std::unordered_map<std::string, Tileset> m_templateTilesets;
 
         //always returns false so we can return this
         //on load failure
