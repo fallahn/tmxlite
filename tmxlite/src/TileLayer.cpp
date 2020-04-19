@@ -174,30 +174,84 @@ void TileLayer::parseBase64(const pugi::xml_node& node)
 
 void TileLayer::parseCSV(const pugi::xml_node& node)
 {
+    auto processDataString = [](const std::string dataString)->std::vector<std::uint32_t>
+    {
+        std::vector<std::uint32_t> IDs;
+
+        std::stringstream dataStream(dataString);
+        std::uint32_t i = 0;
+        while (dataStream >> i)
+        {
+            IDs.push_back(i);
+            //TODO this shouldn't assume the first character
+            //is a valid value, and it should ignore anything non-numeric.
+            if (dataStream.peek() == ',')
+            {
+                dataStream.ignore();
+            }
+        }
+
+        return IDs;
+    };
+
     std::string data = node.text().as_string();
     if (data.empty())
     {
-        Logger::log("Layer " + getName() + " has no layer data. Layer skipped.", Logger::Type::Error);
-        return;
-    }
-
-    std::vector<std::uint32_t> IDs;
-    IDs.reserve(m_tileCount);
-
-    std::stringstream dataStream(data);
-    std::uint32_t i;
-    while (dataStream >> i)
-    {
-        IDs.push_back(i);
-        //TODO this shouldn't assume the first character
-        //is a valid value, and it should ignore anything non-numeric.
-        if (dataStream.peek() == ',')
+        //check for chunk nodes
+        auto dataCount = 0;
+        for (const auto& childNode : node.children())
         {
-            dataStream.ignore();
+            std::string childName = childNode.name();
+            if (childName == "chunk")
+            {
+                std::string dataString = childNode.text().as_string();
+                if (!dataString.empty())
+                {
+                    Chunk chunk;
+                    chunk.position.x = childNode.attribute("x").as_int();
+                    chunk.position.y = childNode.attribute("y").as_int();
+
+                    chunk.size.x = childNode.attribute("width").as_int();
+                    chunk.size.y = childNode.attribute("height").as_int();
+
+                    auto IDs = processDataString(dataString);
+
+                    if (!IDs.empty())
+                    {
+                        createTiles(IDs, chunk.tiles);
+                        m_chunks.push_back(chunk);
+                        dataCount++;
+                    }
+                }
+            }
+        }
+
+        if (dataCount == 0)
+        {
+            Logger::log("Layer " + getName() + " has no layer data. Layer skipped.", Logger::Type::Error);
+            return;
         }
     }
+    else
+    {
+        //std::vector<std::uint32_t> IDs;
+        //IDs.reserve(m_tileCount);
 
-    createTiles(IDs, m_tiles);
+        //std::stringstream dataStream(data);
+        //std::uint32_t i;
+        //while (dataStream >> i)
+        //{
+        //    IDs.push_back(i);
+        //    //TODO this shouldn't assume the first character
+        //    //is a valid value, and it should ignore anything non-numeric.
+        //    if (dataStream.peek() == ',')
+        //    {
+        //        dataStream.ignore();
+        //    }
+        //}
+
+        createTiles(processDataString(data), m_tiles);
+    }
 }
 
 void TileLayer::parseUnencoded(const pugi::xml_node& node)

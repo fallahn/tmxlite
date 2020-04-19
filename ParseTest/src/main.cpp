@@ -36,7 +36,7 @@ int main()
 {
     tmx::Map map;
 
-    if (map.load("maps/platform.tmx"))
+    if (map.load("maps/csv-untitled.tmx"))
     {
         std::cout << "Loaded Map version: " << map.getVersion().upper << ", " << map.getVersion().lower << std::endl;
         if (map.isInfinite())
