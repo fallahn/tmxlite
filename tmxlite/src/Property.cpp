@@ -35,11 +35,10 @@ using namespace tmx;
 Property::Property()
     : m_type(Type::Undef)
 {
-
 }
 
 //public
-void Property::parse(const pugi::xml_node& node)
+void Property::parse(const pugi::xml_node &node)
 {
     std::string attribData = node.name();
     if (attribData != "property")
@@ -70,9 +69,15 @@ void Property::parse(const pugi::xml_node& node)
         m_type = Type::Float;
         return;
     }
-    else if(attribData == "string")
+    else if (attribData == "string")
     {
         m_stringValue = node.attribute("value").as_string();
+
+        //If value is empty, try getting the child value instead
+        if(m_stringValue.length() < 1){
+            m_stringValue = node.child_value();
+        }
+        
         m_type = Type::String;
         return;
     }
