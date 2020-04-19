@@ -38,7 +38,7 @@ Property::Property()
 }
 
 //public
-void Property::parse(const pugi::xml_node &node)
+void Property::parse(const pugi::xml_node& node)
 {
     std::string attribData = node.name();
     if (attribData != "property")
@@ -73,8 +73,10 @@ void Property::parse(const pugi::xml_node &node)
     {
         m_stringValue = node.attribute("value").as_string();
 
-        //If value is empty, try getting the child value instead
-        if(m_stringValue.length() < 1){
+        //if value is empty, try getting the child value instead
+        //as this is how multiline string properties are stored.
+        if(m_stringValue.empty())
+        {
             m_stringValue = node.child_value();
         }
         
