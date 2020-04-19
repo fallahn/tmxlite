@@ -28,6 +28,7 @@ source distribution.
 #include <tmxlite/Map.hpp>
 #include <tmxlite/ObjectGroup.hpp>
 #include <tmxlite/LayerGroup.hpp>
+#include <tmxlite/TileLayer.hpp>
 
 #include <iostream>
 
@@ -35,7 +36,7 @@ int main()
 {
     tmx::Map map;
 
-    if (map.load("maps/tilesettest.tmx"))
+    if (map.load("maps/untitled.tmx"))
     {
         std::cout << "Loaded Map version: " << map.getVersion().upper << ", " << map.getVersion().lower << std::endl;
 
@@ -87,6 +88,27 @@ int main()
                     {
                         std::cout << "Object uses template tile set " << object.getTilesetName() << "\n";
                     }
+                }
+            }
+
+            if (layer->getType() == tmx::Layer::Type::Tile)
+            {
+                const auto& tiles = layer->getLayerAs<tmx::TileLayer>().getTiles();
+                if (tiles.empty())
+                {
+                    const auto& chunks = layer->getLayerAs<tmx::TileLayer>().getChunks();
+                    if (chunks.empty())
+                    {
+                        std::cout << "Layer has missing tile data\n";
+                    }
+                    else
+                    {
+                        std::cout << "Layer has " << chunks.size() << " tile chunks.\n";
+                    }
+                }
+                else
+                {
+                    std::cout << "Layer has " << tiles.size() << " tiles.\n";
                 }
             }
 
