@@ -36,9 +36,13 @@ int main()
 {
     tmx::Map map;
 
-    if (map.load("maps/untitled.tmx"))
+    if (map.load("maps/platform.tmx"))
     {
         std::cout << "Loaded Map version: " << map.getVersion().upper << ", " << map.getVersion().lower << std::endl;
+        if (map.isInfinite())
+        {
+            std::cout << "Map is infinite.\n";
+        }
 
         const auto& mapProperties = map.getProperties();
         std::cout << "Map has " << mapProperties.size() << " properties" << std::endl;

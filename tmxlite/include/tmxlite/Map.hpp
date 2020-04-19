@@ -203,10 +203,21 @@ namespace tmx
         std::unordered_map<std::string, Tileset>& getTemplateTilesets() { return m_templateTilesets; }
         const std::unordered_map<std::string, Tileset>& getTemplateTilesets() const { return m_templateTilesets; }
 
+        /*!
+        \brief Returns true if this is in infinite tile map.
+        Infinite maps store their tile data in for tile layers in chunks. If
+        this is an infinite map use TileLayer::getChunks() to get tile IDs
+        rather than TileLayer::getTiles().
+        \see TileLayer
+        */
+        bool isInfinite() const { return m_infinite; }
+
+
     private:
         Version m_version;
         Orientation m_orientation;
         RenderOrder m_renderOrder;
+        bool m_infinite;
 
         Vector2u m_tileCount;
         Vector2u m_tileSize;
