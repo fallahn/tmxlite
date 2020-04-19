@@ -234,22 +234,6 @@ void TileLayer::parseCSV(const pugi::xml_node& node)
     }
     else
     {
-        //std::vector<std::uint32_t> IDs;
-        //IDs.reserve(m_tileCount);
-
-        //std::stringstream dataStream(data);
-        //std::uint32_t i;
-        //while (dataStream >> i)
-        //{
-        //    IDs.push_back(i);
-        //    //TODO this shouldn't assume the first character
-        //    //is a valid value, and it should ignore anything non-numeric.
-        //    if (dataStream.peek() == ',')
-        //    {
-        //        dataStream.ignore();
-        //    }
-        //}
-
         createTiles(processDataString(data), m_tiles);
     }
 }
