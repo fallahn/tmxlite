@@ -71,6 +71,7 @@ namespace
 Map::Map()
     : m_orientation (Orientation::None),
     m_renderOrder   (RenderOrder::None),
+    m_infinite      (false),
     m_hexSideLength (0.f),
     m_staggerAxis   (StaggerAxis::None),
     m_staggerIndex  (StaggerIndex::None)
@@ -179,6 +180,11 @@ bool Map::load(const std::string& path)
             Logger::log(attribString + ": invalid render order. Map not loaded.", Logger::Type::Error);
             return reset();
         }
+    }
+
+    if (mapNode.attribute("infinite"))
+    {
+        m_infinite = mapNode.attribute("infinite").as_int() != 0;
     }
 
     unsigned width = mapNode.attribute("width").as_int();

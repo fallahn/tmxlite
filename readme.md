@@ -13,6 +13,7 @@ As the library contains no specific rendering functions some example projects ar
 As well as full support for maps up to version 1.0, tmxlite also supports these features found in newer versions of the [tmx specification](https://doc.mapeditor.org/en/stable/reference/tmx-changelog/#tiled-1-0):
 
 * Object Templates - Templates (and any associated tile sets) are automatically loaded and parsed if found. Object properties are transparently handled so that objects can be read from an `ObjectGroup` as if they were unique instances. If an `Object` uses a templated tileset then `Object::getTilsetName()` will contain a non-empty string which can be used as a key with `Map::getTemplateTilesets()` to retrieve the associated tileset data.
+* Infinite Maps - Maps with the 'infinite' flag set, and saved in either CSV or base64 (compressed and uncompressed) format are supported. A `TileLayer` will return an empty Tile vector in these cases, and tile ID data can be retrieved instead with `TileLayer::getChunks()` which returns a vector of chunk data that makes up the tile layer.
 
 #### Building
 Either use the included Visual Studio project file if you are on Windows or the CMake file to generate project files for your compiler of choice. tmxlite can be built as both static or shared libraries, or simply include the source files in your own project.
@@ -34,7 +35,7 @@ tmxlite uses [pugixml](https://pugixml.org/) and [miniz](https://github.com/rich
 
 ***
 
-Matt Marchant & contributors 2016 - 2020
+(c)Matt Marchant & contributors 2016 - 2020
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.

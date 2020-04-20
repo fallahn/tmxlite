@@ -88,75 +88,154 @@ void TileLayer::parse(const pugi::xml_node& node, Map*)
 //private
 void TileLayer::parseBase64(const pugi::xml_node& node)
 {
+    auto processDataString = [](std::string dataString, std::size_t tileCount, bool compressed)->std::vector<std::uint32_t>
+    {
+        std::stringstream ss;
+        ss << dataString;
+        ss >> dataString;
+        dataString = base64_decode(dataString);
+
+        std::size_t expectedSize = tileCount * 4; //4 bytes per tile
+        std::vector<unsigned char> byteData;
+        byteData.reserve(expectedSize);
+
+        if (compressed)
+        {
+            //unzip
+            std::size_t dataSize = dataString.length() * sizeof(unsigned char);
+            if (!decompress(dataString.c_str(), byteData, dataSize, expectedSize))
+            {
+                LOG("Failed to decompress layer data, node skipped.", Logger::Type::Error);
+                return {};
+            }
+        }
+        else
+        {
+            byteData.insert(byteData.end(), dataString.begin(), dataString.end());
+        }
+
+        //data stream is in bytes so we need to OR into 32 bit values
+        std::vector<std::uint32_t> IDs;
+        IDs.reserve(tileCount);
+        for (auto i = 0u; i < expectedSize - 3u; i += 4u)
+        {
+            std::uint32_t id = byteData[i] | byteData[i + 1] << 8 | byteData[i + 2] << 16 | byteData[i + 3] << 24;
+            IDs.push_back(id);
+        }
+
+        return IDs;
+    };
+
+
     std::string data = node.text().as_string();
     if (data.empty())
     {
-        Logger::log("Layer " + getName() + " has no layer data. Layer skipped.", Logger::Type::Error);
-        return;
-    }
-
-    //using a string stream we can remove whitespace such as tabs
-    std::stringstream ss;
-    ss << data;
-    ss >> data;
-    data = base64_decode(data);
-
-    std::size_t expectedSize = m_tileCount * 4; //4 bytes per tile
-    std::vector<unsigned char> byteData;
-    byteData.reserve(expectedSize);
-
-    if (node.attribute("compression"))
-    {
-        //unzip
-        std::size_t dataSize = data.length() * sizeof(unsigned char);
-        if (!decompress(data.c_str(), byteData, dataSize, expectedSize))
+        //check for chunk nodes
+        auto dataCount = 0;
+        for (const auto& childNode : node.children())
         {
-            LOG("Failed to decompress layer data, node skipped.", Logger::Type::Error);
+            std::string childName = childNode.name();
+            if (childName == "chunk")
+            {
+                std::string dataString = childNode.text().as_string();
+                if (!dataString.empty())
+                {
+                    Chunk chunk;
+                    chunk.position.x = childNode.attribute("x").as_int();
+                    chunk.position.y = childNode.attribute("y").as_int();
+
+                    chunk.size.x = childNode.attribute("width").as_int();
+                    chunk.size.y = childNode.attribute("height").as_int();
+
+                    auto IDs = processDataString(dataString, (chunk.size.x * chunk.size.y), node.attribute("compression"));
+
+                    if (!IDs.empty())
+                    {
+                        createTiles(IDs, chunk.tiles);
+                        m_chunks.push_back(chunk);
+                        dataCount++;
+                    }                    
+                }
+            }
+        }
+
+        if (dataCount == 0)
+        {
+            Logger::log("Layer " + getName() + " has no layer data. Layer skipped.", Logger::Type::Error);
             return;
         }
     }
     else
     {
-        byteData.insert(byteData.end(), data.begin(), data.end());
+        auto IDs = processDataString(data, m_tileCount, node.attribute("compression"));
+        createTiles(IDs, m_tiles);
     }
-
-    //data stream is in bytes so whe need to OR into 32 bit values
-    std::vector<std::uint32_t> IDs;
-    IDs.reserve(m_tileCount);
-    for (auto i = 0u; i < expectedSize - 3u; i += 4u)
-    {
-        std::uint32_t id = byteData[i] | byteData[i + 1] << 8 | byteData[i + 2] << 16 | byteData[i + 3] << 24;
-        IDs.push_back(id);
-    }
-    createTiles(IDs);
 }
 
 void TileLayer::parseCSV(const pugi::xml_node& node)
 {
+    auto processDataString = [](const std::string dataString)->std::vector<std::uint32_t>
+    {
+        std::vector<std::uint32_t> IDs;
+
+        std::stringstream dataStream(dataString);
+        std::uint32_t i = 0;
+        while (dataStream >> i)
+        {
+            IDs.push_back(i);
+            //TODO this shouldn't assume the first character
+            //is a valid value, and it should ignore anything non-numeric.
+            if (dataStream.peek() == ',')
+            {
+                dataStream.ignore();
+            }
+        }
+
+        return IDs;
+    };
+
     std::string data = node.text().as_string();
     if (data.empty())
     {
-        Logger::log("Layer " + getName() + " has no layer data. Layer skipped.", Logger::Type::Error);
-        return;
-    }
-
-    std::vector<std::uint32_t> IDs;
-    IDs.reserve(m_tileCount);
-
-    std::stringstream dataStream(data);
-    std::uint32_t i;
-    while (dataStream >> i)
-    {
-        IDs.push_back(i);
-        //TODO this shouldn't assume the first character
-        //is a valid value, and it should ignore anything non-numeric.
-        if (dataStream.peek() == ',')
+        //check for chunk nodes
+        auto dataCount = 0;
+        for (const auto& childNode : node.children())
         {
-            dataStream.ignore();
+            std::string childName = childNode.name();
+            if (childName == "chunk")
+            {
+                std::string dataString = childNode.text().as_string();
+                if (!dataString.empty())
+                {
+                    Chunk chunk;
+                    chunk.position.x = childNode.attribute("x").as_int();
+                    chunk.position.y = childNode.attribute("y").as_int();
+
+                    chunk.size.x = childNode.attribute("width").as_int();
+                    chunk.size.y = childNode.attribute("height").as_int();
+
+                    auto IDs = processDataString(dataString);
+
+                    if (!IDs.empty())
+                    {
+                        createTiles(IDs, chunk.tiles);
+                        m_chunks.push_back(chunk);
+                        dataCount++;
+                    }
+                }
+            }
+        }
+
+        if (dataCount == 0)
+        {
+            Logger::log("Layer " + getName() + " has no layer data. Layer skipped.", Logger::Type::Error);
+            return;
         }
     }
-
-    createTiles(IDs);
+    else
+    {
+        createTiles(processDataString(data), m_tiles);
+    }
 }
 
 void TileLayer::parseUnencoded(const pugi::xml_node& node)
@@ -174,10 +253,10 @@ void TileLayer::parseUnencoded(const pugi::xml_node& node)
         }
     }
 
-    createTiles(IDs);
+    createTiles(IDs, m_tiles);
 }
 
-void TileLayer::createTiles(const std::vector<std::uint32_t>& IDs)
+void TileLayer::createTiles(const std::vector<std::uint32_t>& IDs, std::vector<Tile>& destination)
 {
     //LOG(IDs.size() != m_tileCount, "Layer tile count does not match expected size. Found: "
     //    + std::to_string(IDs.size()) + ", expected: " + std::to_string(m_tileCount));
@@ -185,8 +264,8 @@ void TileLayer::createTiles(const std::vector<std::uint32_t>& IDs)
     static const std::uint32_t mask = 0xf0000000;
     for (const auto& id : IDs)
     {
-        m_tiles.emplace_back();
-        m_tiles.back().flipFlags = ((id & mask) >> 28);
-        m_tiles.back().ID = id & ~mask;
+        destination.emplace_back();
+        destination.back().flipFlags = ((id & mask) >> 28);
+        destination.back().ID = id & ~mask;
     }
 }
