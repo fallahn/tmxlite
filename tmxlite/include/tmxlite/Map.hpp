@@ -109,6 +109,15 @@ namespace tmx
         bool load(const std::string&);
 
         /*!
+        \brief Loads a map from a document stored in a string
+        \param data A std::string containing the map data to load
+        \param workingDir A std::string containing the working directory
+        in which to find assets such as tile sets or images
+        \returns true if successful, else false
+        */
+        bool loadFromString(const std::string& data, const std::string& workingDir);
+
+        /*!
         \brief Returns the version of the tile map last parsed.
         If no tile map has yet been parsed the version will read 0, 0
         */
@@ -237,6 +246,8 @@ namespace tmx
 
         std::unordered_map<std::string, Object> m_templateObjects;
         std::unordered_map<std::string, Tileset> m_templateTilesets;
+
+        bool parseMapNode(const pugi::xml_node&);
 
         //always returns false so we can return this
         //on load failure
