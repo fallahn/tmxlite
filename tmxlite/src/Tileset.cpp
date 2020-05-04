@@ -308,8 +308,8 @@ void Tileset::parseTileNode(const pugi::xml_node& node, Map* map)
     if (m_columnCount != 0) {
         int rowIndex = tile.ID % m_columnCount;
         int columnIndex = tile.ID / m_columnCount;
-        tile.imagePosition.x = rowIndex * m_tileSize.x;
-        tile.imagePosition.y = columnIndex * m_tileSize.y;
+        tile.imagePosition.x = m_margin + rowIndex * (m_tileSize.x + m_spacing);
+        tile.imagePosition.y = m_margin + columnIndex * (m_tileSize.y + m_spacing);
     }
 
     const auto& children = node.children();
@@ -384,8 +384,8 @@ void Tileset::createMissingTile(std::uint32_t ID)
 
     int rowIndex = ID % m_columnCount;
     int columnIndex = ID / m_columnCount;
-    tile.imagePosition.x = rowIndex * m_tileSize.x;
-    tile.imagePosition.y = columnIndex * m_tileSize.y;
+    tile.imagePosition.x = m_margin + rowIndex * (m_tileSize.x + m_spacing);
+    tile.imagePosition.y = m_margin + columnIndex * (m_tileSize.y + m_spacing);
 
     m_tiles.push_back(tile);
 }
