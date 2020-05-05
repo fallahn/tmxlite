@@ -138,7 +138,11 @@ void Tileset::parse(pugi::xml_node node, Map* map)
             {
                 attribString = node.attribute("trans").as_string();
                 m_transparencyColour = colourFromString(attribString);
-
+            }
+            if (node.attribute("width") && node.attribute("height"))
+            {
+                m_imageSize.x = node.attribute("width").as_int();
+                m_imageSize.y = node.attribute("height").as_int();
             }
         }
         else if (name == "tileoffset")
