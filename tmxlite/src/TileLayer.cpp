@@ -174,21 +174,20 @@ void TileLayer::parseBase64(const pugi::xml_node& node)
 
 void TileLayer::parseCSV(const pugi::xml_node& node)
 {
-    auto processDataString = [](const std::string dataString)->std::vector<std::uint32_t>
+    auto processDataString = [](const std::string dataString, const tmx::Vector2i& size)->std::vector<std::uint32_t>
     {
         std::vector<std::uint32_t> IDs;
+        IDs.reserve(size.x * size.y);
 
-        std::stringstream dataStream(dataString);
-        std::uint32_t i = 0;
-        while (dataStream >> i)
+        const char* ptr = dataString.c_str();
+        while (true)
         {
-            IDs.push_back(i);
-            //TODO this shouldn't assume the first character
-            //is a valid value, and it should ignore anything non-numeric.
-            if (dataStream.peek() == ',')
-            {
-                dataStream.ignore();
-            }
+            char* end;
+            auto res = std::strtoul(ptr, &end, 10);
+            if (end == ptr) break;
+            ptr = end;
+            IDs.push_back(res);
+            if (*ptr == ',') ++ptr;
         }
 
         return IDs;
@@ -214,7 +213,7 @@ void TileLayer::parseCSV(const pugi::xml_node& node)
                     chunk.size.x = childNode.attribute("width").as_int();
                     chunk.size.y = childNode.attribute("height").as_int();
 
-                    auto IDs = processDataString(dataString);
+                    auto IDs = processDataString(dataString, chunk.size);
 
                     if (!IDs.empty())
                     {
@@ -234,7 +233,8 @@ void TileLayer::parseCSV(const pugi::xml_node& node)
     }
     else
     {
-        createTiles(processDataString(data), m_tiles);
+        tmx::Vector2i size(node.parent().attribute("width").as_int(), node.parent().attribute("height").as_int());
+        createTiles(processDataString(data, size), m_tiles);
     }
 }
 
