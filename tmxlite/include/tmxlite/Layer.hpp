@@ -125,6 +125,12 @@ namespace tmx
         const Vector2i& getOffset() const { return m_offset; }
 
         /*!
+        \brief Returns the size of the layer, in pixels.
+        This will be the same as the map size for fixed size maps.
+        */
+        const Vector2u& getSize() const { return m_size; }
+
+        /*!
         \brief Returns the list of properties of this layer
         */
         const std::vector<Property>& getProperties() const { return m_properties; }
@@ -135,6 +141,7 @@ namespace tmx
         void setOpacity(float opacity) { m_opacity = opacity; }
         void setVisible(bool visible) { m_visible = visible; }
         void setOffset(std::int32_t x, std::int32_t y) { m_offset = Vector2i(x, y); }
+        void setSize(std::uint32_t width, std::uint32_t height) { m_size = Vector2u(width, height); }
         void addProperty(const pugi::xml_node& node) { m_properties.emplace_back(); m_properties.back().parse(node); }
 
     private:
@@ -142,6 +149,7 @@ namespace tmx
         float m_opacity;
         bool m_visible;
         Vector2i m_offset;
+        Vector2u m_size;
 
         std::vector<Property> m_properties;
     };
