@@ -54,6 +54,7 @@ void TileLayer::parse(const pugi::xml_node& node, Map*)
     setOpacity(node.attribute("opacity").as_float(1.f));
     setVisible(node.attribute("visible").as_bool(true));
     setOffset(node.attribute("offsetx").as_int(), node.attribute("offsety").as_int());
+    setSize(node.attribute("width").as_uint(), node.attribute("height").as_uint());
 
     for (const auto& child : node.children())
     {
@@ -174,10 +175,10 @@ void TileLayer::parseBase64(const pugi::xml_node& node)
 
 void TileLayer::parseCSV(const pugi::xml_node& node)
 {
-    auto processDataString = [](const std::string dataString, const tmx::Vector2i& size)->std::vector<std::uint32_t>
+    auto processDataString = [](const std::string dataString, std::size_t tileCount)->std::vector<std::uint32_t>
     {
         std::vector<std::uint32_t> IDs;
-        IDs.reserve(size.x * size.y);
+        IDs.reserve(tileCount);
 
         const char* ptr = dataString.c_str();
         while (true)
@@ -213,7 +214,7 @@ void TileLayer::parseCSV(const pugi::xml_node& node)
                     chunk.size.x = childNode.attribute("width").as_int();
                     chunk.size.y = childNode.attribute("height").as_int();
 
-                    auto IDs = processDataString(dataString, chunk.size);
+                    auto IDs = processDataString(dataString, chunk.size.x * chunk.size.y);
 
                     if (!IDs.empty())
                     {
@@ -233,8 +234,7 @@ void TileLayer::parseCSV(const pugi::xml_node& node)
     }
     else
     {
-        tmx::Vector2i size(node.parent().attribute("width").as_int(), node.parent().attribute("height").as_int());
-        createTiles(processDataString(data, size), m_tiles);
+        createTiles(processDataString(data, m_tileCount), m_tiles);
     }
 }
 

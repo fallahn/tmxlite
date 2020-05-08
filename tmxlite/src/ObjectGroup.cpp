@@ -62,6 +62,7 @@ void ObjectGroup::parse(const pugi::xml_node& node, Map* map)
     setOpacity(node.attribute("opacity").as_float(1.f));
     setVisible(node.attribute("visible").as_bool(true));
     setOffset(node.attribute("offsetx").as_int(), node.attribute("offsety").as_int());
+    setSize(node.attribute("width").as_uint(), node.attribute("height").as_uint());
 
     attribString = node.attribute("draworder").as_string();
     if (attribString == "index")
