@@ -251,9 +251,16 @@ void Object::parseTemplate(const std::string& path, Map* map)
     if (templateObjects.count(path) != 0)
     {
         const auto& obj = templateObjects[path];
-        m_AABB.width = obj.m_AABB.width;
-        m_AABB.height = obj.m_AABB.height;
+        if (m_AABB.width == 0)
+        {
+            m_AABB.width = obj.m_AABB.width;
+        }
 
+        if (m_AABB.height == 0)
+        {
+            m_AABB.height = obj.m_AABB.height;
+        }
+        
         m_tilesetName = obj.m_tilesetName;
 
         if (m_name.empty())
