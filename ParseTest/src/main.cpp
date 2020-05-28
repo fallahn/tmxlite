@@ -70,6 +70,15 @@ int main()
                 {
                     std::cout << "Found Layer: " << sublayer->getName() << std::endl;
                     std::cout << "Layer Type: " << int(sublayer->getType()) << std::endl;
+
+                    if (sublayer->getType() == tmx::Layer::Type::Object)
+                    {
+                        std::cout << sublayer->getName() << " has " << sublayer->getLayerAs<tmx::ObjectGroup>().getObjects().size() << " objects" << std::endl;
+                    }
+                    else if (sublayer->getType() == tmx::Layer::Type::Tile)
+                    {
+                        std::cout << sublayer->getName() << " has " << sublayer->getLayerAs<tmx::TileLayer>().getTiles().size() << " tiles" << std::endl;
+                    }
                 }
             }
 
