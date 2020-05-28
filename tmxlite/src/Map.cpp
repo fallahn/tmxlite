@@ -325,7 +325,7 @@ bool Map::parseMapNode(const pugi::xml_node& mapNode)
         else if (name == "imagelayer")
         {
             m_layers.emplace_back(std::make_unique<ImageLayer>(m_workingDirectory));
-            m_layers.back()->parse(node);
+            m_layers.back()->parse(node, this);
         }
         else if (name == "properties")
         {
@@ -339,7 +339,7 @@ bool Map::parseMapNode(const pugi::xml_node& mapNode)
         else if (name == "group")
         {
             m_layers.emplace_back(std::make_unique<LayerGroup>(m_workingDirectory, m_tileCount));
-            m_layers.back()->parse(node);
+            m_layers.back()->parse(node, this);
         }
         else
         {
