@@ -44,6 +44,7 @@ are implemented.
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Transformable.hpp>
+#include <SFML/System/Time.hpp>
 
 #include <memory>
 #include <vector>
