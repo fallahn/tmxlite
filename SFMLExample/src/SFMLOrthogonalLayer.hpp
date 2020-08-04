@@ -120,8 +120,8 @@ public:
     }
 
 private:
-	//increasing m_chunkSize by 4; fixes render problems when mapsize != chunksize
-	//sf::Vector2f m_chunkSize = sf::Vector2f(1024.f, 1024.f);
+    //increasing m_chunkSize by 4; fixes render problems when mapsize != chunksize
+    //sf::Vector2f m_chunkSize = sf::Vector2f(1024.f, 1024.f);
     sf::Vector2f m_chunkSize = sf::Vector2f(512.f, 512.f);
     sf::Vector2u m_chunkCount;
     sf::Vector2u m_MapTileSize;   // general Tilesize of Map
@@ -143,13 +143,13 @@ private:
     public:
         using Ptr = std::unique_ptr<Chunk>;
 
-		// the Android OpenGL driver isn't capable of rendering quads,
-		// so we need to use two triangles per tile instead
+        // the Android OpenGL driver isn't capable of rendering quads,
+        // so we need to use two triangles per tile instead
 #ifdef __ANDROID__
-		using Tile = std::array<sf::Vertex, 6u>;
+        using Tile = std::array<sf::Vertex, 6u>;
 #endif
 #ifndef __ANDROID__
-		using Tile = std::array<sf::Vertex, 4u>;
+        using Tile = std::array<sf::Vertex, 4u>;
 #endif
         Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tilesets,
             const sf::Vector2f& position, const sf::Vector2f& tileCount, const sf::Vector2u& tileSize,
@@ -234,12 +234,12 @@ private:
                                 sf::Vertex(tileOffset - getPosition() + sf::Vector2f(0.f, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(0.f, ca->tileSetSize.y))
 #endif
 #ifdef __ANDROID__
-								sf::Vertex(tileOffset - getPosition(), m_chunkColors[idx], tileIndex),
-								sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, 0.f), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, 0.f)),
-								sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y)),
-								sf::Vertex(tileOffset - getPosition(), m_chunkColors[idx], tileIndex),
-								sf::Vertex(tileOffset - getPosition() + sf::Vector2f(0.f, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(0.f, ca->tileSetSize.y)),
-								sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y))
+                                sf::Vertex(tileOffset - getPosition(), m_chunkColors[idx], tileIndex),
+                                sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, 0.f), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, 0.f)),
+                                sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y)),
+                                sf::Vertex(tileOffset - getPosition(), m_chunkColors[idx], tileIndex),
+                                sf::Vertex(tileOffset - getPosition() + sf::Vector2f(0.f, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(0.f, ca->tileSetSize.y)),
+                                sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y))
 #endif
                             };
                             doFlips(m_chunkTileIDs[idx].flipFlags,&tile[0].texCoords,&tile[1].texCoords,&tile[2].texCoords,&tile[3].texCoords);
@@ -436,7 +436,7 @@ private:
                 rt.draw(m_vertices.data(), m_vertices.size(), sf::Quads, states);
 #endif
 #ifdef __ANDROID__
-				rt.draw(m_vertices.data(), m_vertices.size(), sf::Triangles, states);
+                rt.draw(m_vertices.data(), m_vertices.size(), sf::Triangles, states);
 #endif
             }
         };
@@ -497,7 +497,7 @@ private:
         {
             const auto& path = ts->getImagePath();
             //std::unique_ptr<sf::Texture> newTexture = std::make_unique<sf::Texture>();
-			std::unique_ptr<sf::Texture> newTexture = std::make_unique<sf::Texture>();
+            std::unique_ptr<sf::Texture> newTexture = std::make_unique<sf::Texture>();
             sf::Image img;
             if (!img.loadFromFile(path))
             {
@@ -539,7 +539,7 @@ private:
                 }
                 //m_chunks.emplace_back(std::make_unique<Chunk>(layer, usedTileSets,
                 //    sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y), tileCount, map.getTileCount().x, m_textureResource));
-				m_chunks.emplace_back(std::make_unique<Chunk>(layer, usedTileSets,
+                m_chunks.emplace_back(std::make_unique<Chunk>(layer, usedTileSets,
                     sf::Vector2f(x * m_chunkSize.x, y * m_chunkSize.y), tileCount, tileSize, map.getTileCount().x, m_textureResource, map.getAnimatedTiles()));
             }
         }
@@ -584,31 +584,31 @@ private:
     void update(sf::Time elapsed)
     {
         static int32_t time;
-    time += elapsed.asMilliseconds();
+        time += elapsed.asMilliseconds();
 
-    for (auto& c : m_visibleChunks)
-    {
-        for (AnimationState& as : c->getActiveAnimations())
+        for (auto& c : m_visibleChunks)
         {
-            tmx::TileLayer::Tile tile;
-            tile.ID = as.animTile.animation.frames[0].tileID;
-            tile.flipFlags = 0; // TODO: get flipFlags from original tmx::TileLayer::Tile
-
-            int32_t animTime = 0;
-            for(auto itr = as.animTile.animation.frames.begin(); itr < as.animTile.animation.frames.end(); itr++)
+            for (AnimationState& as : c->getActiveAnimations())
             {
-                animTime += itr->duration;
-                if(time >= animTime)
-                {
-                    tile.ID = itr->tileID;
-                    if(itr == as.animTile.animation.frames.end() - 1)
-                        time = 0;
-                }
-            }
+                tmx::TileLayer::Tile tile;
+                tile.ID = as.animTile.animation.frames[0].tileID;
+                tile.flipFlags = 0; // TODO: get flipFlags from original tmx::TileLayer::Tile
 
-            setTile(as.tileCords.x, as.tileCords.y, tile);
+                int32_t animTime = 0;
+                for(auto itr = as.animTile.animation.frames.begin(); itr < as.animTile.animation.frames.end(); itr++)
+                {
+                    animTime += itr->duration;
+                    if(time >= animTime)
+                    {
+                        tile.ID = itr->tileID;
+                        if(itr == as.animTile.animation.frames.end() - 1)
+                            time = 0;
+                    }
+                }
+
+                setTile(as.tileCords.x, as.tileCords.y, tile);
+            }
         }
-    }
     }
 
 };
