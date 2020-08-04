@@ -583,31 +583,32 @@ private:
     public:
     void update(sf::Time elapsed)
     {
-        for (auto& c : m_visibleChunks)
+        static int32_t time;
+    time += elapsed.asMilliseconds();
+
+    for (auto& c : m_visibleChunks)
+    {
+        for (AnimationState& as : c->getActiveAnimations())
         {
-            for (AnimationState& as : c->getActiveAnimations())
+            tmx::TileLayer::Tile tile;
+            tile.ID = as.animTile.animation.frames[0].tileID;
+            tile.flipFlags = 0; // TODO: get flipFlags from original tmx::TileLayer::Tile
+
+            int32_t animTime = 0;
+            for(auto itr = as.animTile.animation.frames.begin(); itr < as.animTile.animation.frames.end(); itr++)
             {
-                sf::Time delta = elapsed - as.startTime;
-                auto overallDuration = sf::milliseconds(0);
-                tmx::TileLayer::Tile tile;
-                tile.ID = as.animTile.animation.frames[0].tileID;
-                tile.flipFlags = 0; // TODO: get flipFlags from original tmx::TileLayer::Tile
-                for(const auto& frame : as.animTile.animation.frames)
+                animTime += itr->duration;
+                if(time >= animTime)
                 {
-                    overallDuration += sf::milliseconds(frame.duration);
-                    if (delta < overallDuration)    // found frame to display
-                    {
-                        tile.ID = frame.tileID;
-                        break;
-                    }
+                    tile.ID = itr->tileID;
+                    if(itr == as.animTile.animation.frames.end() - 1)
+                        time = 0;
                 }
-                if (delta > overallDuration)    // loop the animation by resetting start time
-                {
-                    as.startTime = elapsed;
-                }
-                setTile(as.tileCords.x, as.tileCords.y, tile);
             }
+
+            setTile(as.tileCords.x, as.tileCords.y, tile);
         }
+    }
     }
 
 };

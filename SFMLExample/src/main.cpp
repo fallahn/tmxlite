@@ -53,7 +53,7 @@ int main()
                 window.close();
         }
 
-        sf::Time duration = globalClock.getElapsedTime();
+        sf::Time duration = globalClock.restart();
         layerZero.update(duration);
 
         window.clear(sf::Color::Black);
