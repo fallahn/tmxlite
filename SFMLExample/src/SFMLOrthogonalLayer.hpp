@@ -118,6 +118,37 @@ public:
         const auto& selectedChunk = getChunkAndTransform(tileX, tileY, chunkLocale);
         return selectedChunk->getColor(chunkLocale.x, chunkLocale.y);
     }
+    
+    void update(sf::Time elapsed)
+    {
+        for (auto& c : m_visibleChunks)
+        {
+            for (AnimationState& as : c->getActiveAnimations())
+            {
+                as.currentTime += elapsed;
+
+                tmx::TileLayer::Tile tile;
+                tile.ID = as.animTile.animation.frames[0].tileID;
+                tile.flipFlags = 0; // TODO: get flipFlags from original tmx::TileLayer::Tile
+
+                std::uint32_t animTime = 0;
+                for (const auto& frame : as.animTile.animation.frames)
+                {
+                    animTime += frame.duration;
+                    if (as.currentTime.asMilliseconds() >= animTime)
+                    {
+                        tile.ID = frame.tileID;
+                        if (frame == as.animTile.animation.frames.back())
+                        {
+                            as.currentTime = sf::milliseconds(0);
+                        }
+                    }
+                }
+
+                setTile(as.tileCords.x, as.tileCords.y, tile);
+            }
+        }
+    }
 
 private:
     //increasing m_chunkSize by 4; fixes render problems when mapsize != chunksize
@@ -134,6 +165,7 @@ private:
     {
         sf::Vector2u tileCords;
         sf::Time startTime;
+        sf::Time currentTime;
         tmx::Tileset::Tile animTile;
         std::uint8_t flipFlags;
     };
@@ -390,6 +422,7 @@ private:
                 flipD(v0,v1,v2,v3);
             }
         }
+
     private:
         class ChunkArray final : public sf::Drawable
         {
@@ -580,37 +613,6 @@ private:
             rt.draw(*c, states);
         }
     }
-    public:
-    void update(sf::Time elapsed)
-    {
-        static int32_t time;
-        time += elapsed.asMilliseconds();
-
-        for (auto& c : m_visibleChunks)
-        {
-            for (AnimationState& as : c->getActiveAnimations())
-            {
-                tmx::TileLayer::Tile tile;
-                tile.ID = as.animTile.animation.frames[0].tileID;
-                tile.flipFlags = 0; // TODO: get flipFlags from original tmx::TileLayer::Tile
-
-                int32_t animTime = 0;
-                for(auto itr = as.animTile.animation.frames.begin(); itr < as.animTile.animation.frames.end(); itr++)
-                {
-                    animTime += itr->duration;
-                    if(time >= animTime)
-                    {
-                        tile.ID = itr->tileID;
-                        if(itr == as.animTile.animation.frames.end() - 1)
-                            time = 0;
-                    }
-                }
-
-                setTile(as.tileCords.x, as.tileCords.y, tile);
-            }
-        }
-    }
-
 };
 
 #endif //SFML_ORTHO_HPP_

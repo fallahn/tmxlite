@@ -12,6 +12,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParseTest", "ParseTest\Pars
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tmxlite-android", "tmxlite-android\tmxlite-android.vcxproj", "{0A9268A4-1086-4562-9F44-4BE1CE5D4F03}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SFMLExample", "SFMLExample\SFMLExample.vcxproj", "{2298A657-D09A-438E-B976-5EE827966124}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0BC0C535-FEBB-4A83-8197-AF74FA26E100} = {0BC0C535-FEBB-4A83-8197-AF74FA26E100}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -59,6 +64,18 @@ Global
 		{0A9268A4-1086-4562-9F44-4BE1CE5D4F03}.Release|ARM64.Build.0 = Release|ARM64
 		{0A9268A4-1086-4562-9F44-4BE1CE5D4F03}.Release|x64.ActiveCfg = Release|x64
 		{0A9268A4-1086-4562-9F44-4BE1CE5D4F03}.Release|x86.ActiveCfg = Release|x86
+		{2298A657-D09A-438E-B976-5EE827966124}.Debug|ARM.ActiveCfg = Debug|Win32
+		{2298A657-D09A-438E-B976-5EE827966124}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{2298A657-D09A-438E-B976-5EE827966124}.Debug|x64.ActiveCfg = Debug|x64
+		{2298A657-D09A-438E-B976-5EE827966124}.Debug|x64.Build.0 = Debug|x64
+		{2298A657-D09A-438E-B976-5EE827966124}.Debug|x86.ActiveCfg = Debug|Win32
+		{2298A657-D09A-438E-B976-5EE827966124}.Debug|x86.Build.0 = Debug|Win32
+		{2298A657-D09A-438E-B976-5EE827966124}.Release|ARM.ActiveCfg = Release|Win32
+		{2298A657-D09A-438E-B976-5EE827966124}.Release|ARM64.ActiveCfg = Release|Win32
+		{2298A657-D09A-438E-B976-5EE827966124}.Release|x64.ActiveCfg = Release|x64
+		{2298A657-D09A-438E-B976-5EE827966124}.Release|x64.Build.0 = Release|x64
+		{2298A657-D09A-438E-B976-5EE827966124}.Release|x86.ActiveCfg = Release|Win32
+		{2298A657-D09A-438E-B976-5EE827966124}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

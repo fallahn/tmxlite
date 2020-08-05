@@ -78,6 +78,17 @@ namespace tmx
                 {
                     std::uint32_t tileID = 0;
                     std::uint32_t duration = 0;
+
+                    bool operator == (const Frame& other) const
+                    {
+                        return (this == &other) ||
+                            (tileID == other.tileID && duration == other.duration);
+                    }
+
+                    bool operator != (const Frame& other) const
+                    {
+                        return !(*this == other);
+                    }
                 };
                 std::vector<Frame> frames;
             }animation;
