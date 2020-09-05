@@ -46,7 +46,7 @@ source distribution.
 
 #ifdef __ANDROID__
 	#include <android/log.h>
-
+    #include <cstring>
 
 	#define  LOG_TAG    "TMXlite-Debug" 
 	//#define  ALOG(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
@@ -108,7 +108,7 @@ namespace tmx
 					
 					int outstringLength = outstring.length();
 					char outstring_chararray[outstringLength+1];
-					strcpy(outstring_chararray, outstring.c_str()); 
+					std::strcpy(outstring_chararray, outstring.c_str()); 
 					LOGE("%s",outstring_chararray);
 #endif
                     std::cerr << outstring << std::endl;
@@ -116,7 +116,7 @@ namespace tmx
 #ifdef __ANDROID__
 					int outstringLength = outstring.length();
 					char outstring_chararray[outstringLength+1];
-					strcpy(outstring_chararray, outstring.c_str()); 
+					std::strcpy(outstring_chararray, outstring.c_str()); 
 					LOGI("%s", outstring_chararray);
 #endif
                     std::cout << outstring << std::endl;

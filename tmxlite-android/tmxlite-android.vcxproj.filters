@@ -39,5 +39,8 @@
     <ClCompile Include="..\tmxlite\src\detail\pugixml.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\tmxlite\src\LayerGroup.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
