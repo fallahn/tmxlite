@@ -59,6 +59,7 @@ namespace tmx
             String,
             Colour,
             File,
+            Object,
             Undef
         };
             
@@ -104,6 +105,10 @@ namespace tmx
         \brief Returns the file path property as a string, relative to the map file
         */
         const std::string& getFileValue() const { assert(m_type == Type::File); return m_stringValue; }
+        /*!
+        \brief Returns the property's value as an integer object handle
+        */
+        int getObjectValue() const { assert(m_type == Type::Object); return m_intValue; }
 
 
     private:
