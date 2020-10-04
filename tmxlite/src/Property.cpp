@@ -95,4 +95,10 @@ void Property::parse(const pugi::xml_node& node)
         m_type = Type::File;
         return;
     }
+    else if (attribData == "object")
+    {
+        m_intValue = node.attribute("value").as_int(0);
+        m_type = Type::Object;
+        return;
+    }
 }
