@@ -79,6 +79,6 @@ namespace tmx
     inline ImageLayer& Layer::getLayerAs<ImageLayer>()
     {
         assert(getType() == Type::Image);
-        return *dynamic_cast<ImageLayer*>(this);
+        return *static_cast<ImageLayer*>(this);
     }
 }

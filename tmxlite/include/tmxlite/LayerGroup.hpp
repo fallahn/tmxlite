@@ -74,6 +74,6 @@ namespace tmx
     inline LayerGroup& Layer::getLayerAs<LayerGroup>()
     {
         assert(getType() == Type::Group);
-        return *dynamic_cast<LayerGroup*>(this);
+        return *static_cast<LayerGroup*>(this);
     }
 }

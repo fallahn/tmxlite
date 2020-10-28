@@ -13,9 +13,9 @@ SET(PROJECT_STATIC_RUNTIME FALSE CACHE BOOL "Use statically linked standard/runt
 
 if(CMAKE_COMPILER_IS_GNUCXX OR APPLE)
   if(PROJECT_STATIC_RUNTIME)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -static")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fno-rtti -static")
   else()
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fno-rtti")
   endif()
 endif()
 
