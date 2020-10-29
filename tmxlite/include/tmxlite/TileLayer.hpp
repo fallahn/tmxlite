@@ -105,6 +105,6 @@ namespace tmx
     inline TileLayer& Layer::getLayerAs<TileLayer>()
     {
         assert(getType() == Type::Tile);
-        return *dynamic_cast<TileLayer*>(this);
+        return *static_cast<TileLayer*>(this);
     }
 }

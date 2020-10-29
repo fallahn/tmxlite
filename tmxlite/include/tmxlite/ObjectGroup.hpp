@@ -85,6 +85,6 @@ namespace tmx
     inline ObjectGroup& Layer::getLayerAs<ObjectGroup>()
     {
         assert(getType() == Type::Object);
-        return *dynamic_cast<ObjectGroup*>(this);
+        return *static_cast<ObjectGroup*>(this);
     }
 }
