@@ -25,6 +25,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
+#include "zstd.h"
 #include <tmxlite/FreeFuncs.hpp>
 #include <tmxlite/TileLayer.hpp>
 #include "detail/pugixml.hpp"
@@ -89,7 +90,7 @@ void TileLayer::parse(const pugi::xml_node& node, Map*)
 //private
 void TileLayer::parseBase64(const pugi::xml_node& node)
 {
-    auto processDataString = [](std::string dataString, std::size_t tileCount, bool compressed)->std::vector<std::uint32_t>
+    auto processDataString = [](std::string dataString, std::size_t tileCount, bool compressed, std::string compression)->std::vector<std::uint32_t>
     {
         std::stringstream ss;
         ss << dataString;
@@ -103,11 +104,24 @@ void TileLayer::parseBase64(const pugi::xml_node& node)
         if (compressed)
         {
             //unzip
+            std::string errorMessage = "Failed to decompress layer data, node skipped.";
             std::size_t dataSize = dataString.length() * sizeof(unsigned char);
-            if (!decompress(dataString.c_str(), byteData, dataSize, expectedSize))
+
+            if (compression == "zstd")
             {
-                LOG("Failed to decompress layer data, node skipped.", Logger::Type::Error);
-                return {};
+                std::size_t result = ZSTD_decompress(byteData.data(), expectedSize, &dataString[0], dataSize);
+                if (ZSTD_isError(result)) {
+                    LOG(errorMessage + "\nError: " + ZSTD_getErrorName(result), Logger::Type::Error);
+                    return {};
+                }
+            }
+            else
+            {
+                if (!decompress(dataString.c_str(), byteData, dataSize, expectedSize))
+                {
+                    LOG(errorMessage, Logger::Type::Error);
+                    return {};
+                }
             }
         }
         else
@@ -148,7 +162,7 @@ void TileLayer::parseBase64(const pugi::xml_node& node)
                     chunk.size.x = childNode.attribute("width").as_int();
                     chunk.size.y = childNode.attribute("height").as_int();
 
-                    auto IDs = processDataString(dataString, (chunk.size.x * chunk.size.y), node.attribute("compression"));
+                    auto IDs = processDataString(dataString, (chunk.size.x * chunk.size.y), node.attribute("compression"), node.attribute("compression").as_string());
 
                     if (!IDs.empty())
                     {
@@ -168,7 +182,7 @@ void TileLayer::parseBase64(const pugi::xml_node& node)
     }
     else
     {
-        auto IDs = processDataString(data, m_tileCount, node.attribute("compression"));
+        auto IDs = processDataString(data, m_tileCount, node.attribute("compression"), node.attribute("compression").as_string());
         createTiles(IDs, m_tiles);
     }
 }
