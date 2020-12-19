@@ -163,7 +163,7 @@ void Tileset::parse(pugi::xml_node node, Map* map)
         }
     }
 
-    // If the tsx file does not declare every tile, we create the missing ones
+    //if the tsx file does not declare every tile, we create the missing ones
     if (m_tiles.size() != getTileCount())
     {
         for (std::uint32_t ID = 0 ; ID < getTileCount() ; ID++)
@@ -375,11 +375,13 @@ void Tileset::parseTileNode(const pugi::xml_node& node, Map* map)
 
 void Tileset::createMissingTile(std::uint32_t ID)
 {
-    // First, we check if the tile does not yet exist
-    for (auto &tile : m_tiles)
+    //first, we check if the tile does not yet exist
+    for (const auto& tile : m_tiles)
     {
         if (tile.ID == ID)
+        {
             return;
+        }
     }
 
     Tile tile;
