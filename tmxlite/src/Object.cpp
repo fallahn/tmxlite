@@ -40,6 +40,7 @@ Object::Object()
     : m_UID     (0),
     m_rotation  (0.f),
     m_tileID    (0),
+    m_flipFlags (0),
     m_visible   (true),
     m_shape     (Shape::Rectangle)
 {
@@ -66,8 +67,13 @@ void Object::parse(const pugi::xml_node& node, Map* map)
     m_AABB.width = node.attribute("width").as_float();
     m_AABB.height = node.attribute("height").as_float();
     m_rotation = node.attribute("rotation").as_float();
-    m_tileID = node.attribute("gid").as_uint();
     m_visible = node.attribute("visible").as_bool(true);
+
+    m_tileID = node.attribute("gid").as_uint();
+
+    static const std::uint32_t mask = 0xf0000000;
+    m_flipFlags = ((m_tileID & mask) >> 28);
+    m_tileID = m_tileID & ~mask;
 
     for (const auto& child : node.children())
     {
@@ -281,6 +287,11 @@ void Object::parseTemplate(const std::string& path, Map* map)
         if (m_tileID == 0)
         {
             m_tileID = obj.m_tileID;
+        }
+
+        if (m_flipFlags == 0)
+        {
+            m_flipFlags = obj.m_flipFlags;
         }
 
         if (m_shape == Shape::Rectangle)

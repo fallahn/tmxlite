@@ -139,8 +139,15 @@ namespace tmx
         if there is one. This is used to draw the Object (and therefore
         the Object must be rectangular)
         */
-        uint32_t getTileID() const { return m_tileID; }
+        std::uint32_t getTileID() const { return m_tileID; }
         
+        /*!
+        \brief Returns the flip flags if the objects uses a TileID to
+        draw it.
+        Returns 0 otherwise.
+        */
+        std::uint8_t getFlipFlags() const { return m_flipFlags; }
+
         /*!
         \brief Returns whether or not the Object is visible
         */
@@ -191,6 +198,7 @@ namespace tmx
         FloatRect m_AABB;
         float m_rotation;
         std::uint32_t m_tileID;
+        std::uint8_t m_flipFlags;
         bool m_visible;
 
         Shape m_shape;
