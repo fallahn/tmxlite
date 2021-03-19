@@ -55,3 +55,6 @@ if get_option('build_examples')
   subdir('OpenGLExample')
   subdir('SFMLExample')
 endif
+if get_option('build_tests')
+  subdir('ParseTest')
+endif
