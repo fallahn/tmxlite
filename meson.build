@@ -53,3 +53,4 @@ endif
 
 subdir('tmxlite')
 subdir('OpenGLExample')
+subdir('SFMLExample')
