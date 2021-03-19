@@ -52,3 +52,4 @@ if cpp.get_argument_syntax() == 'msvc'
 endif
 
 subdir('tmxlite')
+subdir('OpenGLExample')
