@@ -52,5 +52,7 @@ if cpp.get_argument_syntax() == 'msvc'
 endif
 
 subdir('tmxlite')
-subdir('OpenGLExample')
-subdir('SFMLExample')
+if get_option('build_examples')
+  subdir('OpenGLExample')
+  subdir('SFMLExample')
+endif
