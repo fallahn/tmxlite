@@ -4,6 +4,7 @@ project('tmxlite', 'cpp', 'c',
   default_options: [
 	'buildtype=release',
 	'cpp_std=c++14',
+	'warning_level=3',
 	'b_ndebug=if-release'
   ]
 )
@@ -12,17 +13,15 @@ cpp = meson.get_compiler('cpp')
 if get_option('use_rtti')
   if cpp.get_argument_syntax() == 'gcc'
 	if get_option('project_static_runtime')
-	  add_project_arguments('-Wall', '-static', language: ['cpp', 'c'])
-	else
-	  add_project_arguments('-Wall', language: ['cpp', 'c'])
+	  add_project_arguments('-static', language: ['cpp', 'c'])
 	endif
   endif
 else
   if cpp.get_argument_syntax() == 'gcc'
 	if get_option('project_static_runtime')
-	  add_project_arguments('-Wall', '-fno-rtti', '-static', language: ['cpp', 'c'])
+	  add_project_arguments('-fno-rtti', '-static', language: ['cpp', 'c'])
 	else
-	  add_project_arguments('-Wall', '-fno-rtti', language: ['cpp', 'c'])
+	  add_project_arguments('-fno-rtti', language: ['cpp', 'c'])
 	endif
   endif
 endif
