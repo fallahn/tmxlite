@@ -1,0 +1,4 @@
+#pragma once
+
+#define ASSETS_PATH "@ASSETS_PATH@"
+#cmakedefine PAUSE_AT_END

@@ -1,0 +1,5 @@
+option('use_rtti', type: 'boolean', value: true, description: 'Use run time type information?', yield: true)
+option('project_static_runtime', type: 'boolean', value: false, description: 'Use statically linked standard/runtime libraries?', yield: true)
+option('build_examples', type: 'boolean', value: false)
+option('build_tests', type: 'boolean', value: false)
+option('pause_test', type: 'boolean', value: true, description: 'Wait for user input after tests have finished running')
