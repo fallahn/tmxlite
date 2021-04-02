@@ -32,7 +32,7 @@ if get_option('default_library') == 'static'
 	add_project_arguments('-D_DEBUG_', '-DTMXLITE_STATIC', language: ['cpp', 'c'])
 	binary_postfix = '-s-d'
   else
-	add_project_arguments('-O4', '-DTMXLITE_STATIC', language: ['cpp', 'c'])
+	add_project_arguments('-O3', '-DTMXLITE_STATIC', language: ['cpp', 'c'])
 	binary_postfix = '-s'
   endif
 elif get_option('default_library') == 'shared'
@@ -40,7 +40,7 @@ elif get_option('default_library') == 'shared'
 	add_project_arguments('-D_DEBUG_', language: ['cpp', 'c'])
 	binary_postfix = '-d'
   else
-	add_project_arguments('-O4', language: ['cpp', 'c'])
+	add_project_arguments('-O3', language: ['cpp', 'c'])
   endif
 else
   error('Unsupported option \'' + get_option('default_library') + '\' for project ' + meson.project_name())
