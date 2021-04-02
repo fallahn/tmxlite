@@ -49,4 +49,7 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
+      if: runner.os == 'Linux'
       run: sudo cmake --build . --config $BUILD_TYPE --target install
+      else:
+      run: cmake --build . --config $BUILD_TYPE --target install
