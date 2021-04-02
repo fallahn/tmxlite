@@ -45,11 +45,18 @@ jobs:
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: cmake $GITHUB_WORKSPACE/tmxlite -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
-    - name: Build
+
+      #linux requires sudo to install, Windows obviously has no idea what that is
+      #macOS, for once, doesn't seem to care either way.
+    - name: Build Linux
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       if: runner.os == 'Linux'
       run: sudo cmake --build . --config $BUILD_TYPE --target install
+
+    - name: Build Other
+      working-directory: ${{github.workspace}}/build
+      shell: bash
       if: runner.os != 'Linux'
       run: cmake --build . --config $BUILD_TYPE --target install
