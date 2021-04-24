@@ -172,7 +172,7 @@ namespace tmx
         working directory. Use this to load the texture required by whichever
         method you choose to render the map.
         */
-        const std::string getImagePath() const { return m_imagePath; }
+        const std::string& getImagePath() const { return m_imagePath; }
         /*!
         \brief Returns the size of the tile set image in pixels.
          */
