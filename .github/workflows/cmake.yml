@@ -26,6 +26,11 @@ jobs:
         config:
         - { name: Shared, flags: -DTMXLITE_STATIC_LIB=TRUE }
         - { name: Static, flags: -DTMXLITE_STATIC_LIB=FALSE }
+
+        include:
+        - platform: { name: MacOS XCode, os: macos-latest }
+          config: { name: iOS, flags: -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/tmxlite/cmake/toolchains/iOS.toolchain.cmake -DIOS_PLATFORM=SIMULATOR }
+
         
     steps:
     - uses: actions/checkout@v2
