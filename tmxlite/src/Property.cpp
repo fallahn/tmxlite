@@ -38,8 +38,11 @@ Property::Property()
 }
 
 //public
-void Property::parse(const pugi::xml_node& node)
+void Property::parse(const pugi::xml_node& node, bool isObjectTypes)
 {
+    // The value attribute name is different in object types
+    const char *const valueAttribute = isObjectTypes ? "default" : "value";
+
     std::string attribData = node.name();
     if (attribData != "property")
     {
@@ -52,26 +55,26 @@ void Property::parse(const pugi::xml_node& node)
     attribData = node.attribute("type").as_string("string");
     if (attribData == "bool")
     {
-        attribData = node.attribute("value").as_string("false");
+        attribData = node.attribute(valueAttribute).as_string("false");
         m_boolValue = (attribData == "true");
         m_type = Type::Boolean;
         return;
     }
     else if (attribData == "int")
     {
-        m_intValue = node.attribute("value").as_int(0);
+        m_intValue = node.attribute(valueAttribute).as_int(0);
         m_type = Type::Int;
         return;
     }
     else if (attribData == "float")
     {
-        m_floatValue = node.attribute("value").as_float(0.f);
+        m_floatValue = node.attribute(valueAttribute).as_float(0.f);
         m_type = Type::Float;
         return;
     }
     else if (attribData == "string")
     {
-        m_stringValue = node.attribute("value").as_string();
+        m_stringValue = node.attribute(valueAttribute).as_string();
 
         //if value is empty, try getting the child value instead
         //as this is how multiline string properties are stored.
@@ -79,25 +82,25 @@ void Property::parse(const pugi::xml_node& node)
         {
             m_stringValue = node.child_value();
         }
-        
+
         m_type = Type::String;
         return;
     }
     else if (attribData == "color")
     {
-        m_colourValue = colourFromString(node.attribute("value").as_string("#FFFFFFFF"));
+        m_colourValue = colourFromString(node.attribute(valueAttribute).as_string("#FFFFFFFF"));
         m_type = Type::Colour;
         return;
     }
     else if (attribData == "file")
     {
-        m_stringValue = node.attribute("value").as_string();
+        m_stringValue = node.attribute(valueAttribute).as_string();
         m_type = Type::File;
         return;
     }
     else if (attribData == "object")
     {
-        m_intValue = node.attribute("value").as_int(0);
+        m_intValue = node.attribute(valueAttribute).as_int(0);
         m_type = Type::Object;
         return;
     }
