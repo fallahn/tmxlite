@@ -1,5 +1,5 @@
 /*********************************************************************
-Raphaël Frantz 2020
+Raphaël Frantz 2021
 
 tmxlite - Zlib license.
 
