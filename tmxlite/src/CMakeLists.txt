@@ -9,4 +9,5 @@ set(PROJECT_SRC
   ${PROJECT_DIR}/Property.cpp
   ${PROJECT_DIR}/TileLayer.cpp
   ${PROJECT_DIR}/LayerGroup.cpp
-  ${PROJECT_DIR}/Tileset.cpp)
+  ${PROJECT_DIR}/Tileset.cpp
+  ${PROJECT_DIR}/ObjectTypes.cpp)
