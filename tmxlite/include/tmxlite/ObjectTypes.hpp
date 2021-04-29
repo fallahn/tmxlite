@@ -53,10 +53,6 @@ namespace tmx
 
         ObjectTypes() = default;
         ~ObjectTypes() = default;
-        ObjectTypes(const ObjectTypes&) = delete;
-        ObjectTypes& operator  = (const ObjectTypes&) = delete;
-        ObjectTypes(ObjectTypes&&) = default;
-        ObjectTypes& operator = (ObjectTypes&&) = default;
 
         /*!
         \brief Attempts to parse the object types at the given location.
