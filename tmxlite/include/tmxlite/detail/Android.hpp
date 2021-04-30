@@ -36,13 +36,13 @@ source distribution.
 
 namespace std
 {
-	template <typename T>
-	std::string to_string(T value)
-	{
-		std::ostringstream os;
-		os << value;
-		return os.str();
-	}
+    template <typename T>
+    std::string to_string(T value)
+    {
+        std::ostringstream os;
+        os << value;
+        return os.str();
+    }
 }
 
 #define STOI(str) std::strtol(str.c_str(), 0, 10)

@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016
+Matt Marchant 2016 - 2021
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -186,16 +186,16 @@ namespace tmx
                 outPath = outPath.substr(0, result);
             }
         }
-// this does only work on windows		
+// this does only work on windows       
 #ifndef __ANDROID__
-        return std::move(outPath += '/' + path);
+        return outPath + '/' + path;
 #endif
 
 // todo: make resolveFilePath work with subfolders on 
 // android - currently only the root folder is working
 
 #ifdef __ANDROID__
-		return std::move(outPath = path);
+        return path;
 #endif
     }
 }

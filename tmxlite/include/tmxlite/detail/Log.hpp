@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016
+Matt Marchant 2016 - 2021
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -45,14 +45,14 @@ source distribution.
 
 
 #ifdef __ANDROID__
-	#include <android/log.h>
+    #include <android/log.h>
     #include <cstring>
 
-	#define  LOG_TAG    "TMXlite-Debug" 
-	//#define  ALOG(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+    #define  LOG_TAG    "TMXlite-Debug" 
+    //#define  ALOG(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 
-	#define LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
-	#define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
+    #define LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+    #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 #endif // __ANDROID__
 
 namespace tmx
@@ -103,21 +103,24 @@ namespace tmx
 
             if (output == Output::Console || output == Output::All)
             {
-                if (type == Type::Error) {
-#ifdef __ANDROID__	
-					
-					int outstringLength = outstring.length();
-					char outstring_chararray[outstringLength+1];
-					std::strcpy(outstring_chararray, outstring.c_str()); 
-					LOGE("%s",outstring_chararray);
+                if (type == Type::Error)
+                {
+#ifdef __ANDROID__  
+                    
+                    int outstringLength = outstring.length();
+                    char outstring_chararray[outstringLength+1];
+                    std::strcpy(outstring_chararray, outstring.c_str()); 
+                    LOGE("%s",outstring_chararray);
 #endif
                     std::cerr << outstring << std::endl;
-				}else{
+                }
+                else
+                {
 #ifdef __ANDROID__
-					int outstringLength = outstring.length();
-					char outstring_chararray[outstringLength+1];
-					std::strcpy(outstring_chararray, outstring.c_str()); 
-					LOGI("%s", outstring_chararray);
+                    int outstringLength = outstring.length();
+                    char outstring_chararray[outstringLength+1];
+                    std::strcpy(outstring_chararray, outstring.c_str()); 
+                    LOGI("%s", outstring_chararray);
 #endif
                     std::cout << outstring << std::endl;
                 }
@@ -140,7 +143,7 @@ namespace tmx
 #ifndef __ANDROID__
                     std::time_t time = std::time(nullptr);
                     auto tm = *std::localtime(&time);
-					//put_time isn't implemented by the ndk versions of the stl
+                    //put_time isn't implemented by the ndk versions of the stl
                     file.imbue(std::locale());
                     file << std::put_time(&tm, "%d/%m/%y-%H:%M:%S: ");
 #endif //__ANDROID__
