@@ -200,6 +200,7 @@
     <ClCompile Include="..\tmxlite\src\miniz.c" />
     <ClCompile Include="..\tmxlite\src\Object.cpp" />
     <ClCompile Include="..\tmxlite\src\ObjectGroup.cpp" />
+    <ClCompile Include="..\tmxlite\src\ObjectTypes.cpp" />
     <ClCompile Include="..\tmxlite\src\Property.cpp" />
     <ClCompile Include="..\tmxlite\src\TileLayer.cpp" />
     <ClCompile Include="..\tmxlite\src\Tileset.cpp" />

@@ -29,32 +29,6 @@ source distribution.
 #include <tmxlite/ObjectTypes.hpp>
 #include <tmxlite/detail/Log.hpp>
 
-namespace
-{
-    //TODO Copied from Map.cpp, maybe move into FreeFuncs.hpp
-    std::string getFilePath(const std::string& path)
-    {
-        static auto searchFunc = [](const char separator, const std::string& path)->std::string
-        {
-            std::size_t i = path.rfind(separator, path.length());
-            if (i != std::string::npos)
-            {
-                return(path.substr(0, i + 1));
-            }
-
-            return "";
-        };
-
-
-#ifdef _WIN32 //try windows formatted paths first
-        std::string retVal = searchFunc('\\', path);
-        if (!retVal.empty()) return retVal;
-#endif
-
-        return searchFunc('/', path);
-    }
-}
-
 using namespace tmx;
 
 bool ObjectTypes::load(const std::string &path)

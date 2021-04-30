@@ -259,6 +259,7 @@
     <ClInclude Include="include\tmxlite\Map.hpp" />
     <ClInclude Include="include\tmxlite\Object.hpp" />
     <ClInclude Include="include\tmxlite\ObjectGroup.hpp" />
+    <ClInclude Include="include\tmxlite\ObjectTypes.hpp" />
     <ClInclude Include="include\tmxlite\Property.hpp" />
     <ClInclude Include="include\tmxlite\TileLayer.hpp" />
     <ClInclude Include="include\tmxlite\Tileset.hpp" />
@@ -273,6 +274,7 @@
     <ClCompile Include="src\miniz.c" />
     <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\ObjectGroup.cpp" />
+    <ClCompile Include="src\ObjectTypes.cpp" />
     <ClCompile Include="src\Property.cpp" />
     <ClCompile Include="src\TileLayer.cpp" />
     <ClCompile Include="src\Tileset.cpp" />

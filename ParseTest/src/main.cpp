@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2020
+Matt Marchant 2016 - 2021
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -25,7 +25,6 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#include "config.h"
 #include <tmxlite/Map.hpp>
 #include <tmxlite/ObjectGroup.hpp>
 #include <tmxlite/LayerGroup.hpp>
@@ -37,7 +36,7 @@ int main()
 {
     tmx::Map map;
 
-    if (map.load(ASSETS_PATH "maps/platform.tmx"))
+    if (map.load("maps/platform.tmx"))
     {
         std::cout << "Loaded Map version: " << map.getVersion().upper << ", " << map.getVersion().lower << std::endl;
         if (map.isInfinite())
