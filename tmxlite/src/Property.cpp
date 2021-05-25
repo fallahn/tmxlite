@@ -37,6 +37,62 @@ Property::Property()
 {
 }
 
+Property Property::fromBoolean(bool value)
+{
+    Property p;
+    p.m_type = Type::Boolean;
+    p.m_boolValue = value;
+    return p;
+}
+
+Property Property::fromFloat(float value)
+{
+    Property p;
+    p.m_type = Type::Float;
+    p.m_floatValue = value;
+    return p;
+}
+
+Property Property::fromInt(int value)
+{
+    Property p;
+    p.m_type = Type::Int;
+    p.m_intValue = value;
+    return p;
+}
+
+Property Property::fromString(const std::string& value)
+{
+    Property p;
+    p.m_type = Type::String;
+    p.m_stringValue = value;
+    return p;
+}
+
+Property Property::fromColour(const Colour& value)
+{
+    Property p;
+    p.m_type = Type::Colour;
+    p.m_colourValue = value;
+    return p;
+}
+
+Property Property::fromFile(const std::string& value)
+{
+    Property p;
+    p.m_type = Type::File;
+    p.m_stringValue = value;
+    return p;
+}
+
+Property Property::fromObject(int value)
+{
+    Property p;
+    p.m_type = Type::Object;
+    p.m_intValue = value;
+    return p;
+}
+
 //public
 void Property::parse(const pugi::xml_node& node, bool isObjectTypes)
 {
