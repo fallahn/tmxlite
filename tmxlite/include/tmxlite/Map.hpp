@@ -122,30 +122,36 @@ namespace tmx
         If no tile map has yet been parsed the version will read 0, 0
         */
         const Version& getVersion() const { return m_version; }
+
         /*!
         \brief Returns the orientation of the map if one is loaded,
         else returns None
         */
         Orientation getOrientation() const { return m_orientation; }
+
         /*!
         \brief Returns the RenderOrder of the map if one is loaded,
         else returns None
         */
         RenderOrder getRenderOrder() const { return m_renderOrder; }
+
         /*!
         \brief Returns the tile count of the map in the X and Y directions
         */
         const Vector2u& getTileCount() const { return m_tileCount; }
+
         /*!
         \brief Returns the size of the tile grid in this map.
         Actual tile sizes may vary and will be extended / shrunk about
         the bottom left corner of the tile.
         */
         const Vector2u& getTileSize() const { return m_tileSize; }
+
         /*!
         \brief Returns the bounds of the map
         */
         FloatRect getBounds() const { return FloatRect(0.f, 0.f, static_cast<float>(m_tileCount.x * m_tileSize.x), static_cast<float>(m_tileCount.y * m_tileSize.y)); }
+
         /*!
         \brief Returns the length of an edge of a tile if a Hexagonal
         map is loaded.
@@ -155,26 +161,31 @@ namespace tmx
         returns 0.f
         */
         float getHexSideLength() const { return m_hexSideLength; }
+
         /*!
         \brief Stagger axis of the map.
         If either a Staggered or Hexagonal tile map is loaded this returns
         which axis the map is staggered along, else returns None.
         */
         StaggerAxis getStaggerAxis() const { return m_staggerAxis; }
+
         /*!
         \brief Stagger Index of the loaded map.
         If a Staggered or Hexagonal map is loaded this returns whether
         the even or odd rows of tiles are staggered, otherwise it returns None.
         */
         StaggerIndex getStaggerIndex() const { return m_staggerIndex; }
+
         /*!
         \brief Returns the background colour of the map.
         */
         const Colour& getBackgroundColour() const { return m_backgroundColour; }
+
         /*!
         \brief Returns a reference to the vector of tile sets used by the map
         */
         const std::vector<Tileset>& getTilesets() const { return m_tilesets; }
+
         /*!
         \brief Returns a reference to the vector containing the layer data.
         Layers are pointer-to-baseclass, the concrete type of which can be
@@ -182,10 +193,12 @@ namespace tmx
         \see Layer
         */
         const std::vector<Layer::Ptr>& getLayers() const { return m_layers; }
+
         /*!
         \brief Returns a vector of Property objects loaded by the map
         */
         const std::vector<Property>& getProperties() const { return m_properties; } 
+
         /*!
         \brief Returns a Hashmap of all animated tiles accessible by TileID
         */

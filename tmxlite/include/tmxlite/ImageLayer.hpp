@@ -42,7 +42,6 @@ namespace tmx
     {
     public:
         explicit ImageLayer(const std::string&);
-        ~ImageLayer() = default;
 
         Type getType() const override { return Layer::Type::Image; }
         void parse(const pugi::xml_node&, Map*) override;
@@ -52,16 +51,19 @@ namespace tmx
         of the image used by the image layer.
         */
         const std::string& getImagePath() const { return m_filePath; }
+
         /*!
         \brief Returns the colour used by the image to represent transparent
         pixels. By default this is (0, 0, 0, 0)
         */
         const Colour& getTransparencyColour() const { return m_transparencyColour; }
+
         /*!
         \brief Returns true if the image used by this layer specifically states a 
         colour to use as transparency
         */
         bool hasTransparency() const { return m_hasTransparency; }
+
         /*!
         \brief Returns the size of the image of the image layer in pixels.
         */

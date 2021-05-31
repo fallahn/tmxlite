@@ -51,9 +51,6 @@ namespace tmx
             std::vector<Property> properties;
         };
 
-        ObjectTypes() = default;
-        ~ObjectTypes() = default;
-
         /*!
         \brief Attempts to parse the object types at the given location.
         \param std::string Path to object types file to try to parse

@@ -49,7 +49,6 @@ namespace tmx
         };
 
         ObjectGroup();
-        ~ObjectGroup() = default;
 
         Type getType() const override { return Layer::Type::Object; }
         void parse(const pugi::xml_node&, Map*) override;
@@ -58,16 +57,19 @@ namespace tmx
         \brief Returns the colour associated with this layer
         */
         const Colour& getColour() const { return m_colour; }
+
         /*!
         \brief Returns the DrawOrder for the objects in this group.
         Defaults to TopDown, where Objects are drawn sorted by Y position
         */
         DrawOrder getDrawOrder() const { return m_drawOrder; }
+
         /*!
         \brief Returns a reference to the vector of properties for
         the ObjectGroup
         */
         const std::vector<Property>& getProperties() const { return m_properties; }
+
         /*!
         \brief Returns a reference to the vector of Objects which belong to the group
         */

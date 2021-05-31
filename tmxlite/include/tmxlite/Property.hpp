@@ -64,7 +64,6 @@ namespace tmx
         };
             
         Property();
-        ~Property() = default;
 
         static Property fromBoolean(bool value);
         static Property fromFloat(float value);
@@ -87,34 +86,42 @@ namespace tmx
         will lead to undefined behaviour.
         */
         Type getType() const { return m_type; }
+
         /*!
         \brief Returns the name of this property
         */
         const std::string& getName() const { return m_name; }
+
         /*!
         \brief Returns the property's value as a boolean
         */
         bool getBoolValue() const { assert(m_type == Type::Boolean); return m_boolValue; }
+
         /*!
         \brief Returns the property's value as a float
         */
         float getFloatValue() const { assert(m_type == Type::Float); return m_floatValue; }
+
         /*!
         \brief Returns the property's value as an integer
         */
         int getIntValue() const { assert(m_type == Type::Int); return m_intValue; }
+
         /*!
         \brief Returns the property's value as a string
         */
         const std::string& getStringValue() const { assert(m_type == Type::String); return m_stringValue; }
+
         /*!
         \brief Returns the property's value as a Colour struct
         */
         const Colour& getColourValue() const { assert(m_type == Type::Colour); return m_colourValue; }
+
         /*!
         \brief Returns the file path property as a string, relative to the map file
         */
         const std::string& getFileValue() const { assert(m_type == Type::File); return m_stringValue; }
+
         /*!
         \brief Returns the property's value as an integer object handle
         */

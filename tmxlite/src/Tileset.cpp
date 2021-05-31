@@ -41,7 +41,8 @@ Tileset::Tileset(const std::string& workingDir)
     m_margin                (0),
     m_tileCount             (0),
     m_columnCount           (0),
-    m_transparencyColour    (0, 0, 0, 0)
+    m_transparencyColour    (0, 0, 0, 0),
+    m_hasTransparency       (false)
 {
 
 }
@@ -138,6 +139,7 @@ void Tileset::parse(pugi::xml_node node, Map* map)
             {
                 attribString = node.attribute("trans").as_string();
                 m_transparencyColour = colourFromString(attribString);
+                m_hasTransparency = true;
             }
             if (node.attribute("width") && node.attribute("height"))
             {
@@ -349,6 +351,7 @@ void Tileset::parseTileNode(const pugi::xml_node& node, Map* map)
             {
                 attribString = child.attribute("trans").as_string();
                 m_transparencyColour = colourFromString(attribString);
+                m_hasTransparency = true;
             }
             if (child.attribute("width"))
             {
