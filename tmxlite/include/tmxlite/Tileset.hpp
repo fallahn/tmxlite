@@ -114,6 +114,23 @@ namespace tmx
         };
 
         /*!
+        \brief Declares the alignment of tile Objects
+        */
+        enum class ObjectAlignment
+        {
+            Unspecified,
+            TopLeft,
+            Top,
+            TopRight,
+            Left,
+            Center,
+            Right,
+            BottomLeft,
+            Bottom,
+            BottomRight
+        };
+
+        /*!
         \brief Attempts to parse the given xml node.
         If node parsing fails an error is printed in the console
         and the Tileset remains in an uninitialised state.
@@ -164,6 +181,15 @@ namespace tmx
         This is used when rendering collection of images sets
         */
         std::uint32_t getColumnCount() const { return m_columnCount; }
+
+        /*!
+        \brief Returns the alignment of tile objects.
+        The default value is ObjectAlignment::Unspecified for compatibility.
+        When the alignment is Unspecified tile objects use BottomLeft in
+        orthogonal mode and Bottom in isometric mode.
+        \see ObjectAlignment
+        */
+        ObjectAlignment getObjectAlignment() const { return m_objectAlignment; }
 
         /*!
         \brief Returns the tile offset in pixels.
@@ -220,7 +246,6 @@ namespace tmx
          */
         bool hasTile(std::uint32_t id) const { return id >= m_firstGID && id <= getLastGID(); };
 
-
         /*!
          \brief queries tiles and returns a tile with the given ID. Checks if the TileID is part of the Tileset with `hasTile(id)`
          \param id Tile ID. The Tile ID will be corrected internally.
@@ -240,6 +265,7 @@ namespace tmx
         std::uint32_t m_margin;
         std::uint32_t m_tileCount;
         std::uint32_t m_columnCount;
+        ObjectAlignment m_objectAlignment;
         Vector2u m_tileOffset;
 
         std::vector<Property> m_properties;
