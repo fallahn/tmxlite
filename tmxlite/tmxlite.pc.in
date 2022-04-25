@@ -1,0 +1,14 @@
+prefix="@CMAKE_INSTALL_PREFIX@"
+exec_prefix="${prefix}"
+libdir="${prefix}/lib"
+includedir="${prefix}/include"
+
+Name: tmxlite
+Description: lightweight C++14 parser for Tiled tmx files
+URL: https://github.com/fallahn/tmxlite
+Version: @CMAKE_PROJECT_VERSION@
+Requires: @PKGCONF_REQ_PUB@
+Requires.private: @PKGCONF_REQ_PRIV@
+Cflags: -I"${includedir}"
+Libs: -L"${libdir}" -ltmxlite
+Libs.private: -L"${libdir}" -ltmxlite @PKGCONF_LIBS_PRIV@
