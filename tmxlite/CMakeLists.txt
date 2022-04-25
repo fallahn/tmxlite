@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(tmxlite)
+project(tmxlite VERSION 1.3.1)
 SET(PROJECT_NAME tmxlite)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
@@ -71,6 +71,9 @@ else()
   endif()
 endif()
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tmxlite.pc.in ${CMAKE_CURRENT_BINARY_DIR}/tmxlite.pc
+               @ONLY)
+
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 include(GNUInstallDirs)
@@ -83,3 +86,8 @@ else()
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
+
+install(
+  FILES       ${CMAKE_CURRENT_BINARY_DIR}/tmxlite.pc
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+  COMPONENT   libraries)
