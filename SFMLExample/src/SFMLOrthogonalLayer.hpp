@@ -119,30 +119,29 @@ public:
         return selectedChunk->getColor(chunkLocale.x, chunkLocale.y);
     }
     
-    void update(sf::Time elapsed)
+    void update(sf::Time elapsed) 
     {
-        for (auto& c : m_visibleChunks)
+        for (auto& c : m_visibleChunks) 
         {
-            for (AnimationState& as : c->getActiveAnimations())
+            for (AnimationState& as : c->getActiveAnimations()) 
             {
                 as.currentTime += elapsed;
 
                 tmx::TileLayer::Tile tile;
-                tile.ID = as.animTile.animation.frames[0].tileID;
-                tile.flipFlags = 0; // TODO: get flipFlags from original tmx::TileLayer::Tile
-
                 std::uint32_t animTime = 0;
-                for (const auto& frame : as.animTile.animation.frames)
+                auto x = as.animTile.animation.frames.begin();
+                while (animTime < as.currentTime.asMilliseconds()) 
                 {
-                    animTime += frame.duration;
-                    if (as.currentTime.asMilliseconds() >= animTime)
+                    if (x == as.animTile.animation.frames.end()) 
                     {
-                        tile.ID = frame.tileID;
-                        if (frame == as.animTile.animation.frames.back())
-                        {
-                            as.currentTime = sf::milliseconds(0);
-                        }
+                        x = as.animTile.animation.frames.begin();
+                        as.currentTime -= sf::milliseconds(animTime);
+                        animTime = 0;
                     }
+
+                    tile.ID = x->tileID;
+                    animTime += x->duration;
+                    x++;
                 }
 
                 setTile(as.tileCords.x, as.tileCords.y, tile);
