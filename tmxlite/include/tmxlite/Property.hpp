@@ -105,7 +105,7 @@ namespace tmx
         /*!
         \brief Returns the property's value as an integer
         */
-        int getIntValue() const { assert(m_type == Type::Int); return m_intValue; }
+        int getIntValue() const { assert(m_type == Type::Int || m_type == Type::Object); return m_intValue; }
 
         /*!
         \brief Returns the property's value as a string
