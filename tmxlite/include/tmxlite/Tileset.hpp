@@ -99,7 +99,7 @@ namespace tmx
             \brief The position of the tile within the image.
             */
             Vector2u imagePosition;
-            std::string type;
+            std::string Class;
         };
             
         /*!

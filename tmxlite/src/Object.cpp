@@ -59,7 +59,13 @@ void Object::parse(const pugi::xml_node& node, Map* map)
 
     m_UID = node.attribute("id").as_int();
     m_name = node.attribute("name").as_string();
-    m_type = node.attribute("type").as_string();
+
+    m_class = node.attribute("type").as_string();
+    if (m_class.empty())
+    {
+        m_class = node.attribute("class").as_string();
+    }
+    
     m_position.x = node.attribute("x").as_float();
     m_AABB.left = m_position.x;
     m_position.y = node.attribute("y").as_float();
@@ -274,9 +280,9 @@ void Object::parseTemplate(const std::string& path, Map* map)
             m_name = obj.m_name;
         }
 
-        if (m_type.empty())
+        if (m_class.empty())
         {
-            m_type = obj.m_type;
+            m_class = obj.m_class;
         }
 
         if (m_rotation == 0)

@@ -8,3 +8,5 @@ Debug
 Release
 
 *.swp
+/.vs/tmxlite
+/tmxlite/tmxlite.vcxproj.user
