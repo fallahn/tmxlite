@@ -112,10 +112,15 @@ namespace tmx
         const std::string& getName() const { return m_name; }
         
         /*!
-        \brief Returns the type of the Object, as defined in the editor
+        \brief Returns the type (equal to class) of the Object, as defined in the editor Tiled < 1.9
         */
-        const std::string& getType() const { return m_type; }
-        
+        const std::string& getType() const { return m_class; }
+
+        /*!
+       \brief Returns the class (equal to type) of the Object, as defined in the editor Tiled 1.9
+       */
+        const std::string& getClass() const { return m_class; }
+
         /*!
         \brief Returns the position of the Object in pixels
         */
@@ -193,7 +198,7 @@ namespace tmx
     private:
         std::uint32_t m_UID;
         std::string m_name;
-        std::string m_type;
+        std::string m_class;
         Vector2f m_position;
         FloatRect m_AABB;
         float m_rotation;
