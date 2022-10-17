@@ -125,6 +125,11 @@ namespace tmx
         const Vector2i& getOffset() const { return m_offset; }
 
         /*!
+        \brief Returns the parallax factor
+        */
+        const Vector2f& getParallaxFactor() const { return m_parallaxFactor;  }
+
+        /*!
         \brief Returns the size of the layer, in pixels.
         This will be the same as the map size for fixed size maps.
         */
@@ -142,6 +147,7 @@ namespace tmx
         void setVisible(bool visible) { m_visible = visible; }
         void setOffset(std::int32_t x, std::int32_t y) { m_offset = Vector2i(x, y); }
         void setSize(std::uint32_t width, std::uint32_t height) { m_size = Vector2u(width, height); }
+        void setParallaxFactor(float x, float y) { m_parallaxFactor.x = x; m_parallaxFactor.y = y; }
         void addProperty(const pugi::xml_node& node) { m_properties.emplace_back(); m_properties.back().parse(node); }
 
     private:
@@ -150,6 +156,7 @@ namespace tmx
         bool m_visible;
         Vector2i m_offset;
         Vector2u m_size;
+        Vector2f m_parallaxFactor;
 
         std::vector<Property> m_properties;
     };
