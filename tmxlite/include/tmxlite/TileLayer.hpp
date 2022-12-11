@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2021
+Matt Marchant 2016 - 2022
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -105,5 +105,12 @@ namespace tmx
     {
         assert(getType() == Type::Tile);
         return *static_cast<TileLayer*>(this);
+    }
+
+    template <>
+    inline const TileLayer& Layer::getLayerAs<TileLayer>() const
+    {
+        assert(getType() == Type::Tile);
+        return *static_cast<const TileLayer*>(this);
     }
 }
