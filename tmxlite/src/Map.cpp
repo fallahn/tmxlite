@@ -352,5 +352,7 @@ bool Map::reset()
     m_templateObjects.clear();
     m_templateTilesets.clear();
 
+    m_animTiles.clear();
+
     return false;
 }
