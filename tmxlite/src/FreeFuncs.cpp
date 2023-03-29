@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2021
+Matt Marchant 2016 - 2023
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -25,8 +25,13 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
+#ifndef USE_EXTLIBS
 #include "miniz.h"
+#else
+#include <zlib.h>
+#endif
 #include <tmxlite/FreeFuncs.hpp>
+#include <tmxlite/Types.hpp>
 #include <tmxlite/detail/Log.hpp>
 
 #include <cstring>
@@ -39,6 +44,10 @@ bool tmx::decompress(const char* source, std::vector<unsigned char>& dest, std::
         return false;
     }
 
+//#ifdef USE_EXTLIBS
+
+
+//#else
     int currentSize = static_cast<int>(expectedSize);
     std::vector<unsigned char> byteArray(expectedSize / sizeof(unsigned char));
     z_stream stream;
@@ -53,9 +62,12 @@ bool tmx::decompress(const char* source, std::vector<unsigned char>& dest, std::
     //we'd prefer to use inflateInit2 but it appears 
     //to be incorrect in miniz. This is fine for zlib
     //compressed data, but gzip compressed streams
-    //will fail to inflate. IMO still preferable to
-    //trying to build/link zlib
-    if (inflateInit(&stream/*, 15 + 32*/) != Z_OK)
+    //will fail to inflate.
+#ifdef USE_EXTLIBS
+    if (inflateInit2(&stream, 15 + 32) != Z_OK)
+#else
+    if (inflateInit(&stream) != Z_OK)
+#endif
     {
         LOG("inflate init failed", Logger::Type::Error);
         return false;
@@ -110,6 +122,12 @@ bool tmx::decompress(const char* source, std::vector<unsigned char>& dest, std::
 
     //copy bytes to vector
     dest.insert(dest.begin(), byteArray.begin(), byteArray.end());
-
+//#endif
     return true;
+}
+
+std::ostream& operator << (std::ostream& os, const tmx::Colour& c)
+{
+    os << "RGBA: " << (int)c.r << ", " << (int)c.g << ", " << (int)c.b << ", " << (int)c.a;
+    return os;
 }

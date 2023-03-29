@@ -31,6 +31,19 @@ source distribution.
 #include <tmxlite/TileLayer.hpp>
 
 #include <iostream>
+#include <array>
+#include <string>
+
+namespace
+{
+    const std::array<std::string, 4u> LayerStrings =
+    {
+        std::string("Tile"),
+        std::string("Object"),
+        std::string("Image"),
+        std::string("Group"),
+    };
+}
 
 int main()
 {
@@ -42,6 +55,10 @@ int main()
         if (map.isInfinite())
         {
             std::cout << "Map is infinite.\n";
+        }
+        else
+        {
+            std::cout << "Map Dimensions: " << map.getBounds() << std::endl;
         }
 
         const auto& mapProperties = map.getProperties();
@@ -59,7 +76,9 @@ int main()
         for (const auto& layer : layers)
         {
             std::cout << "Found Layer: " << layer->getName() << std::endl;
-            std::cout << "Layer Type: " << int(layer->getType()) << std::endl;
+            std::cout << "Layer Type: " << LayerStrings[static_cast<std::int32_t>(layer->getType())] << std::endl;
+            std::cout << "Layer Dimensions: " << layer->getSize() << std::endl;
+            std::cout << "Layer Tint: " << layer->getTintColour() << std::endl;
 
             if (layer->getType() == tmx::Layer::Type::Group)
             {
@@ -69,7 +88,9 @@ int main()
                 for (const auto& sublayer : sublayers)
                 {
                     std::cout << "Found Layer: " << sublayer->getName() << std::endl;
-                    std::cout << "Layer Type: " << int(sublayer->getType()) << std::endl;
+                    std::cout << "Sub-layer Type: " << LayerStrings[static_cast<std::int32_t>(sublayer->getType())] << std::endl;
+                    std::cout << "Sub-layer Dimensions: " << sublayer->getSize() << std::endl;
+                    std::cout << "Sub-layer Tint: " << sublayer->getTintColour() << std::endl;
 
                     if (sublayer->getType() == tmx::Layer::Type::Object)
                     {

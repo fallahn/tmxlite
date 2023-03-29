@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2021
+Matt Marchant 2016 - 2023
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -25,7 +25,11 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
+#ifdef USE_EXTLIBS
+#include <pugixml.hpp>
+#else
 #include "detail/pugixml.hpp"
+#endif
 #include <tmxlite/Tileset.hpp>
 #include <tmxlite/FreeFuncs.hpp>
 #include <tmxlite/detail/Log.hpp>
@@ -90,7 +94,7 @@ void Tileset::parse(pugi::xml_node node, Map* map)
         auto result = tsxDoc.load_file(path.c_str());
         if (!result)
         {
-            Logger::log("Failed opening tsx file for tile set, tile set will be skipped", Logger::Type::Error);
+            Logger::log(path + ": Failed opening tsx file for tile set, tile set will be skipped", Logger::Type::Error);
             return reset();
         }
 

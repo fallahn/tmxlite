@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2021
+Matt Marchant 2016 - 2023
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -25,8 +25,11 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-
+#ifdef USE_EXTLIBS
+#include <pugixml.hpp>
+#else
 #include "detail/pugixml.hpp"
+#endif
 #include <tmxlite/Map.hpp>
 #include <tmxlite/FreeFuncs.hpp>
 #include <tmxlite/ObjectGroup.hpp>
@@ -264,6 +267,11 @@ bool Map::parseMapNode(const pugi::xml_node& mapNode)
         return reset();
     }
 
+    m_parallaxOrigin =
+    {
+        mapNode.attribute("parallaxoriginx").as_float(0.f),
+        mapNode.attribute("parallaxoriginy").as_float(0.f)
+    };
 
     //colour property is optional
     attribString = mapNode.attribute("backgroundcolor").as_string();
@@ -272,8 +280,7 @@ bool Map::parseMapNode(const pugi::xml_node& mapNode)
         m_backgroundColour = colourFromString(attribString);
     }
 
-    //TODO do we need next object ID? technically we won't be creating
-    //new objects outside of the scene in xygine.
+    //TODO do we need next object ID
 
     //parse all child nodes
     for (const auto& node : mapNode.children())
