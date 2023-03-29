@@ -49,12 +49,19 @@ void ImageLayer::parse(const pugi::xml_node& node, Map*)
         return;
     }
 
+    //TODO this gets repeated foreach layer type and could all be moved to base class...
     setName(node.attribute("name").as_string());
     setOpacity(node.attribute("opacity").as_float(1.f));
     setVisible(node.attribute("visible").as_bool(true));
     setOffset(node.attribute("offsetx").as_int(0), node.attribute("offsety").as_int(0));
     setSize(node.attribute("width").as_uint(0), node.attribute("height").as_uint(0));
     setParallaxFactor(node.attribute("parallaxx").as_float(1.f), node.attribute("parallaxy").as_float(1.f));
+
+    std::string tintColour = node.attribute("tintcolor").as_string();
+    if (!tintColour.empty())
+    {
+        setTintColour(colourFromString(tintColour));
+    }
 
     for (const auto& child : node.children())
     {

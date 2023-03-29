@@ -141,3 +141,5 @@ std::ostream& operator << (std::ostream& os, const tmx::Rectangle<T>& t)
     os << "{" << t.left << ", " << t.top << ", " << t.width << ", " << t.height << "}";
     return os;
 }
+
+std::ostream& operator << (std::ostream& os, const tmx::Colour& c);

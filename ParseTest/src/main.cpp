@@ -78,6 +78,7 @@ int main()
             std::cout << "Found Layer: " << layer->getName() << std::endl;
             std::cout << "Layer Type: " << LayerStrings[static_cast<std::int32_t>(layer->getType())] << std::endl;
             std::cout << "Layer Dimensions: " << layer->getSize() << std::endl;
+            std::cout << "Layer Tint: " << layer->getTintColour() << std::endl;
 
             if (layer->getType() == tmx::Layer::Type::Group)
             {
@@ -89,6 +90,7 @@ int main()
                     std::cout << "Found Layer: " << sublayer->getName() << std::endl;
                     std::cout << "Sub-layer Type: " << LayerStrings[static_cast<std::int32_t>(sublayer->getType())] << std::endl;
                     std::cout << "Sub-layer Dimensions: " << sublayer->getSize() << std::endl;
+                    std::cout << "Sub-layer Tint: " << sublayer->getTintColour() << std::endl;
 
                     if (sublayer->getType() == tmx::Layer::Type::Object)
                     {

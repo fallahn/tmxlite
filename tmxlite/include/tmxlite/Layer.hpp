@@ -127,6 +127,12 @@ namespace tmx
         const Vector2f& getParallaxFactor() const { return m_parallaxFactor;  }
 
         /*!
+        \brief Returns the tint colour of the layer.
+        Defaults to 0xFFFFFFFF - pure white
+        */
+        Colour getTintColour() const { return m_tintColour; }
+
+        /*!
         \brief Returns the size of the layer, in pixels.
         This will be the same as the map size for fixed size maps.
         */
@@ -144,6 +150,7 @@ namespace tmx
         void setVisible(bool visible) { m_visible = visible; }
         void setOffset(std::int32_t x, std::int32_t y) { m_offset = Vector2i(x, y); }
         void setParallaxFactor(float x, float y) { m_parallaxFactor.x = x; m_parallaxFactor.y = y; }
+        void setTintColour(Colour c) { m_tintColour = c; }
         void setSize(std::uint32_t width, std::uint32_t height) { m_size = Vector2u(width, height); }
         void addProperty(const pugi::xml_node& node) { m_properties.emplace_back(); m_properties.back().parse(node); }
 
@@ -153,6 +160,7 @@ namespace tmx
         bool m_visible;
         Vector2i m_offset;
         Vector2f m_parallaxFactor;
+        Colour m_tintColour = { 255,255,255,255 };
         Vector2u m_size;
 
         std::vector<Property> m_properties;

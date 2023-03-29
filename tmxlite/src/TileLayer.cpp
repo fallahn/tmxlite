@@ -57,6 +57,12 @@ void TileLayer::parse(const pugi::xml_node& node, Map*)
     setSize(node.attribute("width").as_uint(0), node.attribute("height").as_uint(0));
     setParallaxFactor(node.attribute("parallaxx").as_float(1.f), node.attribute("parallaxy").as_float(1.f));
 
+    std::string tintColour = node.attribute("tintcolor").as_string();
+    if (!tintColour.empty())
+    {
+        setTintColour(colourFromString(tintColour));
+    }
+
     for (const auto& child : node.children())
     {
         attribName = child.name();

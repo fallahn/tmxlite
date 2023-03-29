@@ -27,6 +27,7 @@ source distribution.
 
 #include "miniz.h"
 #include <tmxlite/FreeFuncs.hpp>
+#include <tmxlite/Types.hpp>
 #include <tmxlite/detail/Log.hpp>
 
 #include <cstring>
@@ -112,4 +113,10 @@ bool tmx::decompress(const char* source, std::vector<unsigned char>& dest, std::
     dest.insert(dest.begin(), byteArray.begin(), byteArray.end());
 
     return true;
+}
+
+std::ostream& operator << (std::ostream& os, const tmx::Colour& c)
+{
+    os << "RGBA: " << (int)c.r << ", " << (int)c.g << ", " << (int)c.b << ", " << (int)c.a;
+    return os;
 }

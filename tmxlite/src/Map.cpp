@@ -277,8 +277,7 @@ bool Map::parseMapNode(const pugi::xml_node& mapNode)
         m_backgroundColour = colourFromString(attribString);
     }
 
-    //TODO do we need next object ID? technically we won't be creating
-    //new objects outside of the scene in xygine.
+    //TODO do we need next object ID
 
     //parse all child nodes
     for (const auto& node : mapNode.children())
