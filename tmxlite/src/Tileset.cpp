@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2021
+Matt Marchant 2016 - 2023
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -90,7 +90,7 @@ void Tileset::parse(pugi::xml_node node, Map* map)
         auto result = tsxDoc.load_file(path.c_str());
         if (!result)
         {
-            Logger::log("Failed opening tsx file for tile set, tile set will be skipped", Logger::Type::Error);
+            Logger::log(path + ": Failed opening tsx file for tile set, tile set will be skipped", Logger::Type::Error);
             return reset();
         }
 
