@@ -1,5 +1,6 @@
 /*********************************************************************
 Grant Gangi 2019
+Matt Marchant 2023
 
 tmxlite - Zlib license.
 
@@ -24,7 +25,11 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
+#ifdef USE_EXTLIBS
+#include <pugixml.hpp>
+#else
 #include "detail/pugixml.hpp"
+#endif
 #include <tmxlite/LayerGroup.hpp>
 #include <tmxlite/FreeFuncs.hpp>
 #include <tmxlite/ObjectGroup.hpp>

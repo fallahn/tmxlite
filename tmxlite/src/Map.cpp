@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2021
+Matt Marchant 2016 - 2023
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -25,8 +25,11 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-
+#ifdef USE_EXTLIBS
+#include <pugixml.hpp>
+#else
 #include "detail/pugixml.hpp"
+#endif
 #include <tmxlite/Map.hpp>
 #include <tmxlite/FreeFuncs.hpp>
 #include <tmxlite/ObjectGroup.hpp>
