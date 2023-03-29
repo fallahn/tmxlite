@@ -32,7 +32,7 @@ Doxygen generated API documentation can be found online [here](https://codedocs.
 using the doxy file in the tmxlite/documentation/ directory.
 
 #### Important information 
-tmxlite uses [pugixml](https://pugixml.org/) and [miniz](https://github.com/richgel999/miniz) which are included in the repository.
+tmxlite uses [pugixml](https://pugixml.org/) and [miniz](https://github.com/richgel999/miniz) which are included in the repository, although external zlib and pugixml libraries can be used. Add `-DUSE_EXTLIBS` to your compiler's definitions or when configuring CMake set `USE_EXTLIBS` to TRUE.
 
 ***
 

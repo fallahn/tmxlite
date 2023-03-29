@@ -50,6 +50,12 @@ if cpp.get_argument_syntax() == 'msvc'
   add_project_arguments('-D_CRT_SECURE_NO_WARNINGS', language: ['cpp', 'c'])
 endif
 
+if get_option('use_extlibs')
+  add_project_arguments('-DUSE_EXTLIBS', language: ['cpp', 'c'])
+  zdep = dependency('zlib', version : '>=1.2.8', required: true)
+  pugidep = dependency('pugixml', required: true)
+endif
+
 subdir('tmxlite')
 if get_option('build_examples')
   subdir('OpenGLExample')
