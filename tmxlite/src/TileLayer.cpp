@@ -55,7 +55,7 @@ void TileLayer::parse(const pugi::xml_node& node, Map*)
     setVisible(node.attribute("visible").as_bool(true));
     setOffset(node.attribute("offsetx").as_int(0), node.attribute("offsety").as_int(0));
     setSize(node.attribute("width").as_uint(0), node.attribute("height").as_uint(0));
-    setParallaxFactor(node.attribute("parallaxx").as_float(0.f), node.attribute("parallaxy").as_float(0.f));
+    setParallaxFactor(node.attribute("parallaxx").as_float(1.f), node.attribute("parallaxy").as_float(1.f));
 
     for (const auto& child : node.children())
     {
