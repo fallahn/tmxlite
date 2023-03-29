@@ -264,6 +264,11 @@ bool Map::parseMapNode(const pugi::xml_node& mapNode)
         return reset();
     }
 
+    m_parallaxOrigin =
+    {
+        mapNode.attribute("parallaxoriginx").as_float(0.f),
+        mapNode.attribute("parallaxoriginy").as_float(0.f)
+    };
 
     //colour property is optional
     attribString = mapNode.attribute("backgroundcolor").as_string();
