@@ -54,6 +54,12 @@ if get_option('use_extlibs')
   add_project_arguments('-DUSE_EXTLIBS', language: ['cpp', 'c'])
   zdep = dependency('zlib', version : '>=1.2.8', required: true)
   pugidep = dependency('pugixml', required: true)
+  zstddep = dependency('zstd', required: true)
+else
+  if get_option('use_zstd')
+    add_project_arguments('-DUSE_ZSTD', language: ['cpp', 'c'])
+    zstddep = dependency('zstd', required: true)
+  endif
 endif
 
 subdir('tmxlite')
