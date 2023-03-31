@@ -4,7 +4,7 @@ tmxlite
 [![Github Actions](https://github.com/fallahn/tmxlite/actions/workflows/cmake.yml/badge.svg)](https://github.com/fallahn/tmxlite/actions)
 
 #### Description
-A lightweight C++14 parsing library for tmx map files created with the Tiled map editor. Requires no external linking, all dependencies are included. Fully supports tmx maps up to 1.0 (see [here](https://doc.mapeditor.org/en/stable/reference/tmx-changelog/#tiled-1-0)) with CSV, zlib and base64 compression. Also supports some features of newer map versions (see below). The parser is renderer agnostic, and is cross platform on Windows, linux and macOS. It has also been successfully built for Android too.
+A lightweight C++14 parsing library for tmx map files created with the Tiled map editor. Requires no external linking, all dependencies are included. Optionally Zstd support can be enabled by linking the required external library. Fully supports tmx maps up to 1.0 (see [here](https://doc.mapeditor.org/en/stable/reference/tmx-changelog/#tiled-1-0)) with CSV, zlib and base64 compression. Also supports some features of newer map versions (see below). The parser is renderer agnostic, and is cross platform on Windows, linux and macOS. It has also been successfully built for Android too.
 
 As the library contains no specific rendering functions some example projects are included, along with the relevant CMake files. These are meant mostly for guidance and are not 100% optimised, but should get you off on the right foot when using libraries such as SFML or SDL2/OpenGL. Examples for any specific rendering library are welcome via a pull request.
 
@@ -16,8 +16,21 @@ As well as full support for maps up to version 1.0, tmxlite also supports these 
 * Parallax layers - the parallax offset property of layers is parsed, as well as each map's parallax origin, if they exist
 * Layer tint colours
 
+By default tmxlite supports zlib compressed maps, however gzip and zstd compression can be enabled at compile time, by linking the relevant external libraries:
+
+###### Zstd compression
+Tmxlite supports maps using Zstd compressed tile layers, however Zstd needs to be linked externally. To configure CMake or meson to use Zstd add the definition `USE_ZSTD` and set it to `true`. You may also configure your project manually, and add `-DUSE_ZSTD` to the compiler options. If you are using the `USE_EXTLIBS` option (see below) this is automatically configured for you.
+
 #### Building
-Either use the included Visual Studio project file if you are on Windows or the CMake file to generate project files for your compiler of choice. tmxlite can be built as both static or shared libraries, or simply include the source files in your own project.
+Either use the included Visual Studio project file if you are on Windows or the CMake file to generate project files for your compiler of choice. tmxlite can be built as both static or shared libraries, or simply include the source files in your own project. The following options are available for CMake configuration:
+
+ * `TMXLITE_STATIC_LIB` - Set this to true to build a static library, default false
+ * `PROJECT_STATIC_RUNTIME` - Statically link the cstd libraries, default false
+ * `USE_RTTI` - Enable runtime type information, default true
+ * `USE_EXTLIBS` - Use externally linked pugixml, zlib and Zstd libraries, default false
+ * `USE_ZSTD` - Use externally linked Zstd library, required for Zstd compressed maps. Default is false, but is overridden if `USE_EXTLIBS` is true
+
+Configuring with meson is also possible, see `meson_options.txt` for details.
 
 #### Quick Start
 There is a getting started page on the Github wiki [here](https://github.com/fallahn/tmxlite/wiki/Quick-Start).
@@ -32,7 +45,7 @@ Doxygen generated API documentation can be found online [here](https://codedocs.
 using the doxy file in the tmxlite/documentation/ directory.
 
 #### Important information 
-tmxlite uses [pugixml](https://pugixml.org/) and [miniz](https://github.com/richgel999/miniz) which are included in the repository, although external zlib and pugixml libraries can be used. Add `-DUSE_EXTLIBS` to your compiler's definitions or when configuring CMake set `USE_EXTLIBS` to TRUE.
+tmxlite uses [pugixml](https://pugixml.org/) and [miniz](https://github.com/richgel999/miniz) which are included in the repository, although external zlib and pugixml libraries can be used. Add `-DUSE_EXTLIBS` to your compiler's definitions or when configuring CMake set `USE_EXTLIBS` to TRUE. This will also automatically include Zstd.
 
 ***
 

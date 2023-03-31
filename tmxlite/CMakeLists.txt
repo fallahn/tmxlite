@@ -13,7 +13,8 @@ SET(PROJECT_STATIC_RUNTIME FALSE CACHE BOOL "Use statically linked standard/runt
 
 SET(USE_RTTI TRUE CACHE BOOL "Use run time type information?")
 
-SET(USE_EXTLIBS FALSE CACHE BOOL "Use external zlib and pugixml libraries instead of the included source?")
+SET(USE_EXTLIBS FALSE CACHE BOOL "Use external zlib, zstd and pugixml libraries instead of the included source?")
+SET(USE_ZSTD FALSE CACHE BOOL "Enable zstd compression? (Already set to true if USE_EXTLIBS is true)")
 
 if(USE_RTTI)
   if(CMAKE_COMPILER_IS_GNUCXX OR APPLE)
@@ -62,17 +63,28 @@ include(${PROJECT_DIR}/CMakeLists.txt)
 #if we want external zip and xml libs find them and tell the compiler
 if(USE_EXTLIBS)
     add_definitions(-DUSE_EXTLIBS)
+    add_definitions(-DUSE_ZSTD)
     
     SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
     
     find_package(ZLIB REQUIRED)
     find_package(PUGIXML REQUIRED)
+    find_package(Zstd REQUIRED)
     
-    include_directories(${ZLIB_INCLUDE_DIRS} ${PUGIXML_INCLUDE_DIR})
+    include_directories(${ZLIB_INCLUDE_DIRS} ${PUGIXML_INCLUDE_DIR} ${ZSTD_INCLUDE_DIR})
     
 else()
     #add miniz and pugixml from source
     SET(PROJECT_SRC ${PROJECT_SRC} ${LIB_SRC})
+    
+    if(USE_ZSTD)
+        add_definitions(-DUSE_ZSTD)
+    
+        SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+        find_package(Zstd REQUIRED)
+        include_directories(${ZSTD_INCLUDE_DIR})
+    endif()
+    
 endif()
 
 if(WIN32)
@@ -90,7 +102,11 @@ else()
 endif()
 
 if(USE_EXTLIBS)
-    target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES} ${PUGIXML_LIBRARY})
+    target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES} ${PUGIXML_LIBRARY} ${ZSTD_LIBRARY})
+else()
+    if(USE_ZSTD)
+    target_link_libraries(${PROJECT_NAME} ${ZSTD_LIBRARY})    
+    endif()    
 endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tmxlite.pc.in ${CMAKE_CURRENT_BINARY_DIR}/tmxlite.pc
