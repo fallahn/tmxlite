@@ -135,16 +135,20 @@ void TileLayer::parseBase64(const pugi::xml_node& node)
             break;
         case CompressionType::Zstd:
 #if defined USE_ZSTD || defined USE_EXTLIBS
-            if (std::size_t result = ZSTD_decompress(byteData.data(), expectedSize, &dataString[0], dataSize); ZSTD_isError(result))
             {
-                std::string err = ZSTD_getErrorName(result);
-                LOG("Failed to decompress layer data, node skipped.\nError: " + err, Logger::Type::Error);
+                std::size_t dataSize = dataString.length() * sizeof(unsigned char);
+                std::size_t result = ZSTD_decompress(byteData.data(), expectedSize, &dataString[0], dataSize);
+                
+                if (ZSTD_isError(result))
+                {
+                    std::string err = ZSTD_getErrorName(result);
+                    LOG("Failed to decompress layer data, node skipped.\nError: " + err, Logger::Type::Error);
+                }
             }
 #else
             Logger::log("Library must be built with USE_EXTLIBS or USE_ZSTD for Zstd compression", Logger::Type::Error);
             return {};
 #endif
-            break;
         case CompressionType::GZip:
 #ifndef USE_EXTLIBS
             Logger::log("Library must be built with USE_EXTLIBS for GZip compression", Logger::Type::Error);
