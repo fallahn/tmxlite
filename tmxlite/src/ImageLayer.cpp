@@ -38,7 +38,9 @@ using namespace tmx;
 
 ImageLayer::ImageLayer(const std::string& workingDir)
     : m_workingDir      (workingDir),
-    m_hasTransparency   (false)
+    m_hasTransparency   (false),
+    m_hasRepeatX        (false),
+    m_hasRepeatY        (false)
 {
 
 }
