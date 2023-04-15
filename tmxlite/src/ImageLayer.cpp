@@ -38,7 +38,9 @@ using namespace tmx;
 
 ImageLayer::ImageLayer(const std::string& workingDir)
     : m_workingDir      (workingDir),
-    m_hasTransparency   (false)
+    m_hasTransparency   (false),
+    m_hasRepeatX        (false),
+    m_hasRepeatY        (false)
 {
 
 }
@@ -66,6 +68,9 @@ void ImageLayer::parse(const pugi::xml_node& node, Map*)
     {
         setTintColour(colourFromString(tintColour));
     }
+
+    m_hasRepeatX = node.attribute("repeatx").as_bool(false);
+    m_hasRepeatY = node.attribute("repeaty").as_bool(false);
 
     for (const auto& child : node.children())
     {

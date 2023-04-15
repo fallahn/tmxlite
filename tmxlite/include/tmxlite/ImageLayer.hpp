@@ -69,12 +69,26 @@ namespace tmx
         */
         const Vector2u& getImageSize() const { return m_imageSize; }
 
+        /*!
+        \brief Returns true if the image drawn by this layer is repeated along 
+        the X axis.
+        */
+        bool hasRepeatX() const { return m_hasRepeatX; }
+
+        /*!
+        \brief Returns true if the image drawn by this layer is repeated along 
+        the Y axis.
+        */
+        bool hasRepeatY() const { return m_hasRepeatY; }
+
     private:
         std::string m_workingDir;
         std::string m_filePath;
         Colour m_transparencyColour;
         bool m_hasTransparency;
         Vector2u m_imageSize;
+        bool m_hasRepeatX;
+        bool m_hasRepeatY;
     };
 
     template <>
