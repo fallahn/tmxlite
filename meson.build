@@ -1,5 +1,5 @@
 project('tmxlite', 'cpp', 'c',
-  version: '1.2.1',
+  version: '1.4.2',
   meson_version: '>=0.49.2',
   default_options: [
 	'buildtype=release',
@@ -48,6 +48,18 @@ endif
 
 if cpp.get_argument_syntax() == 'msvc'
   add_project_arguments('-D_CRT_SECURE_NO_WARNINGS', language: ['cpp', 'c'])
+endif
+
+if get_option('use_extlibs')
+  add_project_arguments('-DUSE_EXTLIBS', language: ['cpp', 'c'])
+  zdep = dependency('zlib', version : '>=1.2.8', required: true)
+  pugidep = dependency('pugixml', required: true)
+  zstddep = dependency('zstd', required: true)
+else
+  if get_option('use_zstd')
+    add_project_arguments('-DUSE_ZSTD', language: ['cpp', 'c'])
+    zstddep = dependency('zstd', required: true)
+  endif
 endif
 
 subdir('tmxlite')

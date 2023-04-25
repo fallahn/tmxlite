@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2021
+Matt Marchant 2016 - 2023
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -25,7 +25,17 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
+#ifdef USE_EXTLIBS
+#include <pugixml.hpp>
+#include <zstd.h>
+#else
 #include "detail/pugixml.hpp"
+#endif
+
+#ifdef USE_ZSTD
+#include <zstd.h>
+#endif
+
 #include <tmxlite/FreeFuncs.hpp>
 #include <tmxlite/TileLayer.hpp>
 #include <tmxlite/detail/Log.hpp>
@@ -33,6 +43,17 @@ source distribution.
 #include <sstream>
 
 using namespace tmx;
+
+namespace
+{
+    struct CompressionType final
+    {
+        enum
+        {
+            Zlib, GZip, Zstd, None
+        };
+    };
+}
 
 TileLayer::TileLayer(std::size_t tileCount)
     : m_tileCount (tileCount)
@@ -53,8 +74,15 @@ void TileLayer::parse(const pugi::xml_node& node, Map*)
     setName(node.attribute("name").as_string());
     setOpacity(node.attribute("opacity").as_float(1.f));
     setVisible(node.attribute("visible").as_bool(true));
-    setOffset(node.attribute("offsetx").as_int(), node.attribute("offsety").as_int());
-    setSize(node.attribute("width").as_uint(), node.attribute("height").as_uint());
+    setOffset(node.attribute("offsetx").as_int(0), node.attribute("offsety").as_int(0));
+    setSize(node.attribute("width").as_uint(0), node.attribute("height").as_uint(0));
+    setParallaxFactor(node.attribute("parallaxx").as_float(1.f), node.attribute("parallaxy").as_float(1.f));
+
+    std::string tintColour = node.attribute("tintcolor").as_string();
+    if (!tintColour.empty())
+    {
+        setTintColour(colourFromString(tintColour));
+    }
 
     for (const auto& child : node.children())
     {
@@ -89,7 +117,7 @@ void TileLayer::parse(const pugi::xml_node& node, Map*)
 //private
 void TileLayer::parseBase64(const pugi::xml_node& node)
 {
-    auto processDataString = [](std::string dataString, std::size_t tileCount, bool compressed)->std::vector<std::uint32_t>
+    auto processDataString = [](std::string dataString, std::size_t tileCount, std::int32_t compressionType)->std::vector<std::uint32_t>
     {
         std::stringstream ss;
         ss << dataString;
@@ -100,19 +128,45 @@ void TileLayer::parseBase64(const pugi::xml_node& node)
         std::vector<unsigned char> byteData;
         byteData.reserve(expectedSize);
 
-        if (compressed)
+        switch (compressionType)
+        {
+        default:
+            byteData.insert(byteData.end(), dataString.begin(), dataString.end());
+            break;
+        case CompressionType::Zstd:
+#if defined USE_ZSTD || defined USE_EXTLIBS
+            {
+                std::size_t dataSize = dataString.length() * sizeof(unsigned char);
+                std::size_t result = ZSTD_decompress(byteData.data(), expectedSize, &dataString[0], dataSize);
+                
+                if (ZSTD_isError(result))
+                {
+                    std::string err = ZSTD_getErrorName(result);
+                    LOG("Failed to decompress layer data, node skipped.\nError: " + err, Logger::Type::Error);
+                }
+            }
+#else
+            Logger::log("Library must be built with USE_EXTLIBS or USE_ZSTD for Zstd compression", Logger::Type::Error);
+            return {};
+#endif
+        case CompressionType::GZip:
+#ifndef USE_EXTLIBS
+            Logger::log("Library must be built with USE_EXTLIBS for GZip compression", Logger::Type::Error);
+            return {};
+#endif
+            //[[fallthrough]];
+        case CompressionType::Zlib:
         {
             //unzip
             std::size_t dataSize = dataString.length() * sizeof(unsigned char);
+
             if (!decompress(dataString.c_str(), byteData, dataSize, expectedSize))
             {
                 LOG("Failed to decompress layer data, node skipped.", Logger::Type::Error);
                 return {};
             }
         }
-        else
-        {
-            byteData.insert(byteData.end(), dataString.begin(), dataString.end());
+            break;
         }
 
         //data stream is in bytes so we need to OR into 32 bit values
@@ -127,6 +181,20 @@ void TileLayer::parseBase64(const pugi::xml_node& node)
         return IDs;
     };
 
+    std::int32_t compressionType = CompressionType::None;
+    std::string compression = node.attribute("compression").as_string();
+    if (compression == "gzip")
+    {
+        compressionType = CompressionType::GZip;
+    }
+    else if (compression == "zlib")
+    {
+        compressionType = CompressionType::Zlib;
+    }
+    else if (compression == "zstd")
+    {
+        compressionType = CompressionType::Zstd;
+    }
 
     std::string data = node.text().as_string();
     if (data.empty())
@@ -148,7 +216,7 @@ void TileLayer::parseBase64(const pugi::xml_node& node)
                     chunk.size.x = childNode.attribute("width").as_int();
                     chunk.size.y = childNode.attribute("height").as_int();
 
-                    auto IDs = processDataString(dataString, (chunk.size.x * chunk.size.y), node.attribute("compression"));
+                    auto IDs = processDataString(dataString, (chunk.size.x * chunk.size.y), compressionType);
 
                     if (!IDs.empty())
                     {
@@ -168,7 +236,7 @@ void TileLayer::parseBase64(const pugi::xml_node& node)
     }
     else
     {
-        auto IDs = processDataString(data, m_tileCount, node.attribute("compression"));
+        auto IDs = processDataString(data, m_tileCount, compressionType);
         createTiles(IDs, m_tiles);
     }
 }

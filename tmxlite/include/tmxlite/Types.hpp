@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2021
+Matt Marchant 2016 - 2023
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -30,6 +30,8 @@ source distribution.
 #include <tmxlite/Config.hpp>
 
 #include <cstdint>
+#include <ostream>
+
 
 namespace tmx
 {
@@ -125,3 +127,19 @@ namespace tmx
         }
     };
 }
+
+template <typename T>
+std::ostream& operator << (std::ostream& os, const tmx::Vector2<T>& t)
+{
+    os << "{" << t.x << ", " << t.y << "}";
+    return os;
+}
+
+template <typename T>
+std::ostream& operator << (std::ostream& os, const tmx::Rectangle<T>& t)
+{
+    os << "{" << t.left << ", " << t.top << ", " << t.width << ", " << t.height << "}";
+    return os;
+}
+
+std::ostream& operator << (std::ostream& os, const tmx::Colour& c);

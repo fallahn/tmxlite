@@ -1,5 +1,5 @@
 /*********************************************************************
-Grant Gangi 2019 - 2021
+Grant Gangi 2019 - 2022
 
 tmxlite - Zlib license.
 
@@ -75,5 +75,12 @@ namespace tmx
     {
         assert(getType() == Type::Group);
         return *static_cast<LayerGroup*>(this);
+    }
+
+    template <>
+    inline const LayerGroup& Layer::getLayerAs<LayerGroup>() const
+    {
+        assert(getType() == Type::Group);
+        return *static_cast<const LayerGroup*>(this);
     }
 }

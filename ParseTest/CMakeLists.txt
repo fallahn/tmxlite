@@ -37,15 +37,5 @@ else()
   add_executable(${PROJECT_NAME} ${PROJECT_SRC})
 endif()
 
-target_include_directories(${PROJECT_NAME}
-  ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(${PROJECT_NAME}
-  ${TMXLITE_LIBRARIES})
-
-#install executable
-install(TARGETS ${PROJECT_NAME}
-  RUNTIME DESTINATION .)
-
-#install game data
-install(DIRECTORY assets
-  DESTINATION .)
+  			${TMXLITE_LIBRARIES})

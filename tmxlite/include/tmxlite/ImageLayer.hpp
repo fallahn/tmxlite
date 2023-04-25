@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2021
+Matt Marchant 2016 - 2022
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -69,12 +69,26 @@ namespace tmx
         */
         const Vector2u& getImageSize() const { return m_imageSize; }
 
+        /*!
+        \brief Returns true if the image drawn by this layer is repeated along 
+        the X axis.
+        */
+        bool hasRepeatX() const { return m_hasRepeatX; }
+
+        /*!
+        \brief Returns true if the image drawn by this layer is repeated along 
+        the Y axis.
+        */
+        bool hasRepeatY() const { return m_hasRepeatY; }
+
     private:
         std::string m_workingDir;
         std::string m_filePath;
         Colour m_transparencyColour;
         bool m_hasTransparency;
         Vector2u m_imageSize;
+        bool m_hasRepeatX;
+        bool m_hasRepeatY;
     };
 
     template <>
@@ -82,5 +96,12 @@ namespace tmx
     {
         assert(getType() == Type::Image);
         return *static_cast<ImageLayer*>(this);
+    }
+
+    template <>
+    inline const ImageLayer& Layer::getLayerAs<ImageLayer>() const
+    {
+        assert(getType() == Type::Image);
+        return *static_cast<const ImageLayer*>(this);
     }
 }

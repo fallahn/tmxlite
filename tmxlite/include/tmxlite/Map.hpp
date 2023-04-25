@@ -88,6 +88,7 @@ namespace tmx
     class before calling load() providing a path to the *.tmx file to be
     loaded. Then layers or objects can be requested from the Map class
     to be interpreted as needed.
+    \see https://doc.mapeditor.org/en/stable/reference/tmx-map-format/#map
     */
     class TMXLITE_EXPORT_API Map final
     {
@@ -234,6 +235,10 @@ namespace tmx
         */
         bool isInfinite() const { return m_infinite; }
 
+        /*
+        \brief Returns the origin of each layer's parallax offset value
+        */
+        Vector2f getParallaxOrigin() const { return m_parallaxOrigin; }
 
     private:
         Version m_version;
@@ -247,6 +252,8 @@ namespace tmx
         float m_hexSideLength;
         StaggerAxis m_staggerAxis;
         StaggerIndex m_staggerIndex;
+
+        Vector2f m_parallaxOrigin;
 
         Colour m_backgroundColour;
 
