@@ -125,6 +125,11 @@ namespace tmx
         {
             return !(*this == other);
         }
+
+        explicit operator std::uint32_t() const
+        {
+            return (r << 24) | (g << 16) | (b << 8) | a;
+        }
     };
 }
 
