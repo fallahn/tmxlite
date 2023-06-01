@@ -34,6 +34,7 @@ source distribution.
 #include <string>
 #include <vector>
 #include <array>
+#include <unordered_set>
 
 namespace pugi
 {
@@ -283,6 +284,6 @@ namespace tmx
         void parsePropertyNode(const pugi::xml_node&);
         void parseTerrainNode(const pugi::xml_node&);
         void parseTileNode(const pugi::xml_node&, Map*);
-        void createMissingTile(std::uint32_t ID);
+        void createMissingTile(std::uint32_t ID, std::unordered_set<std::uint32_t>* created);
     };
 }

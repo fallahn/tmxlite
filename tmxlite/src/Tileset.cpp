@@ -216,11 +216,13 @@ void Tileset::parse(pugi::xml_node node, Map* map)
     }
 
     //if the tsx file does not declare every tile, we create the missing ones
+    std::unordered_set<std::uint32_t> created;
+    for(auto& tile: m_tiles) created.insert(tile.ID);
     if (m_tiles.size() != getTileCount())
     {
         for (std::uint32_t ID = 0 ; ID < getTileCount() ; ID++)
         {
-            createMissingTile(ID);
+            createMissingTile(ID, &created);
         }
     }
 
@@ -433,16 +435,12 @@ void Tileset::parseTileNode(const pugi::xml_node& node, Map* map)
     m_tiles.push_back(tile);
 }
 
-void Tileset::createMissingTile(std::uint32_t ID)
+void Tileset::createMissingTile(std::uint32_t ID, std::unordered_set<std::uint32_t>* created)
 {
     //first, we check if the tile does not yet exist
-    for (const auto& tile : m_tiles)
-    {
-        if (tile.ID == ID)
-        {
-            return;
-        }
-    }
+    if(created && created->count(ID) == 0) return;
+    if(!created && std::any_of(m_tiles.begin(), m_tiles.end(), [ID](const Tile& tile) { return tile.ID == ID; }))
+        return;
 
     Tile tile;
     tile.ID = ID;
@@ -455,4 +453,5 @@ void Tileset::createMissingTile(std::uint32_t ID)
     tile.imagePosition.y = m_margin + columnIndex * (m_tileSize.y + m_spacing);
 
     m_tiles.push_back(tile);
+    if(created) created->insert(ID);
 }
