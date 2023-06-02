@@ -34,7 +34,6 @@ source distribution.
 #include <string>
 #include <vector>
 #include <array>
-#include <unordered_set>
 
 namespace pugi
 {
