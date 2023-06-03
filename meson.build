@@ -1,5 +1,5 @@
 project('tmxlite', 'cpp', 'c',
-  version: '1.4.2',
+  version: '1.4.3',
   meson_version: '>=0.49.2',
   default_options: [
 	'buildtype=release',

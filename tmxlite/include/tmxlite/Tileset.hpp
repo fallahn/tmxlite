@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2021
+Matt Marchant 2016 - 2023
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -275,7 +275,7 @@ namespace tmx
         bool m_hasTransparency;
 
         std::vector<Terrain> m_terrainTypes;
-        std::vector<size_t> m_tile_index;
+        std::vector<std::uint32_t> m_tileIndex;
         std::vector<Tile> m_tiles;
 
         void reset();
