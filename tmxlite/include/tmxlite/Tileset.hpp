@@ -275,6 +275,7 @@ namespace tmx
         bool m_hasTransparency;
 
         std::vector<Terrain> m_terrainTypes;
+        std::vector<size_t> m_tile_index;
         std::vector<Tile> m_tiles;
 
         void reset();
@@ -282,6 +283,7 @@ namespace tmx
         void parseOffsetNode(const pugi::xml_node&);
         void parsePropertyNode(const pugi::xml_node&);
         void parseTerrainNode(const pugi::xml_node&);
+        Tile& newTile(std::uint32_t ID);
         void parseTileNode(const pugi::xml_node&, Map*);
         void createMissingTile(std::uint32_t ID);
     };

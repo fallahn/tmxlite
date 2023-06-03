@@ -123,6 +123,9 @@ void Tileset::parse(pugi::xml_node node, Map* map)
     m_tileCount = node.attribute("tilecount").as_int();
     m_columnCount = node.attribute("columns").as_int();
 
+    m_tile_index.reserve(m_tileCount);
+    m_tiles.reserve(m_tileCount);
+
     std::string objectAlignment = node.attribute("objectalignment").as_string();
     if (!objectAlignment.empty())
     {
@@ -217,40 +220,25 @@ void Tileset::parse(pugi::xml_node node, Map* map)
 
     //if the tsx file does not declare every tile, we create the missing ones
     if (m_tiles.size() != getTileCount())
-    {
         for (std::uint32_t ID = 0 ; ID < getTileCount() ; ID++)
-        {
             createMissingTile(ID);
-        }
-    }
-
-    //sort these just to make sure when we request last GID we get the corrtect value
-    std::sort(m_tiles.begin(), m_tiles.end(), [](const Tile& t1, const Tile& t2) {return t1.ID < t2.ID; });
 }
 
 std::uint32_t Tileset::getLastGID() const
 {
-    assert(!m_tiles.empty());
-    return m_firstGID + m_tiles.back().ID;
+    return m_firstGID + m_tile_index.size() - 1;
 }
 
 const Tileset::Tile* Tileset::getTile(std::uint32_t id) const
 {
-    if (!hasTile(id))
-    {
+    if (!hasTile(id)) {
         return nullptr;
     }
     
     //corrects the ID. Indices and IDs are different.
-    id = (getLastGID() - m_firstGID) - (getLastGID() - id);
-    
-    const auto itr = std::find_if(m_tiles.begin(), m_tiles.end(), 
-        [id](const Tile& tile)
-    {
-            return tile.ID == id;
-    });
-
-    return (itr == m_tiles.end()) ? nullptr : &(*itr);
+    id -= m_firstGID;
+    id = m_tile_index[id];
+    return id ? &m_tiles[id - 1] : nullptr;
 }
 
 //private
@@ -271,6 +259,7 @@ void Tileset::reset()
     m_transparencyColour = { 0, 0, 0, 0 };
     m_hasTransparency = false;
     m_terrainTypes.clear();
+    m_tile_index.clear();
     m_tiles.clear();
 }
 
@@ -319,12 +308,20 @@ void Tileset::parseTerrainNode(const pugi::xml_node& node)
     }
 }
 
+Tileset::Tile& Tileset::newTile(std::uint32_t ID) {
+    Tile& tile = (m_tiles.emplace_back(), m_tiles.back());
+    if(m_tile_index.size() <= ID)
+        m_tile_index.resize(ID + 1, 0);
+    m_tile_index[ID] = m_tiles.size();
+    tile.ID = ID;
+    return tile;
+}
+
 void Tileset::parseTileNode(const pugi::xml_node& node, Map* map)
 {
     assert(map);
 
-    Tile tile;
-    tile.ID = node.attribute("id").as_int();
+    Tile& tile = newTile(node.attribute("id").as_int());
     if (node.attribute("terrain"))
     {
         std::string data = node.attribute("terrain").as_string();
@@ -430,22 +427,14 @@ void Tileset::parseTileNode(const pugi::xml_node& node, Map* map)
             }
         }
     }
-    m_tiles.push_back(tile);
 }
 
 void Tileset::createMissingTile(std::uint32_t ID)
 {
     //first, we check if the tile does not yet exist
-    for (const auto& tile : m_tiles)
-    {
-        if (tile.ID == ID)
-        {
-            return;
-        }
-    }
+    if(m_tile_index.size() > ID && m_tile_index[ID]) return;
 
-    Tile tile;
-    tile.ID = ID;
+    Tile& tile = newTile(ID);
     tile.imagePath = m_imagePath;
     tile.imageSize = m_tileSize;
 
@@ -453,6 +442,4 @@ void Tileset::createMissingTile(std::uint32_t ID)
     std::int32_t columnIndex = ID / m_columnCount;
     tile.imagePosition.x = m_margin + rowIndex * (m_tileSize.x + m_spacing);
     tile.imagePosition.y = m_margin + columnIndex * (m_tileSize.y + m_spacing);
-
-    m_tiles.push_back(tile);
 }
