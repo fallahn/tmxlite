@@ -6,7 +6,9 @@ ReleaseStatic
 /tmxlite/bin
 Debug
 Release
+build
 
 *.swp
+/.vscode
 /.vs/tmxlite
 /tmxlite/tmxlite.vcxproj.user
