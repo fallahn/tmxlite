@@ -117,8 +117,8 @@ namespace tmx
         const std::string& getType() const { return m_class; }
 
         /*!
-       \brief Returns the class (equal to type) of the Object, as defined in the editor Tiled 1.9
-       */
+        \brief Returns the class (equal to type) of the Object, as defined in the editor Tiled 1.9+
+        */
         const std::string& getClass() const { return m_class; }
 
         /*!

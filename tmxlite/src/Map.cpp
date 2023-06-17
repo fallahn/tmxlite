@@ -143,6 +143,8 @@ bool Map::parseMapNode(const pugi::xml_node& mapNode)
     m_version.upper = STOI(attribString.substr(0, pointPos));
     m_version.lower = STOI(attribString.substr(pointPos + 1));
 
+    m_class = mapNode.attribute("class").as_string();
+
     attribString = mapNode.attribute("orientation").as_string();
     if (attribString.empty())
     {

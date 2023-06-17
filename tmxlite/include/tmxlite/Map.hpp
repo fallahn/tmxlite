@@ -196,6 +196,11 @@ namespace tmx
         const std::vector<Layer::Ptr>& getLayers() const { return m_layers; }
 
         /*!
+        \brief Returns the class of the Map, as defined in the editor Tiled 1.9+
+        */
+        const std::string& getClass() const { return m_class; }
+
+        /*!
         \brief Returns a vector of Property objects loaded by the map
         */
         const std::vector<Property>& getProperties() const { return m_properties; } 
@@ -242,6 +247,7 @@ namespace tmx
 
     private:
         Version m_version;
+        std::string m_class;
         Orientation m_orientation;
         RenderOrder m_renderOrder;
         bool m_infinite;
