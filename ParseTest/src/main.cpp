@@ -63,6 +63,13 @@ int main()
 
         const auto& mapProperties = map.getProperties();
         std::cout << "Map class: " << map.getClass() << std::endl;
+
+        std::cout << "Map tileset has " << map.getTilesets().size() << " tilesets" << std::endl;
+        for (const auto& tileset : map.getTilesets()) {
+            std::cout << "Tileset: " << tileset.getName() << std::endl;
+            std::cout << "Tileset class: " << tileset.getClass() << std::endl;
+        }
+
         std::cout << "Map has " << mapProperties.size() << " properties" << std::endl;
         for (const auto& prop : mapProperties)
         {

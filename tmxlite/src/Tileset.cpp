@@ -109,6 +109,7 @@ void Tileset::parse(pugi::xml_node node, Map* map)
 
     m_name = node.attribute("name").as_string();
     LOG("found tile set " + m_name, Logger::Type::Info);
+    m_class = node.attribute("class").as_string();
 
     m_tileSize.x = node.attribute("tilewidth").as_int();
     m_tileSize.y = node.attribute("tileheight").as_int();
@@ -253,6 +254,7 @@ void Tileset::reset()
     m_firstGID = 0;
     m_source = "";
     m_name = "";
+    m_class = "";
     m_tileSize = { 0,0 };
     m_spacing = 0;
     m_margin = 0;

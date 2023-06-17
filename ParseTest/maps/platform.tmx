@@ -4,7 +4,7 @@
   <property name="test map property" type="float" value="12.43"/>
  </properties>
  <tileset firstgid="1" source="../images/tilemap/platform.tsx"/>
- <tileset firstgid="43" name="tileset02" tilewidth="32" tileheight="32" tilecount="24" columns="6">
+ <tileset firstgid="43" name="tileset02" class="TestTilesetClass" tilewidth="32" tileheight="32" tilecount="24" columns="6">
   <image source="../images/tilemap/tileset02.png" width="192" height="128"/>
  </tileset>
  <group name="TestGroup">
