@@ -87,8 +87,8 @@ void ImageLayer::parse(const pugi::xml_node& node, Map*)
 
             if (child.attribute("width") &&  child.attribute("height"))
             {
-            	m_imageSize.x = child.attribute("width").as_uint();
-            	m_imageSize.y = child.attribute("height").as_uint();
+                m_imageSize.x = child.attribute("width").as_uint();
+                m_imageSize.y = child.attribute("height").as_uint();
             }
 
             m_filePath = resolveFilePath(attribName, m_workingDir);

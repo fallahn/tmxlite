@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2021
+Matt Marchant 2016 - 2023
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -65,7 +65,8 @@ int main()
         std::cout << "Map class: " << map.getClass() << std::endl;
 
         std::cout << "Map tileset has " << map.getTilesets().size() << " tilesets" << std::endl;
-        for (const auto& tileset : map.getTilesets()) {
+        for (const auto& tileset : map.getTilesets()) 
+        {
             std::cout << "Tileset: " << tileset.getName() << std::endl;
             std::cout << "Tileset class: " << tileset.getClass() << std::endl;
         }

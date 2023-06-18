@@ -15,6 +15,7 @@ As well as full support for maps up to version 1.0, tmxlite also supports these 
 * Infinite Maps - Maps with the 'infinite' flag set, and saved in either CSV or base64 (compressed and uncompressed) format are supported. A `TileLayer` will return an empty Tile vector in these cases, and tile ID data can be retrieved instead with `TileLayer::getChunks()` which returns a vector of chunk data that makes up the tile layer.
 * Parallax layers - the parallax offset property of layers is parsed, as well as each map's parallax origin, if they exist
 * Layer tint colours
+* Extended tag support such as `class`
 
 By default tmxlite supports zlib compressed maps, however gzip and zstd compression can be enabled at compile time, by linking the relevant external libraries:
 

@@ -367,11 +367,11 @@ void Tileset::parseTileNode(const pugi::xml_node& node, Map* map)
 
     tile.probability = node.attribute("probability").as_int(100);
 
-    tile.Class = node.attribute("type").as_string();
-	if (tile.Class.empty())
-	{
-        tile.Class = node.attribute("class").as_string();
-	}
+    tile.className = node.attribute("type").as_string();
+    if (tile.className.empty())
+    {
+        tile.className = node.attribute("class").as_string();
+    }
     
     //by default we set the tile's values as in an Image tileset
     tile.imagePath = m_imagePath;
