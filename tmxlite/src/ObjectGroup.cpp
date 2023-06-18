@@ -56,6 +56,7 @@ void ObjectGroup::parse(const pugi::xml_node& node, Map* map)
     }
 
     setName(node.attribute("name").as_string());
+    setClass(node.attribute("class").as_string());
 
     attribString = node.attribute("color").as_string();
     if (!attribString.empty())

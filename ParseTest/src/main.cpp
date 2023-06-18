@@ -62,6 +62,14 @@ int main()
         }
 
         const auto& mapProperties = map.getProperties();
+        std::cout << "Map class: " << map.getClass() << std::endl;
+
+        std::cout << "Map tileset has " << map.getTilesets().size() << " tilesets" << std::endl;
+        for (const auto& tileset : map.getTilesets()) {
+            std::cout << "Tileset: " << tileset.getName() << std::endl;
+            std::cout << "Tileset class: " << tileset.getClass() << std::endl;
+        }
+
         std::cout << "Map has " << mapProperties.size() << " properties" << std::endl;
         for (const auto& prop : mapProperties)
         {
@@ -89,6 +97,7 @@ int main()
                 {
                     std::cout << "Found Layer: " << sublayer->getName() << std::endl;
                     std::cout << "Sub-layer Type: " << LayerStrings[static_cast<std::int32_t>(sublayer->getType())] << std::endl;
+                    std::cout << "Sub-layer Class: " << sublayer->getClass() << std::endl;
                     std::cout << "Sub-layer Dimensions: " << sublayer->getSize() << std::endl;
                     std::cout << "Sub-layer Tint: " << sublayer->getTintColour() << std::endl;
 

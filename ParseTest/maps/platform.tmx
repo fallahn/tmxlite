@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="left-down" width="200" height="40" tilewidth="64" tileheight="64" nextobjectid="46">
+<map version="1.0" class="TestMapClass" orientation="orthogonal" renderorder="left-down" width="200" height="40" tilewidth="64" tileheight="64" nextobjectid="46">
  <properties>
   <property name="test map property" type="float" value="12.43"/>
  </properties>
  <tileset firstgid="1" source="../images/tilemap/platform.tsx"/>
- <tileset firstgid="43" name="tileset02" tilewidth="32" tileheight="32" tilecount="24" columns="6">
+ <tileset firstgid="43" name="tileset02" class="TestTilesetClass" tilewidth="32" tileheight="32" tilecount="24" columns="6">
   <image source="../images/tilemap/tileset02.png" width="192" height="128"/>
  </tileset>
  <group name="TestGroup">
@@ -12,7 +12,7 @@
    <property name="layer group prop" value="hello"/>
    <property name="another property" type="bool" value="false"/>
   </properties>
-  <layer name="Far" width="200" height="40">
+  <layer name="Far" class="TestLayerClass" width="200" height="40">
    <data encoding="base64" compression="zlib">
     eJzt2VsKwyAQBdCsoo8VNN3/BvvbQC1Em9iZOQeE/AQcyFXjLAuc69YxIKuePMgLVckCtNkz4LvrjgGVXHYMqGZPPuSFSuQCPrt3Dshudt/jOfAuZLfOngD8MfmANvkY43ya22P2BIKzvkCbfECbfECb8ykAAABnqNb/qlYvY6rdX0avV77PVe3+Mnq90fMNv/a+Z8gHbK2NZ2B7Jox+PqQO/8rQZi0HAAAAiCf7nWf2+jhW9v5u9vo41sj3E2Ftlg9GjPTMIvTbIswRYKYXswgSvA==
    </data>

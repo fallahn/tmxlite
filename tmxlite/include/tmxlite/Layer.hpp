@@ -83,6 +83,11 @@ namespace tmx
         virtual Type getType() const = 0;
 
         /*!
+        \brief Returns the class of the Layer, as defined in the editor Tiled 1.9+
+        */
+        const std::string& getClass() const { return m_class; }
+
+        /*!
         \brief Use this to get a reference to the concrete layer type
         which this layer points to.
         Use getType() to return the type value of this layer and determine
@@ -146,6 +151,7 @@ namespace tmx
     protected:
 
         void setName(const std::string& name) { m_name = name; }
+        void setClass(const std::string& cls) { m_class = cls; }
         void setOpacity(float opacity) { m_opacity = opacity; }
         void setVisible(bool visible) { m_visible = visible; }
         void setOffset(std::int32_t x, std::int32_t y) { m_offset = Vector2i(x, y); }
@@ -156,6 +162,7 @@ namespace tmx
 
     private:
         std::string m_name;
+        std::string m_class;
         float m_opacity;
         bool m_visible;
         Vector2i m_offset;

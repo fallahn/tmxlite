@@ -72,6 +72,7 @@ void TileLayer::parse(const pugi::xml_node& node, Map*)
     }
 
     setName(node.attribute("name").as_string());
+    setClass(node.attribute("class").as_string());
     setOpacity(node.attribute("opacity").as_float(1.f));
     setVisible(node.attribute("visible").as_bool(true));
     setOffset(node.attribute("offsetx").as_int(0), node.attribute("offsety").as_int(0));

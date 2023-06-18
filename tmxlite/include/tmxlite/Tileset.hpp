@@ -156,6 +156,11 @@ namespace tmx
         const std::string& getName() const { return m_name; }
 
         /*!
+        \brief Returns the class of the Tileset, as defined in the editor Tiled 1.9+
+        */
+        const std::string& getClass() const { return m_class; }
+
+        /*!
         \brief Returns the width and height of a tile in the
         tile set, in pixels.
         */
@@ -260,6 +265,7 @@ namespace tmx
         std::uint32_t m_firstGID;
         std::string m_source;
         std::string m_name;
+        std::string m_class;
         Vector2u m_tileSize;
         std::uint32_t m_spacing;
         std::uint32_t m_margin;
