@@ -30,6 +30,7 @@ source distribution.
 #include <tmxlite/ObjectGroup.hpp>
 #include <tmxlite/LayerGroup.hpp>
 #include <tmxlite/TileLayer.hpp>
+#include <tmxlite/Tileset.hpp>
 
 #include <iostream>
 #include <array>
@@ -70,6 +71,7 @@ void testLoadMap()
         {
             std::cout << "Tileset: " << tileset.getName() << std::endl;
             std::cout << "Tileset class: " << tileset.getClass() << std::endl;
+            std::cout << "Tileset first GID: " << tileset.getFirstGID() << std::endl;
         }
 
         std::cout << "Map has " << mapProperties.size() << " properties" << std::endl;
@@ -172,6 +174,25 @@ void testLoadMap()
     }
 }
 
+void testLoadTilesetWithoutMap()
+{
+    tmx::Tileset ts;
+    if (!ts.loadWithoutMap("images/tilemap/platform.tsx"))
+    {
+        std::cout << "Failed to load tileset" << std::endl;
+        return;
+    }
+
+    std::cout << "Loaded tileset without map: " << ts.getName() << std::endl;
+    std::cout << "Tileset class: " << ts.getClass() << std::endl;
+    std::cout << "Tileset image: " << ts.getImagePath() << std::endl;
+    std::cout << "Tileset first GID: " << ts.getFirstGID() << std::endl;
+    if (ts.getColumnCount() > 0)
+    {
+        std::cout << "Tiles in tileset: " << ts.getTileCount() << std::endl;
+    }
+}
+
 class TestFailure {};
 
 template <typename T1, typename T2>
@@ -255,6 +276,8 @@ void testResolvingPaths()
 int main()
 {
     testLoadMap();
+    std::cout << std::endl << "------------------------------" << std::endl << std::endl;
+    testLoadTilesetWithoutMap();
     std::cout << std::endl << "------------------------------" << std::endl << std::endl;
     testResolvingPaths();
     std::cout << std::endl << "------------------------------" << std::endl << std::endl;

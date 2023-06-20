@@ -38,6 +38,7 @@ source distribution.
 
 using namespace tmx;
 
+//public
 Tileset::Tileset(const std::string& workingDir)
     : m_workingDir          (workingDir),
     m_firstGID              (0),
@@ -52,58 +53,66 @@ Tileset::Tileset(const std::string& workingDir)
 
 }
 
-//public
-void Tileset::parse(pugi::xml_node node, Map* map)
+bool Tileset::loadWithoutMap(const std::string& path)
 {
-    assert(map);
+    std::string resolved_path = tmx::resolveFilePath(path, m_workingDir);
+    std::string contents;
+    if (!readFileIntoString(resolved_path, &contents))
+    {
+        Logger::log("Failed to read file " + resolved_path, Logger::Type::Error);
+        return reset();
+    }
 
+    m_workingDir = getFilePath(resolved_path);
+    return loadWithoutMapFromString(contents);
+}
+
+bool Tileset::loadWithoutMapFromString(const std::string& xmlStr)
+{
+    pugi::xml_document doc;
+    auto result = doc.load_string(xmlStr.c_str());
+    if (!result)
+    {
+        Logger::log("Failed to parse tileset XML", Logger::Type::Error);
+        Logger::log("Reason: " + std::string(result.description()), Logger::Type::Error);
+        return false;
+    }
+
+    auto tilesetNode = doc.child("tileset");
+    if (!tilesetNode)
+    {
+        Logger::log("Failed opening tileset: no tileset node found", Logger::Type::Error);
+        return reset();
+    }
+
+    return parse(tilesetNode, nullptr);
+}
+
+bool Tileset::parse(pugi::xml_node node, Map* map)
+{
     std::string attribString = node.name();
-    if (attribString != "tileset")
-    {
-        Logger::log(attribString + ": not a tileset node! Node will be skipped.", Logger::Type::Warning);
-        return;
-    }
-    
-    m_firstGID = node.attribute("firstgid").as_int();
-    if (m_firstGID == 0)
-    {
-        Logger::log("Invalid first GID in tileset. Tileset node skipped.", Logger::Type::Warning);
-        return;
-    }
 
-    pugi::xml_document tsxDoc; //need to keep this in scope
-    if (node.attribute("source"))
+    //when parsing as part of a map, we may be looking at an inline node that
+    //refers to another file
+    if (map)
     {
-        //parse TSX doc
-        std::string path = node.attribute("source").as_string();
-        path = resolveFilePath(path, m_workingDir);
-
-        //as the TSX file now dictates the image path, the working
-        //directory is now that of the tsx file
-        auto position = path.find_last_of('/');
-        if (position != std::string::npos)
+        if (attribString != "tileset")
         {
-            m_workingDir = path.substr(0, position);
-        }
-        else
-        {
-            m_workingDir = "";
+            Logger::log(attribString + ": not a tileset node! Node will be skipped.", Logger::Type::Warning);
+            return false;
         }
 
-        //see if doc can be opened
-        auto result = tsxDoc.load_file(path.c_str());
-        if (!result)
+        m_firstGID = node.attribute("firstgid").as_int();
+        if (m_firstGID == 0)
         {
-            Logger::log(path + ": Failed opening tsx file for tile set, tile set will be skipped", Logger::Type::Error);
-            return reset();
+            Logger::log("Invalid first GID in tileset. Tileset node skipped.", Logger::Type::Warning);
+            return false;
         }
 
-        //if it can then replace the current node with tsx node
-        node = tsxDoc.child("tileset");
-        if (!node)
+        if (node.attribute("source"))
         {
-            Logger::log("tsx file does not contain a tile set node, tile set will be skipped", Logger::Type::Error);
-            return reset();
+            std::string path = node.attribute("source").as_string();
+            return loadWithoutMap(path);
         }
     }
 
@@ -227,6 +236,8 @@ void Tileset::parse(pugi::xml_node node, Map* map)
             createMissingTile(ID);
         }
     }
+
+    return true;
 }
 
 std::uint32_t Tileset::getLastGID() const
@@ -249,7 +260,7 @@ const Tileset::Tile* Tileset::getTile(std::uint32_t id) const
 }
 
 //private
-void Tileset::reset()
+bool Tileset::reset()
 {
     m_firstGID = 0;
     m_source = "";
@@ -269,6 +280,7 @@ void Tileset::reset()
     m_terrainTypes.clear();
     m_tileIndex.clear();
     m_tiles.clear();
+    return false;
 }
 
 void Tileset::parseOffsetNode(const pugi::xml_node& node)
@@ -331,8 +343,6 @@ Tileset::Tile& Tileset::newTile(std::uint32_t ID)
 
 void Tileset::parseTileNode(const pugi::xml_node& node, Map* map)
 {
-    assert(map);
-
     Tile& tile = newTile(node.attribute("id").as_int());
     if (node.attribute("terrain"))
     {
