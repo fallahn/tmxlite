@@ -25,6 +25,7 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
+#include <tmxlite/FreeFuncs.hpp>
 #include <tmxlite/Map.hpp>
 #include <tmxlite/ObjectGroup.hpp>
 #include <tmxlite/LayerGroup.hpp>
@@ -36,16 +37,16 @@ source distribution.
 
 namespace
 {
-    const std::array<std::string, 4u> LayerStrings =
-    {
-        std::string("Tile"),
-        std::string("Object"),
-        std::string("Image"),
-        std::string("Group"),
-    };
-}
 
-int main()
+const std::array<std::string, 4u> LayerStrings =
+{
+    std::string("Tile"),
+    std::string("Object"),
+    std::string("Image"),
+    std::string("Group"),
+};
+
+void testLoadMap()
 {
     tmx::Map map;
 
@@ -169,11 +170,100 @@ int main()
     {
         std::cout << "Failed loading map" << std::endl;
     }
+}
+
+class TestFailure {};
+
+template <typename T1, typename T2>
+void checkEqImpl(const char* expr1, T1&& v1, const char* expr2, T2&& v2, const char* file, ssize_t line)
+{
+    if (v1 != v2)
+    {
+        std::cout << "FAIL: " << expr1 << " = " << expr2
+            << "\n  Left:  " << v1 << "\n  Right: " << v2
+            << "\nat " << file << ":" << line
+            << std::endl;
+        throw TestFailure();
+    }
+    else
+    {
+        std::cout << "OK: " << expr1 << " = " << expr2 << " = " << v1 << std::endl;
+    }
+}
+
+#define CHECK_EQ(a, b) checkEqImpl(#a, (a), #b, (b), __FILE__, __LINE__)
+
+struct RevertWindowsPathHandling
+{
+    bool oldValue = tmx::enableWindowsPathHandling;
+    ~RevertWindowsPathHandling()
+    {
+        tmx::enableWindowsPathHandling = oldValue;
+    }
+};
+
+void testResolvingPaths()
+{
+    RevertWindowsPathHandling revertWindowsPathHandling;
+    tmx::enableWindowsPathHandling = true;
+
+    CHECK_EQ(tmx::resolveFilePath("a/b/c", "A/B/C"), "A/B/C/a/b/c");
+    CHECK_EQ(tmx::resolveFilePath("a/b/c/", "A/B/C"), "A/B/C/a/b/c");
+    CHECK_EQ(tmx::resolveFilePath("a/b/c", "A/B/C/"), "A/B/C/a/b/c");
+
+    CHECK_EQ(tmx::resolveFilePath("a/b/c", ""), "a/b/c");
+    CHECK_EQ(tmx::resolveFilePath("", "A/B/C"), "A/B/C");
+
+    CHECK_EQ(tmx::resolveFilePath("a///b//c", "A//B///C"), "A/B/C/a/b/c");
+
+    CHECK_EQ(tmx::resolveFilePath("/a/b/c", "A/B/C"), "/a/b/c");
+    CHECK_EQ(tmx::resolveFilePath("a/b/c", "/A/B/C"), "/A/B/C/a/b/c");
+
+    CHECK_EQ(tmx::resolveFilePath("./a/b/c", "A/B/C"), "A/B/C/a/b/c");
+    CHECK_EQ(tmx::resolveFilePath("../a/b/c", "A/B/C"), "A/B/a/b/c");
+    CHECK_EQ(tmx::resolveFilePath("../../a/b/c", "A/B/C"), "A/a/b/c");
+    CHECK_EQ(tmx::resolveFilePath("../../../a/b/c", "A/B/C"), "a/b/c");
+    CHECK_EQ(tmx::resolveFilePath("../../../../a/b/c", "A/B/C"), "../a/b/c");
+    CHECK_EQ(tmx::resolveFilePath("../../../../../a/b/c", "A/B/C"), "../../a/b/c");
+
+    CHECK_EQ(tmx::resolveFilePath("a/b/c", "./A/B/C"), "A/B/C/a/b/c");
+    CHECK_EQ(tmx::resolveFilePath("a/b/c", "../A/B/C"), "../A/B/C/a/b/c");
+    CHECK_EQ(tmx::resolveFilePath("a/b/c", "../../A/B/C"), "../../A/B/C/a/b/c");
+
+    CHECK_EQ(tmx::resolveFilePath("a/../b/c", "A/B/C"), "A/B/C/b/c");
+    CHECK_EQ(tmx::resolveFilePath("a/b/c", "A/../B/C"), "B/C/a/b/c");
+    CHECK_EQ(tmx::resolveFilePath("a/../b/../c", "A/B/C"), "A/B/C/c");
+    CHECK_EQ(tmx::resolveFilePath("a/b/c", "A/../B/../C"), "C/a/b/c");
+    CHECK_EQ(tmx::resolveFilePath("a/../b/../c", "A/../B/../C"), "C/c");
+
+    CHECK_EQ(tmx::resolveFilePath("a/b/c/../..", "A/B/C"), "A/B/C/a");
+    CHECK_EQ(tmx::resolveFilePath("a/b/c/../../..", "A/B/C"), "A/B/C");
+    CHECK_EQ(tmx::resolveFilePath("a/b/c/../../../..", "A/B/C"), "A/B");
+
+    CHECK_EQ(tmx::resolveFilePath("/a/../b/c", "A/B/C"), "/b/c");
+    CHECK_EQ(tmx::resolveFilePath("/a/../../b/c", "A/B/C"), "/../b/c");  // "/b/c" would also be valid but not worth handling this weird case IMO
+
+    CHECK_EQ(tmx::resolveFilePath("C:/a/../b/c", "A/B/C"), "C:/b/c");
+    CHECK_EQ(tmx::resolveFilePath("a/../b/c", "C:/A/B/C"), "C:/A/B/C/b/c");
+    CHECK_EQ(tmx::resolveFilePath("C:/a/../b/c", "C:/A/B/C"), "C:/b/c");
+
+    CHECK_EQ(tmx::resolveFilePath("a\\..\\b\\c", "C:\\A\\B\\..\\C"), "C:/A/C/b/c");
+}
+
+}  // namespace
+
+int main()
+{
+    testLoadMap();
+    std::cout << std::endl << "------------------------------" << std::endl << std::endl;
+    testResolvingPaths();
+    std::cout << std::endl << "------------------------------" << std::endl << std::endl;
 
 #if defined(PAUSE_AT_END)
     std::cout << std::endl << "Press return to quit..." <<std::endl;
     std::cin.get();
 #endif
 
+    std::cout << "Test complete" << std::endl;
     return 0;
 }

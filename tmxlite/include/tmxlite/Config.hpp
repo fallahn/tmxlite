@@ -62,3 +62,9 @@ source distribution.
 #define TMXLITE_EXPORT_API
 
 #endif //TMXLITE_STATIC
+
+#if __cpp_constinit >= 201907
+#define TMXLITE_CONSTINIT constinit
+#else
+#define TMXLITE_CONSTINIT
+#endif

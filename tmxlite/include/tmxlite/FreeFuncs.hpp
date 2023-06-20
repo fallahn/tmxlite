@@ -53,6 +53,7 @@ René Nyffenegger rene.nyffenegger@adp-gmbh.ch
 
 #include <tmxlite/detail/Android.hpp>
 #include <tmxlite/detail/Log.hpp>
+#include <tmxlite/Config.hpp>
 #include <tmxlite/Types.hpp>
 
 #include <string>
@@ -63,7 +64,7 @@ René Nyffenegger rene.nyffenegger@adp-gmbh.ch
 
 namespace tmx
 {
-    //using inline here just to supress unused warnings on gcc
+    //using inline here just to supress unused warnings on gcc (TODO: can say "(void)x" instead)
     bool decompress(const char* source, std::vector<unsigned char>& dest, std::size_t inSize, std::size_t expectedSize);
 
     static inline std::string base64_decode(std::string const& encoded_string)
@@ -163,41 +164,34 @@ namespace tmx
         return{};
     }
 
-    static inline std::string resolveFilePath(std::string path, const std::string& workingDir)
-    {      
-        static const std::string match("../");
-        std::size_t result = path.find(match);
-        std::size_t count = 0;
-        while (result != std::string::npos)
-        {
-            count++;
-            path = path.substr(result + match.size());
-            result = path.find(match);
-        }
+    /*!
+    \brief Splits 's' at each 'sep' and appends the parts to 'out'.
+    */
+    void splitStringInto(const std::string& s, char sep, std::vector<std::string>* out);
 
-        if (workingDir.empty()) return path;
+    /*!
+    \brief Joins 'parts' with 'sep' and appends the result to 'out'.
+    */
+    void joinStringInto(const std::vector<std::string>& parts, char sep, std::string* out);
 
-        std::string outPath = workingDir;
-        for (auto i = 0u; i < count; ++i)
-        {
-            result = outPath.find_last_of('/');
-            if (result != std::string::npos)
-            {
-                outPath = outPath.substr(0, result);
-            }
-        }
-// this does only work on windows       
-#ifndef __ANDROID__
-        return outPath + '/' + path;
-#endif
+    /*!
+    \brief Defaults to true only on Windows. May be changed for unit testing.
+    */
+    extern TMXLITE_CONSTINIT bool enableWindowsPathHandling;
 
-// todo: make resolveFilePath work with subfolders on 
-// android - currently only the root folder is working
+    /*!
+    \brief Returns whether 'path' is absolute, and optionally writes its
+    prefix (e.g. '/' or 'c:\\') in 'prefix'.
+    */
+    bool isAbsoluteFilePath(const std::string& path, std::string* prefix = nullptr);
 
-#ifdef __ANDROID__
-        return path;
-#endif
-    }
+    /*!
+    \brief Returns a path that refers to what 'path' would refer to if
+    it were evaluated in 'workingDir'. Simplifies away '.' and '..'
+    in most cases where it's possible.
+    Both 'path' and 'workingDir' may be relative or absolute.
+    */
+    std::string resolveFilePath(std::string path, std::string workingDir);
 
     static inline std::string getFilePath(const std::string& path)
     {
@@ -216,10 +210,11 @@ namespace tmx
         };
 
 
-#ifdef _WIN32 //try windows formatted paths first
-        std::string retVal = searchFunc('\\', path);
-        if (!retVal.empty()) return retVal;
-#endif
+        if (enableWindowsPathHandling)
+        {
+            std::string retVal = searchFunc('\\', path);
+            if (!retVal.empty()) return retVal;
+        }
 
         return searchFunc('/', path);
     }
