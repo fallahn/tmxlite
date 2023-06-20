@@ -218,4 +218,9 @@ namespace tmx
 
         return searchFunc('/', path);
     }
+
+    /*!
+    \brief Appends the contents of a file into the given string.
+    */
+    bool readFileIntoString(const std::string& path, std::string* out);
 } //namespacec tmx

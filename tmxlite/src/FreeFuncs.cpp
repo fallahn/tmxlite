@@ -35,6 +35,7 @@ source distribution.
 #include <tmxlite/detail/Log.hpp>
 
 #include <cstring>
+#include <fstream>
 
 bool tmx::decompress(const char* source, std::vector<unsigned char>& dest, std::size_t inSize, std::size_t expectedSize)
 {
@@ -262,4 +263,15 @@ std::string tmx::resolveFilePath(std::string path, std::string workingDir)
     result += absolutePathPrefix;
     joinStringInto(parts, '/', &result);
     return result;
+}
+
+bool tmx::readFileIntoString(const std::string& path, std::string* out)
+{
+    std::ifstream stream(path);
+    if (!stream.is_open())
+    {
+        return false;
+    }
+    out->append((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+    return !stream.bad();
 }
