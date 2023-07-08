@@ -60,7 +60,6 @@ class MapLayer final : public sf::Drawable
 {
 public:
 
-
     MapLayer(const tmx::Map& map, std::size_t idx)
     {
         const auto& layers = map.getLayers();
@@ -174,14 +173,7 @@ private:
     public:
         using Ptr = std::unique_ptr<Chunk>;
 
-        // the Android OpenGL driver isn't capable of rendering quads,
-        // so we need to use two triangles per tile instead
-#ifdef __ANDROID__
         using Tile = std::array<sf::Vertex, 6u>;
-#endif
-#ifndef __ANDROID__
-        using Tile = std::array<sf::Vertex, 4u>;
-#endif
         Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tilesets,
             const sf::Vector2f& position, const sf::Vector2f& tileCount, const sf::Vector2u& tileSize,
             std::size_t rowSize,  TextureResource& tr, const std::map<std::uint32_t, tmx::Tileset::Tile>& animTiles)
@@ -258,22 +250,14 @@ private:
                             tileIndex.y *= ca->tileSetSize.y;
                             Tile tile =
                             {
-#ifndef __ANDROID__
                                 sf::Vertex(tileOffset - getPosition(), m_chunkColors[idx], tileIndex),
                                 sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, 0.f), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, 0.f)),
+                                sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y)),
+                                sf::Vertex(tileOffset - getPosition(), m_chunkColors[idx], tileIndex),
                                 sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y)),
                                 sf::Vertex(tileOffset - getPosition() + sf::Vector2f(0.f, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(0.f, ca->tileSetSize.y))
-#endif
-#ifdef __ANDROID__
-                                sf::Vertex(tileOffset - getPosition(), m_chunkColors[idx], tileIndex),
-                                sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, 0.f), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, 0.f)),
-                                sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y)),
-                                sf::Vertex(tileOffset - getPosition(), m_chunkColors[idx], tileIndex),
-                                sf::Vertex(tileOffset - getPosition() + sf::Vector2f(0.f, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(0.f, ca->tileSetSize.y)),
-                                sf::Vertex(tileOffset - getPosition() + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y), m_chunkColors[idx], tileIndex + sf::Vector2f(ca->tileSetSize.x, ca->tileSetSize.y))
-#endif
                             };
-                            doFlips(m_chunkTileIDs[idx].flipFlags,&tile[0].texCoords,&tile[1].texCoords,&tile[2].texCoords,&tile[3].texCoords);
+                            doFlips(m_chunkTileIDs[idx].flipFlags,&tile[0].texCoords,&tile[1].texCoords,&tile[2].texCoords,&tile[3].texCoords,&tile[4].texCoords,&tile[5].texCoords);
                             ca->addTile(tile);
                         }
                         idx++;
@@ -319,37 +303,48 @@ private:
             return x + y * chunkTileCount.x;
         }
         bool empty() const { return m_chunkArrays.empty(); }
-        void flipY(sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
+        
+        void flipY(sf::Vector2f* v0, sf::Vector2f* v1, sf::Vector2f* v2, sf::Vector2f* v3, sf::Vector2f* v4, sf::Vector2f* v5)
         {
             //Flip Y
-            sf::Vector2f tmp = *v0;
-            v0->y = v2->y;
-            v1->y = v2->y;
-            v2->y = tmp.y ;
-            v3->y = v2->y  ;
+            sf::Vector2f tmp0 = *v0;
+            v0->y = v5->y;
+            v3->y = v5->y;
+            v5->y = tmp0.y;
+            sf::Vector2f tmp2 = *v2;
+            v2->y = v1->y;
+            v4->y = v1->y;
+            v1->y = tmp2.y;
         }
 
-        void flipX(sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
+        void flipX(sf::Vector2f* v0, sf::Vector2f* v1, sf::Vector2f* v2, sf::Vector2f* v3, sf::Vector2f* v4, sf::Vector2f* v5)
         {
             //Flip X
-            sf::Vector2f tmp = *v0;
+            sf::Vector2f tmp0 = *v0;
             v0->x = v1->x;
-            v1->x = tmp.x;
-            v2->x = v3->x;
-            v3->x = v0->x ;
+            v3->x = v1->x;
+            v1->x = tmp0.x;
+            sf::Vector2f tmp2 = *v2;
+            v2->x = v5->x;
+            v4->x = v5->x;
+            v5->x = tmp2.x;
         }
 
-        void flipD(sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
+        void flipD(sf::Vector2f* v0, sf::Vector2f* v1, sf::Vector2f* v2, sf::Vector2f* v3, sf::Vector2f* v4, sf::Vector2f* v5)
         {
             //Diagonal flip
-            sf::Vector2f tmp = *v1;
-            v1->x = v3->x;
-            v1->y = v3->y;
-            v3->x = tmp.x;
-            v3->y = tmp.y;
+            sf::Vector2f tmp2 = *v2;
+            *v2 = *v4;
+            *v4 = tmp2;
+            sf::Vector2f tmp0 = *v0;
+            *v0 = *v3;
+            *v3 = tmp0;
+            sf::Vector2f tmp1 = *v1;
+            *v1 = *v5;
+            *v5 = tmp1;
         }
 
-        void doFlips(std::uint8_t bits, sf::Vector2f *v0, sf::Vector2f *v1, sf::Vector2f *v2, sf::Vector2f *v3)
+        void doFlips(std::uint8_t bits, sf::Vector2f* v0, sf::Vector2f* v1, sf::Vector2f* v2, sf::Vector2f* v3, sf::Vector2f* v4, sf::Vector2f* v5)
         {
             //0000 = no change
             //0100 = vertical = swap y axis
@@ -464,12 +459,7 @@ private:
             void draw(sf::RenderTarget& rt, sf::RenderStates states) const override
             {
                 states.texture = &m_texture;
-#ifndef __ANDROID__
-                rt.draw(m_vertices.data(), m_vertices.size(), sf::Quads, states);
-#endif
-#ifdef __ANDROID__
                 rt.draw(m_vertices.data(), m_vertices.size(), sf::Triangles, states);
-#endif
             }
         };
 
