@@ -366,54 +366,54 @@ private:
                !(bits & tmx::TileLayer::FlipFlag::Diagonal) )
             {
                 //0100
-                flipY(v0,v1,v2,v3);
+                flipY(v0,v1,v2,v3,v4,v5);
             }
             else if((bits & tmx::TileLayer::FlipFlag::Horizontal) &&
                !(bits & tmx::TileLayer::FlipFlag::Vertical) &&
                !(bits & tmx::TileLayer::FlipFlag::Diagonal) )
             {
                 //1000
-                flipX(v0,v1,v2,v3);
+                flipX(v0,v1,v2,v3,v4,v5);
             }
             else if((bits & tmx::TileLayer::FlipFlag::Horizontal) &&
                (bits & tmx::TileLayer::FlipFlag::Vertical) &&
                !(bits & tmx::TileLayer::FlipFlag::Diagonal) )
             {
                 //1100
-                flipY(v0,v1,v2,v3);
-                flipX(v0,v1,v2,v3);
+                flipY(v0,v1,v2,v3,v4,v5);
+                flipX(v0,v1,v2,v3,v4,v5);
             }
             else if(!(bits & tmx::TileLayer::FlipFlag::Horizontal) &&
                !(bits & tmx::TileLayer::FlipFlag::Vertical) &&
                (bits & tmx::TileLayer::FlipFlag::Diagonal) )
             {
                 //0010
-                flipD(v0,v1,v2,v3);
+                flipD(v0,v1,v2,v3,v4,v5);
             }
             else if(!(bits & tmx::TileLayer::FlipFlag::Horizontal) &&
                 (bits & tmx::TileLayer::FlipFlag::Vertical) &&
                 (bits & tmx::TileLayer::FlipFlag::Diagonal) )
             {
                 //0110
-                flipX(v0,v1,v2,v3);
-                flipD(v0,v1,v2,v3);
+                flipX(v0,v1,v2,v3,v4,v5);
+                flipD(v0,v1,v2,v3,v4,v5);
             }
             else if((bits & tmx::TileLayer::FlipFlag::Horizontal) &&
                 !(bits & tmx::TileLayer::FlipFlag::Vertical) &&
                 (bits & tmx::TileLayer::FlipFlag::Diagonal) )
             {
                 //1010
-                flipY(v0,v1,v2,v3);
-                flipD(v0,v1,v2,v3);
+                flipY(v0,v1,v2,v3,v4,v5);
+                flipD(v0,v1,v2,v3,v4,v5);
            }
             else if((bits & tmx::TileLayer::FlipFlag::Horizontal) &&
                (bits & tmx::TileLayer::FlipFlag::Vertical) &&
                (bits & tmx::TileLayer::FlipFlag::Diagonal) )
             {
                 //1110
-                flipY(v0,v1,v2,v3);
-                flipX(v0,v1,v2,v3);
-                flipD(v0,v1,v2,v3);
+                flipY(v0,v1,v2,v3,v4,v5);
+                flipX(v0,v1,v2,v3,v4,v5);
+                flipD(v0,v1,v2,v3,v4,v5);
             }
         }
 
