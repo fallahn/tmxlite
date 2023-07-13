@@ -1,6 +1,7 @@
+cmake_minimum_required(VERSION 2.8.12)
+
 project(SFML_example)
 SET(PROJECT_NAME SFML_example)
-cmake_minimum_required(VERSION 2.8)
 
 if(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
@@ -21,7 +22,7 @@ endif()
 SET (CMAKE_CXX_FLAGS_DEBUG "-g -D_DEBUG_")
 SET (CMAKE_CXX_FLAGS_RELEASE "-O4 -DNDEBUG")
 
-find_package(TMXLITE REQUIRED)
+find_package(tmxlite REQUIRED)
 find_package(SFML 2 REQUIRED graphics window system)
 
 include_directories(
