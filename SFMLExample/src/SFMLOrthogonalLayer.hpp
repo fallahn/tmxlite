@@ -63,8 +63,20 @@ public:
     MapLayer(const tmx::Map& map, std::size_t idx)
     {
         const auto& layers = map.getLayers();
-        if (map.getOrientation() == tmx::Orientation::Orthogonal &&
-            idx < layers.size() && layers[idx]->getType() == tmx::Layer::Type::Tile)
+        if (map.getOrientation() != tmx::Orientation::Orthogonal)
+        {
+            std::cout << "Map is not orthogonal - nothing will be drawn" << std::endl;
+        }
+        else if (idx >= layers.size())
+        {
+            std::cout << "Layer index " << idx << " is out of range, layer count is " << layers.size() << std::endl;
+        }
+        else if (layers[idx]->getType() != tmx::Layer::Type::Tile)
+        {
+            std::cout << "layer " << idx << " is not a Tile layer..." << std::endl;
+        }
+
+        else
         {
             //round the chunk size to the nearest tile
             const auto tileSize = map.getTileSize();
@@ -78,10 +90,6 @@ public:
             auto mapSize = map.getBounds();
             m_globalBounds.width = mapSize.width;
             m_globalBounds.height = mapSize.height;
-        }
-        else
-        {
-            std::cout << "Not a valid orthogonal layer, nothing will be drawn." << std::endl;
         }
     }
 
@@ -127,7 +135,7 @@ public:
                 as.currentTime += elapsed;
 
                 tmx::TileLayer::Tile tile;
-                std::uint32_t animTime = 0;
+                std::int32_t animTime = 0;
                 auto x = as.animTile.animation.frames.begin();
                 while (animTime < as.currentTime.asMilliseconds()) 
                 {
@@ -183,10 +191,8 @@ private:
             layerOpacity = static_cast<sf::Uint8>(layer.getOpacity() /  1.f * 255.f);
             sf::Color vertColour = sf::Color(200 ,200, 200, layerOpacity);
             auto offset = layer.getOffset();
-            layerOffset.x = offset.x;
-            layerOffset.x = offset.y;
-            chunkTileCount.x = tileCount.x;
-            chunkTileCount.y = tileCount.y;
+            layerOffset = { static_cast<float>(offset.x), static_cast<float>(offset.y) };
+            chunkTileCount = { tileCount.x, tileCount.y };
             mapTileSize = tileSize;
             const auto& tileIDs = layer.getTiles();
 
@@ -224,8 +230,8 @@ private:
             for (const auto& ca : m_chunkArrays)
             {
                 sf::Uint32 idx = 0;
-                std::size_t xPos = static_cast<std::size_t>(getPosition().x / mapTileSize.x);
-                std::size_t yPos = static_cast<std::size_t>(getPosition().y / mapTileSize.y);
+                std::uint32_t xPos = static_cast<std::uint32_t>(getPosition().x / mapTileSize.x);
+                std::uint32_t yPos = static_cast<std::uint32_t>(getPosition().y / mapTileSize.y);
                 for (auto y = yPos; y < yPos + chunkTileCount.y; ++y)
                 {
                     for (auto x = xPos; x < xPos + chunkTileCount.x; ++x)
@@ -242,7 +248,7 @@ private:
                                 m_activeAnimations.push_back(as);
                             }
 
-                            sf::Vector2f tileOffset(x * mapTileSize.x, (float)y * mapTileSize.y + mapTileSize.y - ca->tileSetSize.y);
+                            sf::Vector2f tileOffset(static_cast<float>(x) * mapTileSize.x, static_cast<float>(y) * mapTileSize.y + mapTileSize.y - ca->tileSetSize.y);
 
                             auto idIndex = m_chunkTileIDs[idx].ID - ca->m_firstGID;
                             sf::Vector2f tileIndex(idIndex % ca->tsTileCount.x, idIndex / ca->tsTileCount.x);

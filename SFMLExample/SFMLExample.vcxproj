@@ -116,12 +116,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../tmxlite/include;../sfml/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../tmxlite/include;../extlibs/sfml/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../sfml/bin/Debug;../tmxlite/x64/bin/DebugStatic</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../extlibs/sfml/lib;../tmxlite/x64/bin/DebugStatic</AdditionalLibraryDirectories>
       <AdditionalDependencies>libtmxlite-s-d.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -133,14 +133,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../tmxlite/include;../sfml/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../tmxlite/include;../extlibs/sfml/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../sfml/bin/Release;../tmxlite/x64/bin/ReleaseStatic</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../extlibs/sfml/lib;../tmxlite/x64/bin/ReleaseStatic</AdditionalLibraryDirectories>
       <AdditionalDependencies>libtmxlite-s.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

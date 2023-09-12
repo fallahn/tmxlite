@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29926.136
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tmxlite", "tmxlite\tmxlite.vcxproj", "{0BC0C535-FEBB-4A83-8197-AF74FA26E100}"
 EndProject
@@ -68,6 +68,7 @@ Global
 		{2298A657-D09A-438E-B976-5EE827966124}.Debug|ARM.ActiveCfg = Debug|Win32
 		{2298A657-D09A-438E-B976-5EE827966124}.Debug|ARM64.ActiveCfg = Debug|Win32
 		{2298A657-D09A-438E-B976-5EE827966124}.Debug|x64.ActiveCfg = Debug|x64
+		{2298A657-D09A-438E-B976-5EE827966124}.Debug|x64.Build.0 = Debug|x64
 		{2298A657-D09A-438E-B976-5EE827966124}.Debug|x86.ActiveCfg = Debug|Win32
 		{2298A657-D09A-438E-B976-5EE827966124}.Debug|x86.Build.0 = Debug|Win32
 		{2298A657-D09A-438E-B976-5EE827966124}.Release|ARM.ActiveCfg = Release|Win32
