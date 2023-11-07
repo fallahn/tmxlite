@@ -125,6 +125,16 @@ namespace tmx
         const std::string& getFileValue() const { assert(m_type == Type::File); return m_stringValue; }
 
         /*!
+        \brief Returns an array of properties
+        */
+        const std::vector<std::shared_ptr<Property>>& getClassValue() const {assert(m_type == Type::Class); return m_classValue; }
+
+        /*!
+        \brief Returns an the propertytype value
+        */
+        const std::string getPropertyType() const {assert(m_type == Type::Class); return m_propertyType; }
+        
+        /*!
         \brief Returns the property's value as an integer object handle
         */
         int getObjectValue() const { assert(m_type == Type::Object); return m_intValue; }

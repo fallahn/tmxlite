@@ -167,9 +167,10 @@ void Property::parse(const pugi::xml_node& node, bool isObjectTypes)
     else if (attribData == "class")
     {
         m_type = Type::Class;
-        m_propertyType = node.attribute("propertytype").as_string("string");
-        
-        if (node.first_child().name() == "properties")
+        m_propertyType = node.attribute("propertytype").as_string("null");
+
+        const std::string firstChildName = node.first_child().name();
+        if (firstChildName == "properties")
         {
             for(const auto& childProp : node.first_child().children())
             {
