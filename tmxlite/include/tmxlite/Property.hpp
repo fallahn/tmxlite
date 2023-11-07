@@ -32,6 +32,7 @@ source distribution.
 
 #include <string>
 #include <cassert>
+#include <vector>
 
 namespace pugi
 {
@@ -60,6 +61,7 @@ namespace tmx
             Colour,
             File,
             Object,
+            Class,
             Undef
         };
             
@@ -137,7 +139,10 @@ namespace tmx
         };
         std::string m_stringValue;
         std::string m_name;
+        std::string m_propertyType;
+        
         Colour m_colourValue;
+        std::vector<std::shared_ptr<Property>> m_classValue;
 
         Type m_type;
     };

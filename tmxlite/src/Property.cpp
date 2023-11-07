@@ -164,4 +164,19 @@ void Property::parse(const pugi::xml_node& node, bool isObjectTypes)
         m_type = Type::Object;
         return;
     }
+    else if (attribData == "class")
+    {
+        m_type = Type::Class;
+        m_propertyType = node.attribute("propertytype").as_string("string");
+        
+        if (node.first_child().name() == "properties")
+        {
+            for(const auto& childProp : node.first_child().children())
+            {
+                m_classValue.emplace_back(std::make_shared<Property>());
+                m_classValue.back()->parse(childProp);
+            }
+        }
+        return;
+    }
 }
