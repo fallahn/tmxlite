@@ -32,6 +32,7 @@ source distribution.
 
 #include <string>
 #include <cassert>
+#include <vector>
 
 namespace pugi
 {
@@ -60,6 +61,7 @@ namespace tmx
             Colour,
             File,
             Object,
+            Class,
             Undef
         };
             
@@ -123,6 +125,16 @@ namespace tmx
         const std::string& getFileValue() const { assert(m_type == Type::File); return m_stringValue; }
 
         /*!
+        \brief Returns an array of properties
+        */
+        const std::vector<Property>& getClassValue() const {assert(m_type == Type::Class); return m_classValue; }
+
+        /*!
+        \brief Returns an the propertytype value
+        */
+        const std::string getPropertyType() const {assert(m_type == Type::Class); return m_propertyType; }
+        
+        /*!
         \brief Returns the property's value as an integer object handle
         */
         int getObjectValue() const { assert(m_type == Type::Object); return m_intValue; }
@@ -137,7 +149,10 @@ namespace tmx
         };
         std::string m_stringValue;
         std::string m_name;
+        std::string m_propertyType;
+        
         Colour m_colourValue;
+        std::vector<Property> m_classValue;
 
         Type m_type;
     };
