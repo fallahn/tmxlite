@@ -127,7 +127,7 @@ namespace tmx
         /*!
         \brief Returns an array of properties
         */
-        const std::vector<std::shared_ptr<Property>>& getClassValue() const {assert(m_type == Type::Class); return m_classValue; }
+        const std::vector<Property>& getClassValue() const {assert(m_type == Type::Class); return m_classValue; }
 
         /*!
         \brief Returns an the propertytype value
@@ -152,7 +152,7 @@ namespace tmx
         std::string m_propertyType;
         
         Colour m_colourValue;
-        std::vector<std::shared_ptr<Property>> m_classValue;
+        std::vector<Property> m_classValue;
 
         Type m_type;
     };

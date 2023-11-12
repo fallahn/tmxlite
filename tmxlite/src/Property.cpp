@@ -174,8 +174,8 @@ void Property::parse(const pugi::xml_node& node, bool isObjectTypes)
         {
             for(const auto& childProp : node.first_child().children())
             {
-                m_classValue.emplace_back(std::make_shared<Property>());
-                m_classValue.back()->parse(childProp);
+                m_classValue.emplace_back();
+                m_classValue.back().parse(childProp);
             }
         }
         return;
