@@ -11,4 +11,4 @@ build
 *.swp
 /.vscode
 /.vs/tmxlite
-/tmxlite/tmxlite.vcxproj.user
+*.user
