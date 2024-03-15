@@ -29,19 +29,22 @@ source distribution.
 Example code for rendering a map layer with SDL2
 */
 
+#include "Texture.hpp"
+#include "MapLayer.hpp"
+
 #include <SDL.h>
+#include <tmxlite/Map.hpp>
 
 #include <iostream>
 
 int main(int, char**)
 {
     SDL_Window* window = nullptr;
-    SDL_Surface* screenSurface = nullptr;
 
     //init SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << "\n";
+        std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << "\n";
     }
     else
     {
@@ -49,26 +52,69 @@ int main(int, char**)
         window = SDL_CreateWindow("SDL2 Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
         if (window == nullptr)
         {
-            std::cout << "Window could not be created! SDL_Error: " << SDL_GetError() << "\n";
+            std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << "\n";
         }
         else
         {
-            screenSurface = SDL_GetWindowSurface(window);
-            SDL_FillRect(screenSurface, nullptr, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
-            SDL_UpdateWindowSurface(window);
+            SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-            //pump events
-            SDL_Event evt;
-            bool running = true;
-            while (running)
+            if (renderer)
             {
-                while (SDL_PollEvent(&evt)) 
+                std::vector<std::unique_ptr<MapLayer>> renderLayers;
+
+                //load the tile map and create layers 
+                tmx::Map map;
+                if (map.load("assets/demo.tmx"))
                 {
-                    if (evt.type == SDL_QUIT)
+                    const auto& mapLayers = map.getLayers();
+                    for (const auto& l : mapLayers)
                     {
-                        running = false;
+                        if (l->getType() == tmx::Layer::Type::Tile)
+                        {
+                            renderLayers.emplace_back(std::make_unique<MapLayer>())->create(renderer, l);
+                        }
                     }
                 }
+
+
+                //enter loop...
+                SDL_SetRenderDrawColor(renderer, 100, 149, 237, 255);
+
+                bool running = true;
+                while (running)
+                {
+                    //pump events
+                    SDL_Event evt;
+                    while (SDL_PollEvent(&evt))
+                    {
+                        if (evt.type == SDL_QUIT)
+                        {
+                            running = false;
+                        }
+                        else if (evt.type == SDL_KEYDOWN)
+                        {
+                            switch (evt.key.keysym.sym)
+                            {
+                            default: break;
+                            case SDLK_ESCAPE:
+                                running = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    //clear/draw/display
+                    SDL_RenderClear(renderer);
+
+                    for (const auto& l : renderLayers)
+                    {
+                        l->draw(renderer);
+                    }
+
+                    SDL_RenderPresent(renderer);
+                }
+
+                SDL_DestroyRenderer(renderer);
             }
         }
     }
