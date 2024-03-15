@@ -31,6 +31,7 @@ source distribution.
 #include "stb_image.h"
 
 #include <iostream>
+#include <cstdint>
 
 Texture::Texture()
     : m_texture(nullptr)

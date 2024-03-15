@@ -22,7 +22,7 @@ endif()
 SET (CMAKE_CXX_FLAGS_DEBUG "-g -D_DEBUG_")
 SET (CMAKE_CXX_FLAGS_RELEASE "-O4 -DNDEBUG")
 
-find_package(tmxlite REQUIRED)
+find_package(TMXLITE REQUIRED)
 find_package(SDL2 REQUIRED)
 
 include_directories(
