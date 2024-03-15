@@ -48,10 +48,12 @@ public:
     Texture& operator = (Texture&&) = delete;
 
     bool loadFromFile(const std::string&, SDL_Renderer*);
+    SDL_Point getSize() const { return m_size; }
 
     operator SDL_Texture* () { return m_texture; }
 
 private:
 
     SDL_Texture* m_texture;
+    SDL_Point m_size;
 };

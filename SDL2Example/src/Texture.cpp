@@ -81,7 +81,18 @@ bool Texture::loadFromFile(const std::string& path, SDL_Renderer* renderer)
         SDL_FreeSurface(surface);
         stbi_image_free(data);
 
-        return m_texture != nullptr;
+        if (!m_texture)
+        {
+            std::cerr << "Failed to create texture for " << path << "\n";
+            return false;
+        }
+
+        //sets alpha blending
+        //SDL_SetTextureBlendMode(m_texture, SDL_BLENDMODE_BLEND);
+        m_size.x = x;
+        m_size.y = y;
+
+        return true;
     }
 
     return false;

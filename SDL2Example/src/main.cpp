@@ -44,7 +44,7 @@ int main(int, char**)
     //init SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << "\n";
+        std::cerr << "Failed to initialise SDL: " << SDL_GetError() << "\n";
     }
     else
     {
@@ -52,7 +52,7 @@ int main(int, char**)
         window = SDL_CreateWindow("SDL2 Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
         if (window == nullptr)
         {
-            std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << "\n";
+            std::cerr << "Window could not be created: " << SDL_GetError() << "\n";
         }
         else
         {
@@ -60,18 +60,33 @@ int main(int, char**)
 
             if (renderer)
             {
+                std::vector<std::unique_ptr<Texture>> textures;
                 std::vector<std::unique_ptr<MapLayer>> renderLayers;
 
-                //load the tile map and create layers 
+                //load the tile map
                 tmx::Map map;
                 if (map.load("assets/demo.tmx"))
                 {
-                    const auto& mapLayers = map.getLayers();
-                    for (const auto& l : mapLayers)
+                    //load the textures as they're shared between layers
+                    const auto& tileSets = map.getTilesets();
+                    assert(!tileSets.empty());
+                    for (const auto& ts : tileSets)
                     {
-                        if (l->getType() == tmx::Layer::Type::Tile)
+                        textures.emplace_back(std::make_unique<Texture>());
+                        if (!textures.back()->loadFromFile(ts.getImagePath(), renderer))
                         {
-                            renderLayers.emplace_back(std::make_unique<MapLayer>())->create(renderer, l);
+                            std::cerr << "Failed opening " << ts.getImagePath() << "\n";
+                        }
+                    }
+
+                    //load the layers
+                    const auto& mapLayers = map.getLayers();
+                    for (auto i = 0u; i < mapLayers.size(); ++i)
+                    {
+                        if (mapLayers[i]->getType() == tmx::Layer::Type::Tile)
+                        {
+                            renderLayers.emplace_back(std::make_unique<MapLayer>());
+                            renderLayers.back()->create(map, i, textures); //just cos we're using C++14
                         }
                     }
                 }
@@ -105,12 +120,10 @@ int main(int, char**)
 
                     //clear/draw/display
                     SDL_RenderClear(renderer);
-
                     for (const auto& l : renderLayers)
                     {
                         l->draw(renderer);
                     }
-
                     SDL_RenderPresent(renderer);
                 }
 

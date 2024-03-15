@@ -34,20 +34,23 @@ Encapsulates a texture and vertex array and uses them to draw a map layer
 #include "Texture.hpp"
 
 #include <SDL.h>
-#include <tmxlite/Layer.hpp>
+#include <tmxlite/Map.hpp>
 #include <vector>
 
 class MapLayer final
 {
 public:
-    MapLayer();
+    explicit MapLayer();
 
-    bool create(SDL_Renderer*, const tmx::Layer::Ptr&);
+    bool create(const tmx::Map&, std::uint32_t index, const std::vector<std::unique_ptr<Texture>>& textures);
 
     void draw(SDL_Renderer*) const;
 
 private:
-
-    std::vector<SDL_Vertex> m_vertexData;
-    mutable Texture m_texture;
+    struct Subset final
+    {
+        std::vector<SDL_Vertex> vertexData;
+        SDL_Texture* texture = nullptr;
+    };
+    std::vector<Subset> m_subsets;
 };
