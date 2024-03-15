@@ -6,7 +6,7 @@ tmxlite
 #### Description
 A lightweight C++14 parsing library for tmx map files created with the Tiled map editor. Requires no external linking, all dependencies are included. Optionally Zstd support can be enabled by linking the required external library. Fully supports tmx maps up to 1.0 (see [here](https://doc.mapeditor.org/en/stable/reference/tmx-changelog/#tiled-1-0)) with CSV, zlib and base64 compression. Also supports some features of newer map versions (see below). The parser is renderer agnostic, and is cross platform on Windows, linux and macOS. It has also been successfully built for Android too.
 
-As the library contains no specific rendering functions some example projects are included, along with the relevant CMake files. These are meant mostly for guidance and are not 100% optimised, but should get you off on the right foot when using libraries such as SFML or SDL2/OpenGL. Examples for any specific rendering library are welcome via a pull request.
+As the library contains no specific rendering functions some example projects are included, along with the relevant CMake files. These are meant mostly for guidance and are not 100% optimised, but should get you off on the right foot when using libraries such as SFML, SDL2 or directly with OpenGL. Examples for any specific rendering library are welcome via a pull request.
 
 ##### Other Features
 As well as full support for maps up to version 1.0, tmxlite also supports these features found in newer versions of the [tmx specification](https://doc.mapeditor.org/en/stable/reference/tmx-changelog/#tiled-1-0):
@@ -37,9 +37,12 @@ Configuring with meson is also possible, see `meson_options.txt` for details.
 There is a getting started page on the Github wiki [here](https://github.com/fallahn/tmxlite/wiki/Quick-Start).
 
 #### Examples
-Check out the following examples:
+The repository contains the following rendering examples:
 * [OpenGL Example](https://github.com/fallahn/tmxlite/tree/master/OpenGLExample)
 * [SFML Example](https://github.com/fallahn/tmxlite/tree/master/SFMLExample)
+* [SDL2 Example](https://github.com/fallahn/tmxlite/tree/master/SDL2Example)
+
+Examples are generally maintained by the community and offer varying amounts of functionality. All of them will render the included example tile maps at the very least, and some include more complex features such as animated tiles or individual tile flipping.
 
 #### API Documentation
 Doxygen generated API documentation can be found online [here](https://codedocs.xyz/fallahn/tmxlite/) or generated with doxygen
@@ -50,7 +53,7 @@ tmxlite uses [pugixml](https://pugixml.org/) and [miniz](https://github.com/rich
 
 ***
 
-(c)Matt Marchant & contributors 2016 - 2023
+(c)Matt Marchant & contributors 2016 - 2024
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
