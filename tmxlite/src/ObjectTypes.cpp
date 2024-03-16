@@ -37,39 +37,13 @@ using namespace tmx;
 
 bool ObjectTypes::load(const std::string &path)
 {
-    reset();
-
-    //open the doc
-    pugi::xml_document doc;
-    auto result = doc.load_file(path.c_str());
-    if (!result)
+    std::string contents;
+    if (!readFileIntoString(path, &contents))
     {
-        Logger::log("Failed opening " + path, Logger::Type::Error);
-        Logger::log("Reason: " + std::string(result.description()), Logger::Type::Error);
-        return false;
-    }
-
-    //make sure we have consistent path separators
-    m_workingDirectory = path;
-    std::replace(m_workingDirectory.begin(), m_workingDirectory.end(), '\\', '/');
-    m_workingDirectory = getFilePath(m_workingDirectory);
-
-    if (!m_workingDirectory.empty() &&
-        m_workingDirectory.back() == '/')
-    {
-        m_workingDirectory.pop_back();
-    }
-
-
-    //find the node and bail if it doesn't exist
-    auto node = doc.child("objecttypes");
-    if (!node)
-    {
-        Logger::log("Failed opening object types: " + path + ", no objecttype node found", Logger::Type::Error);
+        Logger::log("Failed to read file " + path, Logger::Type::Error);
         return reset();
     }
-
-    return parseObjectTypesNode(node);
+    return loadFromString(contents, getFilePath(path));
 }
 
 bool ObjectTypes::loadFromString(const std::string &data, const std::string &workingDir)
@@ -89,7 +63,6 @@ bool ObjectTypes::loadFromString(const std::string &data, const std::string &wor
     //make sure we have consistent path separators
     m_workingDirectory = workingDir;
     std::replace(m_workingDirectory.begin(), m_workingDirectory.end(), '\\', '/');
-    m_workingDirectory = getFilePath(m_workingDirectory);
 
     if (!m_workingDirectory.empty() &&
         m_workingDirectory.back() == '/')

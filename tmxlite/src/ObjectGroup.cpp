@@ -46,8 +46,6 @@ ObjectGroup::ObjectGroup()
 //public
 void ObjectGroup::parse(const pugi::xml_node& node, Map* map)
 {
-    assert(map);
-
     std::string attribString = node.name();
     if (attribString != "objectgroup")
     {

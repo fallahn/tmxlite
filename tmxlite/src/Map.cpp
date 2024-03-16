@@ -57,39 +57,13 @@ Map::Map()
 //public
 bool Map::load(const std::string& path)
 {
-    reset();
-
-    //open the doc
-    pugi::xml_document doc;
-    auto result = doc.load_file(path.c_str());
-    if (!result)
+    std::string contents;
+    if (!readFileIntoString(path, &contents))
     {
-        Logger::log("Failed opening " + path, Logger::Type::Error);
-        Logger::log("Reason: " + std::string(result.description()), Logger::Type::Error);
-        return false;
-    }
-
-    //make sure we have consistent path separators
-    m_workingDirectory = path;
-    std::replace(m_workingDirectory.begin(), m_workingDirectory.end(), '\\', '/');
-    m_workingDirectory = getFilePath(m_workingDirectory);
-
-    if (!m_workingDirectory.empty() &&
-        m_workingDirectory.back() == '/')
-    {
-        m_workingDirectory.pop_back();
-    }
-
-
-    //find the map node and bail if it doesn't exist
-    auto mapNode = doc.child("map");
-    if (!mapNode)
-    {
-        Logger::log("Failed opening map: " + path + ", no map node found", Logger::Type::Error);
+        Logger::log("Failed to read file " + path, Logger::Type::Error);
         return reset();
     }
-
-    return parseMapNode(mapNode);
+    return loadFromString(contents, getFilePath(path));
 }
 
 bool Map::loadFromString(const std::string& data, const std::string& workingDir)
@@ -109,7 +83,6 @@ bool Map::loadFromString(const std::string& data, const std::string& workingDir)
     //make sure we have consistent path separators
     m_workingDirectory = workingDir;
     std::replace(m_workingDirectory.begin(), m_workingDirectory.end(), '\\', '/');
-    m_workingDirectory = getFilePath(m_workingDirectory);
 
     if (!m_workingDirectory.empty() &&
         m_workingDirectory.back() == '/')
