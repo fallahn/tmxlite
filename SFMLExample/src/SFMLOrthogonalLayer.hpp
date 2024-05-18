@@ -34,6 +34,7 @@ are implemented.
 #ifndef SFML_ORTHO_HPP_
 #define SFML_ORTHO_HPP_
 
+#include <SFML/System/Vector2.hpp>
 #include <tmxlite/Map.hpp>
 #include <tmxlite/TileLayer.hpp>
 #include <tmxlite/detail/Log.hpp>
@@ -125,6 +126,9 @@ public:
         const auto& selectedChunk = getChunkAndTransform(tileX, tileY, chunkLocale);
         return selectedChunk->getColor(chunkLocale.x, chunkLocale.y);
     }
+
+    void setOffset(sf::Vector2f offset) { this->offset = offset; }
+    sf::Vector2f getOffset() { return this->offset; }
     
     void update(sf::Time elapsed) 
     {
@@ -159,6 +163,7 @@ public:
 private:
     //increasing m_chunkSize by 4; fixes render problems when mapsize != chunksize
     //sf::Vector2f m_chunkSize = sf::Vector2f(1024.f, 1024.f);
+    sf::Vector2f offset = sf::Vector2f(0, 0);
     sf::Vector2f m_chunkSize = sf::Vector2f(512.f, 512.f);
     sf::Vector2u m_chunkCount;
     sf::Vector2u m_MapTileSize;   // general Tilesize of Map
@@ -599,8 +604,10 @@ private:
         std::swap(m_visibleChunks, visible);
     }
 
+
     void draw(sf::RenderTarget& rt, sf::RenderStates states) const override
     {
+        states.transform.translate(offset);
         //calc view coverage and draw nearest chunks
         updateVisibility(rt.getView());
         for (const auto& c : m_visibleChunks)

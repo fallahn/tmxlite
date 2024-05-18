@@ -26,8 +26,10 @@ source distribution.
 *********************************************************************/
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 
+#include <SFML/Window/Keyboard.hpp>
 #include <tmxlite/Map.hpp>
 
 #include "SFMLOrthogonalLayer.hpp"
@@ -44,6 +46,8 @@ int main()
     MapLayer layerTwo(map, 2);
 
     sf::Clock globalClock;
+    sf::Clock wiggleClock;
+    bool doWiggle = false;
     while (window.isOpen())
     {
         sf::Event event;
@@ -51,10 +55,26 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+            if( event.type == sf::Event::KeyPressed ) {
+                switch(event.key.code) {
+                    case sf::Keyboard::W:
+                        /// toggle doWiggle
+                        doWiggle = !doWiggle;
+                    break;
+                }
+            }
         }
+
 
         sf::Time duration = globalClock.restart();
         layerZero.update(duration);
+        sf::Vector2f newOffset = sf::Vector2f(0.f, 0.f);
+        if( doWiggle ) {
+             newOffset = sf::Vector2f(cosf(wiggleClock.getElapsedTime().asSeconds())*100.f, 0.f);
+        }
+        layerZero.setOffset(newOffset);
+        layerOne.setOffset(newOffset);
+        layerTwo.setOffset(newOffset);
 
         window.clear(sf::Color::Black);
         window.draw(layerZero);
