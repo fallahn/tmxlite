@@ -1,5 +1,5 @@
 /*********************************************************************
-(c) Matt Marchant & contributors 2016 - 2019
+(c) Matt Marchant & contributors 2016 - 2024
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -25,14 +25,13 @@ and must not be misrepresented as being the original software.
 source distribution.
 *********************************************************************/
 
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/System/Vector2.hpp>
-#include <SFML/Window/Event.hpp>
-
-#include <SFML/Window/Keyboard.hpp>
-#include <tmxlite/Map.hpp>
 
 #include "SFMLOrthogonalLayer.hpp"
+
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/Keyboard.hpp>
+
 
 int main()
 {
@@ -47,18 +46,25 @@ int main()
 
     sf::Clock globalClock;
     sf::Clock wiggleClock;
+
     bool doWiggle = false;
+
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
+            {
                 window.close();
-            if( event.type == sf::Event::KeyPressed ) {
-                switch(event.key.code) {
+            }
+
+            else if( event.type == sf::Event::KeyPressed )
+            {
+                switch(event.key.code)
+                {
                     case sf::Keyboard::W:
-                        /// toggle doWiggle
+                        // toggle doWiggle
                         doWiggle = !doWiggle;
                     break;
                 }
@@ -68,9 +74,11 @@ int main()
 
         sf::Time duration = globalClock.restart();
         layerZero.update(duration);
+
         sf::Vector2f newOffset = sf::Vector2f(0.f, 0.f);
-        if( doWiggle ) {
-             newOffset = sf::Vector2f(cosf(wiggleClock.getElapsedTime().asSeconds())*100.f, 0.f);
+        if (doWiggle)
+        {
+             newOffset = sf::Vector2f(std::cos(wiggleClock.getElapsedTime().asSeconds()) * 100.f, 0.f);
         }
         layerZero.setOffset(newOffset);
         layerOne.setOffset(newOffset);
