@@ -64,4 +64,4 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       if: runner.os != 'Linux'
-      run: cmake --build . --config $BUILD_TYPE --target install
+      run: cmake --build . --config $BUILD_TYPE
