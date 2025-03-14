@@ -222,7 +222,7 @@ void Object::parseTemplate(const std::string& path, Map* map)
     //load the template if not already loaded
     if (templateObjects.count(path) == 0)
     {
-        auto templatePath = map->getWorkingDirectory() + "/" + path;
+        auto templatePath = resolveFilePath(path, map->getWorkingDirectory());
 
         pugi::xml_document doc;
         if (!doc.load_file(templatePath.c_str()))

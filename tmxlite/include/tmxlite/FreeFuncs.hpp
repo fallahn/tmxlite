@@ -175,9 +175,22 @@ namespace tmx
             result = path.find(match);
         }
 
-        if (workingDir.empty()) return path;
-
         std::string outPath = workingDir;
+        if (workingDir.empty()) {
+#ifndef __ANDROID__
+            // Going up the folder tree
+            for (auto j = 0u; j < count; ++j) {
+                if (j != 0)
+                    outPath.push_back('/');
+                outPath.append("..");
+            }
+            if (!outPath.empty()) {
+                path = outPath + '/' + path;
+            }
+#endif
+            return path;
+        }
+
         for (auto i = 0u; i < count; ++i)
         {
             result = outPath.find_last_of('/');
@@ -185,10 +198,26 @@ namespace tmx
             {
                 outPath = outPath.substr(0, result);
             }
+            else {
+                // Going up the folder tree
+                if (!outPath.empty()) {
+                    outPath = "";
+                    for (auto j = i + 1u; j < count; ++j) {
+                        if (j != i + 1u)
+                            outPath.push_back('/');
+                        outPath.append("..");
+                    }
+                    break;
+                }
+            }
         }
+
 // this does only work on windows       
 #ifndef __ANDROID__
-        return outPath + '/' + path;
+        if (!outPath.empty())
+            return outPath + '/' + path;
+        else
+            return path;
 #endif
 
 // todo: make resolveFilePath work with subfolders on 
