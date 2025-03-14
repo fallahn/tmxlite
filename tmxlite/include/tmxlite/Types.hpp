@@ -113,7 +113,7 @@ namespace tmx
             : r(red), g(green), b(blue), a(alpha) {}
         std::uint8_t r, g, b, a;
 
-        bool operator == (const Colour& other)
+        bool operator == (const Colour& other) const
         {
             return other.r == r
                 && other.g == g
@@ -121,7 +121,7 @@ namespace tmx
                 && other.a == a;
         }
 
-        bool operator != (const Colour& other)
+        bool operator != (const Colour& other) const
         {
             return !(*this == other);
         }
