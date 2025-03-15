@@ -34,6 +34,9 @@ are implemented.
 #ifndef SFML_ORTHO_HPP_
 #define SFML_ORTHO_HPP_
 
+#include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/PrimitiveType.hpp>
+#include <stdexcept>
 #include <tmxlite/Map.hpp>
 #include <tmxlite/TileLayer.hpp>
 #include <tmxlite/detail/Log.hpp>
@@ -89,8 +92,7 @@ public:
             createChunks(map, layer);
 
             auto mapSize = map.getBounds();
-            m_globalBounds.width = mapSize.width;
-            m_globalBounds.height = mapSize.height;
+            m_globalBounds.size = {mapSize.width, mapSize.height};
         }
     }
 
@@ -194,7 +196,7 @@ private:
             : m_animTiles(animTiles)
         {
             setPosition(position);
-            layerOpacity = static_cast<sf::Uint8>(layer.getOpacity() /  1.f * 255.f);
+            layerOpacity = static_cast<std::uint8_t>(layer.getOpacity() / 1.f * 255.f);
 
             sf::Color vertColour = sf::Color(200 ,200, 200, layerOpacity);
             auto offset = layer.getOffset();
@@ -494,11 +496,11 @@ private:
             void draw(sf::RenderTarget& rt, sf::RenderStates states) const override
             {
                 states.texture = &m_texture;
-                rt.draw(m_vertices.data(), m_vertices.size(), sf::Triangles, states);
+                rt.draw(m_vertices.data(), m_vertices.size(), sf::PrimitiveType::Triangles, states);
             }
         };
 
-        sf::Uint8 layerOpacity;     // opacity of the layer
+        std::uint8_t layerOpacity;  // opacity of the layer
         sf::Vector2f layerOffset;   // Layer offset
         sf::Vector2u mapTileSize;   // general Tilesize of Map
         sf::Vector2f chunkTileCount;   // chunk tilecount
@@ -551,8 +553,7 @@ private:
             maxID = i->getFirstGID();
         }
 
-        sf::Image fallback;
-        fallback.create(2, 2, sf::Color::Magenta);
+        sf::Image fallback({2, 2}, sf::Color::Magenta);
         for (const auto& ts : usedTileSets)
         {
             const auto& path = ts->getImagePath();
@@ -561,16 +562,18 @@ private:
             sf::Image img;
             if (!img.loadFromFile(path))
             {
-                newTexture->loadFromImage(fallback);
-            }
-            else
-            {
+                if (!newTexture->loadFromImage(fallback)) {
+                    throw std::runtime_error("Unable to load fallback image");
+                }
+            } else {
                 if (ts->hasTransparency())
                 {
                     auto transparency = ts->getTransparencyColour();
                     img.createMaskFromColor({ transparency.r, transparency.g, transparency.b, transparency.a });
                 }
-                newTexture->loadFromImage(img);
+                if (!newTexture->loadFromImage(img)) {
+                    throw std::runtime_error("Unable to load image: " + path);
+                }
             }
             m_textureResource.insert(std::make_pair(path, std::move(newTexture)));
         }
@@ -578,8 +581,8 @@ private:
         //calculate the number of chunks in the layer
         //and create each one
         const auto bounds = map.getBounds();
-        m_chunkCount.x = static_cast<sf::Uint32>(std::ceil(bounds.width / m_chunkSize.x));
-        m_chunkCount.y = static_cast<sf::Uint32>(std::ceil(bounds.height / m_chunkSize.y));
+        m_chunkCount.x = static_cast<std::uint32_t>(std::ceil(bounds.width / m_chunkSize.x));
+        m_chunkCount.y = static_cast<std::uint32_t>(std::ceil(bounds.height / m_chunkSize.y));
 
         sf::Vector2u tileSize(map.getTileSize().x, map.getTileSize().y);
 
