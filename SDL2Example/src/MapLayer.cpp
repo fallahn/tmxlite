@@ -82,7 +82,7 @@ bool MapLayer::create(const tmx::Map& map, std::uint32_t layerIndex, const std::
                     //tex coords
                     auto idIndex = (tileIDs[idx].ID - ts.getFirstGID());
                     float u = static_cast<float>(idIndex % tileCountX);
-                    float v = static_cast<float>(idIndex / tileCountY);
+                    float v = static_cast<float>(idIndex / tileCountX);
                     u *= mapTileSize.x; //TODO we should be using the tile set size, as this may be different from the map's grid size
                     v *= mapTileSize.y;
 
