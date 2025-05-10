@@ -1,6 +1,6 @@
+cmake_minimum_required(VERSION 3.5)
 project(tmxlite_parse_test)
 SET(PROJECT_NAME tmxlite_parse_test)
-cmake_minimum_required(VERSION 2.8)
 
 if(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
