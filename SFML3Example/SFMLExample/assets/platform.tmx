@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="left-down" width="200" height="40" tilewidth="64" tileheight="64" nextobjectid="46">
+ <properties>
+  <property name="test map property" type="float" value="12.43"/>
+ </properties>
+ <tileset firstgid="1" source="../images/tilemap/platform.tsx"/>
+ <tileset firstgid="43" name="tileset02" tilewidth="32" tileheight="32" tilecount="24" columns="6">
+  <image source="../images/tilemap/tileset02.png" width="192" height="128"/>
+ </tileset>
+ <layer name="Far" width="200" height="40">
+  <data encoding="base64" compression="zlib">
+   eJzt2VsKwyAQBdCsoo8VNN3/BvvbQC1Em9iZOQeE/AQcyFXjLAuc69YxIKuePMgLVckCtNkz4LvrjgGVXHYMqGZPPuSFSuQCPrt3Dshudt/jOfAuZLfOngD8MfmANvkY43ya22P2BIKzvkCbfECbfECb8ykAAABnqNb/qlYvY6rdX0avV77PVe3+Mnq90fMNv/a+Z8gHbK2NZ2B7Jox+PqQO/8rQZi0HAAAAiCf7nWf2+jhW9v5u9vo41sj3E2Ftlg9GjPTMIvTbIswRYKYXswgSvA==
+  </data>
+ </layer>
+ <layer name="Middle" width="200" height="40">
+  <properties>
+   <property name="test layer property" type="bool" value="true"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztm9tOw0AMBc0DPAEfAKIY6P9/I6kgqA25NInXa3dnpCOeqJxmZ+89CgCMcfwNAPwHPwCmwQ+AafDDlrvaBYAp+GHLZ5fDIF9VK4I94AfU4qXL60LeqlX3A34ATIMfvrA+yQV++MC6JCf4AdkpOSbjB2RmbFy2HJvxw5bh+2IOlRv8iA9rehueujwO8rzwP/gRk6l5A+PSNua+z7nvEj/KsqXPuhW2jHvRxkr8KMfWPmsN0dqTdnkvlA+/x/ijZT/G+vYM/XuksxSVyzZ8LBxvT1r1g/n9PlR8fJiKlyOt+gHbUKnrhbcj+AFLqPjNn6LNt/AjLyXniCpxnfAcS/ADelRyOeHhCH7ACZX67dvSkdO+99T+5FzO9y7vzz63BaKdFURBpX67tozVecv5Z94Kpzl5/3yHkb/s3V6iUr89Zwi0h0r9dpclUI+18+S58/1r5pAqedfg+NEOKuXuKl07ryb4sYZr+nKL+1kq9d85wY81LJ23WZy9qdCHZ0x2ou/dquBF5mRGJeZvB3pU6r9f0p4fKuv6ZG9H1tZH4iYTKtvbnYcje+ojMZMFlf3PWtIRi/pIvERHxbZPLuGIGtZHYiUiKmXPtKzW7X2dtd8hKZcH2XYf2CrDMzd1fPY9jnjWSeqmxl2HKHcgstRJ/PMNRu5JzA==
+  </data>
+ </layer>
+ <layer name="Near" width="200" height="40">
+  <data encoding="base64" compression="zlib">
+   eJzt2+FqwjAUBtDihO2fbnPv/6rbYGUxNOuqbW9izoEgIsqF+jVpczsMAAAAAACkPqILgIq9RxdA1U7RBQSTDyiTjz4dowtoxJr5eP0a52T0PjfX7PDzuuUxajmDY+3mD7byFF3AHcba5YN7nSfGt0PxG/WLzke6FnsLqgFKovNBXVwrXhvnvsswPT9ODed5lvC/YU/5+t45HwCgX+la0HUJsIaWexBga3M9CM+7VAH1SNedf/Ug9JCNUm8G9Mxzm1CmrwfKWsrHXN/RlP/s7S/9TfqR58N9PPiV5+PWZ4n0YPGI1soHPKJL9r7lZ+0AAAAgZQ+Bnr3MfO4eKb3LM5Lujy29Rzq3t3ZLX8VeTkPd9QHU4hO/Kwa1
+  </data>
+ </layer>
+ <objectgroup name="Objects" offsetx="1" offsety="-2">
+  <properties>
+   <property name="another object layer property" value="salmon"/>
+   <property name="object layer property" type="bool" value="false"/>
+  </properties>
+  <object id="1" name="Buns" type="Floor" x="128" y="2496" width="2240" height="64"/>
+  <object id="2" name="Flaps" type="Wall" x="0" y="0" width="64" height="2434">
+   <properties>
+    <property name="Custom Object Property" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="3" name="Dicketry" type="Wall" x="64" y="2432">
+   <polyline points="0,0 64,64"/>
+  </object>
+  <object id="4" x="2368" y="2496">
+   <polyline points="0,0 0,-64 64,-64 64,-128 256,-128 256,-192 384,-192 384,-256 448,-256 448,-320 576,-320 576,-384 704,-384 704,-448 1344,-448 1344,-384 1408,-384 1408,-320 1472,-320 1472,-256 1536,-256 1536,-192 1600,-192 1600,-128 1728,-128 1728,-64 1792,-64 1792,0"/>
+  </object>
+  <object id="6" x="576" y="640" width="128" height="64" rotation="90">
+   <ellipse/>
+  </object>
+  <object id="8" x="768" y="1152" rotation="45">
+   <polygon points="0,0 -66,98 -22,206 100,234 226,152 187,3"/>
+  </object>
+  <object id="19" x="1408" y="768">
+   <polygon points="175,0 -45,11 73,39 -27,80 220,128 128,68"/>
+  </object>
+  <object id="23" x="4160" y="2496" width="896" height="64"/>
+  <object id="24" x="4224" y="1920" width="768" height="64"/>
+  <object id="25" x="3264" y="1600" width="640" height="64"/>
+  <object id="26" x="3904" y="1152" width="576" height="64"/>
+  <object id="27" x="5312" y="320" width="384" height="64"/>
+  <object id="28" x="5696" y="576" width="384" height="64"/>
+  <object id="29" x="5312" y="768" width="320" height="64"/>
+  <object id="30" x="5504" y="1024" width="512" height="64"/>
+  <object id="31" x="6464" y="896" width="576" height="64"/>
+  <object id="32" x="6912" y="1088" width="384" height="64"/>
+  <object id="33" x="7040" y="1344" width="576" height="64"/>
+  <object id="34" x="6016" y="1792" width="1920" height="64"/>
+  <object id="35" x="9408" y="1024" width="1536" height="64"/>
+  <object id="36" x="10112" y="384" width="640" height="64"/>
+  <object id="37" x="11200" y="704" width="448" height="64"/>
+  <object id="38" x="11840" y="896" width="512" height="64"/>
+  <object id="39" x="11520" y="1536" width="1152" height="64"/>
+  <object id="40" x="12736" y="0" width="64" height="1472"/>
+  <object id="41" x="12736" y="1472">
+   <polyline points="0,0 -64,64"/>
+  </object>
+  <object id="42" x="11520" y="1536">
+   <polyline points="0,0 0,-64 -64,-64 -64,-128 -128,-128 -128,-192 -192,-192 -192,-256 -320,-256 -320,-320 -384,-320 -384,-384 -448,-384 -448,-448 -576,-448"/>
+  </object>
+  <object id="43" x="9408" y="1088">
+   <polyline points="0,0 -256,0 -256,64 -384,64 -384,128 -512,128 -512,192 -704,192 -704,256 -896,256 -896,320 -1088,320 -1088,384 -1152,384 -1152,448 -1216,448 -1216,512 -1280,512 -1280,576 -1344,576 -1344,640 -1472,640 -1472,704"/>
+  </object>
+  <object id="44" x="6016" y="1856">
+   <polyline points="0,0 -64,0 -64,64 -192,64 -192,128 -320,128 -320,192 -384,192 -384,256 -512,256 -512,320 -640,320 -640,384 -704,384 -704,448 -768,448 -768,512 -896,512 -896,576 -960,576 -960,640"/>
+  </object>
+  <object id="45" x="64" y="0">
+   <polyline points="0,0 12672,0"/>
+  </object>
+ </objectgroup>
+ <imagelayer name="Test Image Layer" offsetx="4224" offsety="1536">
+  <image source="../images/mask_test.png" width="128" height="128"/>
+  <properties>
+   <property name="image layer property" value="buns"/>
+  </properties>
+ </imagelayer>
+</map>
