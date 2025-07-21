@@ -39,8 +39,12 @@ There is a getting started page on the Github wiki [here](https://github.com/fal
 #### Examples
 The repository contains the following rendering examples:
 * [OpenGL Example](https://github.com/fallahn/tmxlite/tree/master/OpenGLExample)
-* [SFML Example](https://github.com/fallahn/tmxlite/tree/master/SFMLExample)
+* [SFML 2 Example](https://github.com/fallahn/tmxlite/tree/master/SFMLExample)
+* [SFML 3 Example](https://github.com/fallahn/tmxlite/tree/master/SFML3Example)
 * [SDL2 Example](https://github.com/fallahn/tmxlite/tree/master/SDL2Example)
+
+
+Codotaku has published a video on creating a DX12 renderer: https://youtu.be/p1o1N72KQQA 
 
 Examples are generally maintained by the community and offer varying amounts of functionality. All of them will render the included example tile maps at the very least, and some include more complex features such as animated tiles or individual tile flipping.
 
@@ -53,8 +57,8 @@ tmxlite uses [pugixml](https://pugixml.org/) and [miniz](https://github.com/rich
 
 ***
 
-(c)Matt Marchant & contributors 2016 - 2024
-http://trederia.blogspot.com
+(c)Matt Marchant & contributors 2016 - 2025
+https://trederiagames.com
 
 tmxlite - Zlib license.
 
