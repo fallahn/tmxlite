@@ -77,7 +77,7 @@ namespace tmx
 
         /*!
         \brief Returns a Type value representing the concrete type.
-        Use this when deciding which conrete layer type to use when
+        Use this when deciding which concrete layer type to use when
         calling the templated function getLayerAs<T>()
         */
         virtual Type getType() const = 0;
