@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(tmxlite VERSION 1.3.1)
+project(tmxlite VERSION 1.4.4)
 SET(PROJECT_NAME tmxlite)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
