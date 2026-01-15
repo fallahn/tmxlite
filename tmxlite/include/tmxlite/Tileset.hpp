@@ -75,7 +75,15 @@ namespace tmx
                 */
                 struct Frame final
                 {
+                    /*!
+                        \brief ID of the tile to be displayed during this frame
+                        \note For convenience, this is global tile ID - you do not need to add the firstGID of the tileset to it
+                    */
                     std::uint32_t tileID = 0;
+
+                    /*!
+                        \brief Duration of the animation frame, in milliseconds
+                    */
                     std::uint32_t duration = 0;
 
                     bool operator == (const Frame& other) const
