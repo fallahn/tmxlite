@@ -1,11 +1,11 @@
 project('tmxlite', 'cpp', 'c',
   version: '1.4.5',
-  meson_version: '>=1.11',
+  meson_version: '>=1.0.0',  # Earliest modern release that supports oldest supported Python (3.11)
   default_options: [
     'buildtype=release',
     'cpp_std=c++14',
     'warning_level=3',
-    'b_ndebug=if-release'
+    'b_ndebug=if-release',
   ]
 )
 
