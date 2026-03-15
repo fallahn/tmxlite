@@ -3,13 +3,18 @@ project('tmxlite', 'cpp', 'c',
   meson_version: '>=1.0.0',  # Earliest modern release that supports oldest supported Python (3.11)
   default_options: [
     'buildtype=release',
-    'cpp_std=c++14',
+    # 'cpp_std=c++14',
+    # 'c_std=c11',
     'warning_level=3',
     'b_ndebug=if-release',
   ]
 )
 
 cpp = meson.get_compiler('cpp')
+if cpp.get_argument_syntax() != 'msvc'  # msvc is being a dufus
+  add_project_arguments('-std=c++14', language: ['cpp'])
+endif
+
 if get_option('use_rtti')
   if cpp.get_argument_syntax() == 'gcc'
     if get_option('project_static_runtime')
@@ -32,7 +37,7 @@ if get_option('default_library') == 'static'
     add_project_arguments('-D_DEBUG_', '-DTMXLITE_STATIC', language: ['cpp', 'c'])
     binary_postfix = '-s-d'
   else
-    add_project_arguments('-O3', '-DTMXLITE_STATIC', language: ['cpp', 'c'])
+    add_project_arguments('-Doptimization=3', '-DTMXLITE_STATIC', language: ['cpp', 'c'])
     binary_postfix = '-s'
   endif
 elif get_option('default_library') == 'shared'
@@ -40,7 +45,7 @@ elif get_option('default_library') == 'shared'
     add_project_arguments('-D_DEBUG_', language: ['cpp', 'c'])
     binary_postfix = '-d'
   else
-	  add_project_arguments('-O3', language: ['cpp', 'c'])
+	  add_project_arguments('-Doptimization=3', language: ['cpp', 'c'])
   endif
 else
   error('Unsupported option \'' + get_option('default_library') + '\' for project ' + meson.project_name())

@@ -109,7 +109,7 @@ namespace tmx
             Vector2u imagePosition;
             std::string className;
         };
-            
+
         /*!
         \brief Terrain information with which one
         or more tiles may be associated.
@@ -117,7 +117,7 @@ namespace tmx
         struct Terrain final
         {
             std::string name;
-            std::uint32_t tileID = -1;
+            uint32_t tileID = static_cast<uint32_t>(-1);
             std::vector<Property> properties;
         };
 
@@ -277,7 +277,7 @@ namespace tmx
         /*!
          \brief Checks if a tiled ID is in the range of the first ID and the last ID
          \param id Tile ID
-         \return 
+         \return
          */
         bool hasTile(std::uint32_t id) const { return id >= m_firstGID && id <= getLastGID(); };
 
