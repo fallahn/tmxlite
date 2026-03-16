@@ -182,49 +182,49 @@ bool Tileset::parse(pugi::xml_node node, Map* map)
     }
 
     const auto& children = node.children();
-    for (const auto& node : children)
+    for (const auto& childNode : children)
     {
-        std::string name = node.name();
+        std::string name = childNode.name();
         if (name == "image")
         {
             //TODO this currently doesn't cover embedded images
             //mostly because I can't figure out how to export them
             //from the Tiled editor... but also resource handling
             //should be handled by the renderer, not the parser.
-            attribString = node.attribute("source").as_string();
+            attribString = childNode.attribute("source").as_string();
             if (attribString.empty())
             {
                 Logger::log("Tileset image node has missing source property, tile set not loaded", Logger::Type::Error);
                 return reset();
             }
             m_imagePath = resolveFilePath(attribString, m_workingDir);
-            if (node.attribute("trans"))
+            if (childNode.attribute("trans"))
             {
-                attribString = node.attribute("trans").as_string();
+                attribString = childNode.attribute("trans").as_string();
                 m_transparencyColour = colourFromString(attribString);
                 m_hasTransparency = true;
             }
-            if (node.attribute("width") && node.attribute("height"))
+            if (childNode.attribute("width") && childNode.attribute("height"))
             {
-                m_imageSize.x = node.attribute("width").as_int();
-                m_imageSize.y = node.attribute("height").as_int();
+                m_imageSize.x = childNode.attribute("width").as_int();
+                m_imageSize.y = childNode.attribute("height").as_int();
             }
         }
         else if (name == "tileoffset")
         {
-            parseOffsetNode(node);
+            parseOffsetNode(childNode);
         }
         else if (name == "properties")
         {
-            parsePropertyNode(node);
+            parsePropertyNode(childNode);
         }
         else if (name == "terraintypes")
         {
-            parseTerrainNode(node);
+            parseTerrainNode(childNode);
         }
         else if (name == "tile")
         {
-            parseTileNode(node, map);
+            parseTileNode(childNode, map);
         }
     }
 
@@ -252,7 +252,7 @@ const Tileset::Tile* Tileset::getTile(std::uint32_t id) const
     {
         return nullptr;
     }
-    
+
     //corrects the ID. Indices and IDs are different.
     id -= m_firstGID;
     id = m_tileIndex[id];
@@ -382,12 +382,12 @@ void Tileset::parseTileNode(const pugi::xml_node& node, Map* map)
     {
         tile.className = node.attribute("class").as_string();
     }
-    
+
     //by default we set the tile's values as in an Image tileset
     tile.imagePath = m_imagePath;
     tile.imageSize = m_tileSize;
 
-    if (m_columnCount != 0) 
+    if (m_columnCount != 0)
     {
         std::uint32_t rowIndex = tile.ID % m_columnCount;
         std::uint32_t columnIndex = tile.ID / m_columnCount;

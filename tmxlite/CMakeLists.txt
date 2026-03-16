@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.5)
-project(tmxlite VERSION 1.4.4)
+cmake_minimum_required(VERSION 3.10)
+project(tmxlite VERSION 1.4.5)
 SET(PROJECT_NAME tmxlite)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
@@ -52,7 +52,7 @@ endif()
 
 #disable msvc warning
 if(MSVC)
-    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -64,29 +64,29 @@ include(${PROJECT_DIR}/CMakeLists.txt)
 
 #if we want external zip and xml libs find them and tell the compiler
 if(USE_EXTLIBS)
-    add_definitions(-DUSE_EXTLIBS)
-    add_definitions(-DUSE_ZSTD)
-    
-    SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-    
-    find_package(ZLIB REQUIRED)
-    find_package(PUGIXML REQUIRED)
-    find_package(Zstd REQUIRED)
-    
-    include_directories(${ZLIB_INCLUDE_DIRS} ${PUGIXML_INCLUDE_DIR} ${ZSTD_INCLUDE_DIR})
-    
+  add_definitions(-DUSE_EXTLIBS)
+  add_definitions(-DUSE_ZSTD)
+
+  SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+
+  find_package(ZLIB REQUIRED)
+  find_package(PUGIXML REQUIRED)
+  find_package(Zstd REQUIRED)
+
+  include_directories(${ZLIB_INCLUDE_DIRS} ${PUGIXML_INCLUDE_DIR} ${ZSTD_INCLUDE_DIR})
+
 else()
-    #add miniz and pugixml from source
-    SET(PROJECT_SRC ${PROJECT_SRC} ${LIB_SRC})
-    
-    if(USE_ZSTD)
-        add_definitions(-DUSE_ZSTD)
-    
-        SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-        find_package(Zstd REQUIRED)
-        include_directories(${ZSTD_INCLUDE_DIR})
-    endif()
-    
+  # add miniz and pugixml from source
+  SET(PROJECT_SRC ${PROJECT_SRC} ${LIB_SRC})
+
+  if(USE_ZSTD)
+    add_definitions(-DUSE_ZSTD)
+
+    SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+    find_package(Zstd REQUIRED)
+    include_directories(${ZSTD_INCLUDE_DIR})
+  endif()
+
 endif()
 
 if(WIN32)
@@ -94,7 +94,7 @@ if(WIN32)
     add_library(${PROJECT_NAME} STATIC ${PROJECT_SRC})
   else()
     add_library(${PROJECT_NAME} SHARED ${PROJECT_SRC})
-  endif()   
+  endif()
 else()
   if(TMXLITE_STATIC_LIB)
     add_library(${PROJECT_NAME} STATIC ${PROJECT_SRC})
@@ -104,11 +104,11 @@ else()
 endif()
 
 if(USE_EXTLIBS)
-    target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES} ${PUGIXML_LIBRARY} ${ZSTD_LIBRARY})
+  target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES} ${PUGIXML_LIBRARY} ${ZSTD_LIBRARY})
 else()
-    if(USE_ZSTD)
-    target_link_libraries(${PROJECT_NAME} ${ZSTD_LIBRARY})    
-    endif()    
+  if(USE_ZSTD)
+    target_link_libraries(${PROJECT_NAME} ${ZSTD_LIBRARY})
+  endif()
 endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tmxlite.pc.in ${CMAKE_CURRENT_BINARY_DIR}/tmxlite.pc
@@ -121,7 +121,7 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/tmxlite DESTINATION ${CMAK
 if(TMXLITE_STATIC_LIB)
   install(TARGETS ${PROJECT_NAME} EXPORT tmxlite-targets DESTINATION ${CMAKE_INSTALL_LIBDIR})
 else()
-  install(TARGETS ${PROJECT_NAME} EXPORT tmxlite-targets 
+  install(TARGETS ${PROJECT_NAME} EXPORT tmxlite-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
