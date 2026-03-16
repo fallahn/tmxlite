@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2023
+Matt Marchant (and contributors) 2016 - 2026
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -30,14 +30,14 @@ source distribution.
 #else
 #include "detail/pugixml.hpp"
 #endif
-#include <tmxlite/Map.hpp>
 #include <tmxlite/FreeFuncs.hpp>
-#include <tmxlite/ObjectGroup.hpp>
 #include <tmxlite/ImageLayer.hpp>
-#include <tmxlite/TileLayer.hpp>
 #include <tmxlite/LayerGroup.hpp>
-#include <tmxlite/detail/Log.hpp>
+#include <tmxlite/Map.hpp>
+#include <tmxlite/ObjectGroup.hpp>
+#include <tmxlite/TileLayer.hpp>
 #include <tmxlite/detail/Android.hpp>
+#include <tmxlite/detail/Log.hpp>
 
 #include <queue>
 
@@ -113,8 +113,8 @@ bool Map::parseMapNode(const pugi::xml_node& mapNode)
         return reset();
     }
 
-    m_version.upper = static_cast<uint16_t>(STOI(attribString.substr(0, pointPos)));
-    m_version.lower = static_cast<uint16_t>(STOI(attribString.substr(pointPos + 1)));
+    m_version.upper = static_cast<std::uint16_t>(STOI(attribString.substr(0, pointPos)));
+    m_version.lower = static_cast<std::uint16_t>(STOI(attribString.substr(pointPos + 1)));
 
     m_class = mapNode.attribute("class").as_string();
 

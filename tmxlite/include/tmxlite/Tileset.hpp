@@ -1,5 +1,5 @@
 /*********************************************************************
-Matt Marchant 2016 - 2023
+Matt Marchant (and contributors) 2016 - 2026
 http://trederia.blogspot.com
 
 tmxlite - Zlib license.
@@ -28,12 +28,13 @@ source distribution.
 #pragma once
 
 #include <tmxlite/Config.hpp>
-#include <tmxlite/Property.hpp>
 #include <tmxlite/ObjectGroup.hpp>
+#include <tmxlite/Property.hpp>
 
+#include <array>
+#include <limits>
 #include <string>
 #include <vector>
-#include <array>
 
 namespace pugi
 {
@@ -117,7 +118,7 @@ namespace tmx
         struct Terrain final
         {
             std::string name;
-            uint32_t tileID = static_cast<uint32_t>(-1);
+            std::uint32_t tileID = std::numeric_limits<uint32_t>::max();
             std::vector<Property> properties;
         };
 
