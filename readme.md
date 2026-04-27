@@ -44,7 +44,8 @@ The repository contains the following rendering examples:
 * [SDL2 Example](https://github.com/fallahn/tmxlite/tree/master/SDL2Example)
 
 
-Codotaku has published a video on creating a DX12 renderer: https://youtu.be/p1o1N72KQQA 
+Codotaku has published a video on creating a DX12 renderer: https://youtu.be/p1o1N72KQQA  
+Guido Bisocoli has created an example for SDL3 which you can find [here](https://github.com/GuidoBisocoli/SDL3-TMX-LOADER)  
 
 Examples are generally maintained by the community and offer varying amounts of functionality. All of them will render the included example tile maps at the very least, and some include more complex features such as animated tiles or individual tile flipping.
 
