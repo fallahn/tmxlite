@@ -40,6 +40,7 @@ source distribution.
 #include <tmxlite/TileLayer.hpp>
 #include <tmxlite/detail/Log.hpp>
 
+#include <algorithm>
 #include <sstream>
 
 using namespace tmx;
@@ -173,10 +174,17 @@ void TileLayer::parseBase64(const pugi::xml_node& node)
             break;
         }
 
+        if (byteData.size() < expectedSize)
+        {
+            Logger::log("Layer data is shorter than expected. Found " + std::to_string(byteData.size())
+                + " bytes, expected " + std::to_string(expectedSize), Logger::Type::Warning);
+        }
+        const std::size_t byteCount = std::min(expectedSize, byteData.size());
+
         //data stream is in bytes so we need to OR into 32 bit values
         std::vector<std::uint32_t> IDs;
         IDs.reserve(tileCount);
-        for (auto i = 0u; i < expectedSize - 3u; i += 4u)
+        for (std::size_t i = 0u; i + 3u < byteCount; i += 4u)
         {
             std::uint32_t id = byteData[i] | byteData[i + 1] << 8 | byteData[i + 2] << 16 | byteData[i + 3] << 24;
             IDs.push_back(id);
