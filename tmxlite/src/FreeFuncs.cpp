@@ -91,6 +91,12 @@ bool tmx::decompress(const char* source, std::vector<unsigned char>& dest, std::
             inflateEnd(&stream);
             Logger::log("inflate() returned " +  std::to_string(result), Logger::Type::Error);
             return false;
+        case Z_BUF_ERROR:
+            //no progress was possible: the output buffer is always
+            //grown below, so the compressed data must be truncated
+            inflateEnd(&stream);
+            Logger::log("Compressed data ended before the end of the stream", Logger::Type::Error);
+            return false;
         }
 
         if (result != Z_STREAM_END)
