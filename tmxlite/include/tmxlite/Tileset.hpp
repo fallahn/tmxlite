@@ -64,6 +64,10 @@ namespace tmx
         {
             std::uint32_t ID = 0;
             std::array<std::int32_t, 4u> terrainIndices{};
+            /*!
+            \brief Terrain tool probability as a percentage of
+            Tiled's default weight of 1, so 100 is the default
+            */
             std::uint32_t probability = 100;
 
             /*!

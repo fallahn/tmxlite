@@ -34,6 +34,7 @@ source distribution.
 #include <tmxlite/FreeFuncs.hpp>
 #include <tmxlite/detail/Log.hpp>
 
+#include <cmath>
 #include <ctype.h>
 
 using namespace tmx;
@@ -375,7 +376,10 @@ void Tileset::parseTileNode(const pugi::xml_node& node, Map* map)
         }
     }
 
-    tile.probability = node.attribute("probability").as_int(100);
+    //Tiled writes the probability as a relative weight and leaves
+    //it out when it is 1, so store it as a percentage of that
+    const auto probability = node.attribute("probability").as_float(1.f);
+    tile.probability = probability > 0.f ? static_cast<std::uint32_t>(std::lround(probability * 100.f)) : 0;
 
     tile.className = node.attribute("type").as_string();
     if (tile.className.empty())
