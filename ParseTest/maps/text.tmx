@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="4">
+ <objectgroup id="1" name="Text">
+  <object id="1" name="default colour" x="0" y="0" width="96" height="32">
+   <text>Black</text>
+  </object>
+  <object id="2" name="red" x="0" y="32" width="96" height="32">
+   <text color="#ff0000">Red</text>
+  </object>
+  <object id="3" name="translucent green" x="0" y="64" width="96" height="32">
+   <text color="#8000ff00">Green</text>
+  </object>
+ </objectgroup>
+</map>
