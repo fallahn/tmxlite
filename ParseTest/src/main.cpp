@@ -271,6 +271,24 @@ void testResolvingPaths()
     CHECK_EQ(tmx::resolveFilePath("a\\..\\b\\c", "C:\\A\\B\\..\\C"), "C:/A/C/b/c");
 }
 
+void testTextObjects()
+{
+    tmx::Map map;
+    if (!map.load("maps/text.tmx"))
+    {
+        std::cout << "FAIL: could not load maps/text.tmx" << std::endl;
+        throw TestFailure();
+    }
+
+    const auto& objects = map.getLayers()[0]->getLayerAs<tmx::ObjectGroup>().getObjects();
+    CHECK_EQ(objects.size(), 3u);
+
+    //Tiled omits the color attribute when the text is black
+    CHECK_EQ(objects[0].getText().colour, tmx::Colour(0, 0, 0, 255));
+    CHECK_EQ(objects[1].getText().colour, tmx::Colour(255, 0, 0, 255));
+    CHECK_EQ(objects[2].getText().colour, tmx::Colour(0, 255, 0, 128));
+}
+
 }  // namespace
 
 int main()
@@ -280,6 +298,8 @@ int main()
     testLoadTilesetWithoutMap();
     std::cout << std::endl << "------------------------------" << std::endl << std::endl;
     testResolvingPaths();
+    std::cout << std::endl << "------------------------------" << std::endl << std::endl;
+    testTextObjects();
     std::cout << std::endl << "------------------------------" << std::endl << std::endl;
 
 #if defined(PAUSE_AT_END)

@@ -172,7 +172,7 @@ void Object::parsePoints(const pugi::xml_node& node)
 void Object::parseText(const pugi::xml_node& node)
 {
     m_textData.bold = node.attribute("bold").as_bool(false);
-    m_textData.colour = colourFromString(node.attribute("color").as_string("#FFFFFFFF"));
+    m_textData.colour = colourFromString(node.attribute("color").as_string("#000000"));
     m_textData.fontFamily = node.attribute("fontfamily").as_string();
     m_textData.italic = node.attribute("italic").as_bool(false);
     m_textData.kerning = node.attribute("kerning").as_bool(true);
