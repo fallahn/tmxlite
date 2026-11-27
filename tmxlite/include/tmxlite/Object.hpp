@@ -216,6 +216,6 @@ namespace tmx
 
         void parsePoints(const pugi::xml_node&);
         void parseText(const pugi::xml_node&);
-        void parseTemplate(const std::string&, Map*);
+        void parseTemplate(const std::string&, Map*, const pugi::xml_node&);
     };
 }

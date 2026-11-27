@@ -126,7 +126,7 @@ void Object::parse(const pugi::xml_node& node, Map* map)
     std::string templateStr = node.attribute("template").as_string();
     if (!templateStr.empty() && map)
     {
-        parseTemplate(templateStr, map);
+        parseTemplate(templateStr, map, node);
     }
 }
 
@@ -212,7 +212,7 @@ void Object::parseText(const pugi::xml_node& node)
     m_textData.content = node.text().as_string();
 }
 
-void Object::parseTemplate(const std::string& path, Map* map)
+void Object::parseTemplate(const std::string& path, Map* map, const pugi::xml_node& node)
 {
     assert(map);
 
@@ -264,7 +264,9 @@ void Object::parseTemplate(const std::string& path, Map* map)
         }
     }
 
-    //apply any non-overridden object properties from the template
+    //apply any non-overridden object properties from the template.
+    //Tiled only writes the values an instance overrides, so an
+    //attribute that is present wins even if it holds the default.
     if (templateObjects.count(path) != 0)
     {
         const auto& obj = templateObjects[path];
@@ -277,8 +279,6 @@ void Object::parseTemplate(const std::string& path, Map* map)
         {
             m_AABB.height = obj.m_AABB.height;
         }
-        
-        m_tilesetName = obj.m_tilesetName;
 
         if (m_name.empty())
         {
@@ -290,19 +290,23 @@ void Object::parseTemplate(const std::string& path, Map* map)
             m_class = obj.m_class;
         }
 
-        if (m_rotation == 0)
+        if (!node.attribute("rotation"))
         {
             m_rotation = obj.m_rotation;
         }
 
-        if (m_tileID == 0)
+        if (!node.attribute("visible"))
         {
-            m_tileID = obj.m_tileID;
+            m_visible = obj.m_visible;
         }
 
-        if (m_flipFlags == 0)
+        //an overridden gid replaces the whole tile, flip flags
+        //included, and refers to the map's tile sets
+        if (!node.attribute("gid"))
         {
+            m_tileID = obj.m_tileID;
             m_flipFlags = obj.m_flipFlags;
+            m_tilesetName = obj.m_tilesetName;
         }
 
         if (m_shape == Shape::Rectangle)
@@ -331,74 +335,11 @@ void Object::parseTemplate(const std::string& path, Map* map)
         }
 
 
-        if (m_shape == Shape::Text)
+        //Tiled writes the whole <text> element when an instance
+        //changes any part of it, so it replaces the template text
+        if (m_shape == Shape::Text && !node.child("text"))
         {
-            //check each text property and update as necessary
-            //TODO this makes he assumption we prefer the template
-            //properties over the default ones - this might not
-            //actually be the case....
-            const auto& otherText = obj.m_textData;
-            if (m_textData.fontFamily.empty())
-            {
-                m_textData.fontFamily = otherText.fontFamily;
-            }
-
-            if (m_textData.pixelSize == 16)
-            {
-                m_textData.pixelSize = otherText.pixelSize;
-            }
-
-            //TODO this isn't actually right if we *want* to be false
-            //and the template is set to true...
-            if (m_textData.wrap == false)
-            {
-                m_textData.wrap = otherText.wrap;
-            }
-
-            if (m_textData.colour == Colour())
-            {
-                m_textData.colour = otherText.colour;
-            }
-
-            if (m_textData.bold == false)
-            {
-                m_textData.bold = otherText.bold;
-            }
-
-            if (m_textData.italic == false)
-            {
-                m_textData.italic = otherText.italic;
-            }
-
-            if (m_textData.underline == false)
-            {
-                m_textData.underline = otherText.underline;
-            }
-
-            if (m_textData.strikethough == false)
-            {
-                m_textData.strikethough = otherText.strikethough;
-            }
-
-            if (m_textData.kerning == true)
-            {
-                m_textData.kerning = otherText.kerning;
-            }
-
-            if (m_textData.hAlign == Text::HAlign::Left)
-            {
-                m_textData.hAlign = otherText.hAlign;
-            }
-
-            if (m_textData.vAlign == Text::VAlign::Top)
-            {
-                m_textData.vAlign = otherText.vAlign;
-            }
-
-            if (m_textData.content.empty())
-            {
-                m_textData.content = otherText.content;
-            }
+            m_textData = obj.m_textData;
         }
     }
 }
